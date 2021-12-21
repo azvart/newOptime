@@ -1,0 +1,175 @@
+@import "../styles/variables.scss";
+.result-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    &__header {
+        @extend %center-row;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        justify-content: space-between;
+        padding-left: 124px;
+        padding-right: 124px;
+        background-color: $white;
+        height: 120px;
+        z-index: 5;
+    }
+    &__header-input {
+        background-color: rgba(#f5f5f5, 0.86);
+        width: 416px;
+        margin-left: 4rem;
+        box-shadow: none;
+        .input-field__submit-button {
+            width: 120px;
+        }
+        input {
+            font-size: 1rem;
+        }
+    }
+    &__autocomplete {
+        background-color: transparent;
+        border: none;
+        width: 416px;
+        height: 3.125rem;
+        font-family: "Roboto", sans-serif;
+    }
+    &__row {
+        @extend %center-row;
+        height: 100%;
+        .input_search_error {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            .null {
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+            }
+        }
+        .fild_animation {
+            left: -20px;
+            position: relative;
+            animation: fadeField 0.3s ease-in;
+            @keyframes fadeField {
+                from {
+                    top: -100px;
+                    opacity: 0;
+                }
+                to {
+                    top: 10px;
+                    opacity: 1;
+                }
+            }
+        }
+        .error_message {
+            color: red;
+            opacity: 1;
+            animation: fadein 0.5s forwards;
+            margin-left: 120px;
+            flex-grow: 0.4;
+            display: flex;
+            align-items: center;
+        }
+    }
+    &__location-icon {
+        path {
+            fill: $green;
+        }
+    }
+    &__location-text {
+        cursor: pointer;
+        font-size: 1.125rem;
+        text-decoration-line: underline;
+        color: $green;
+        margin-left: 0.625rem;
+        font-family: "Roboto", sans-serif;
+    }
+    &__content {
+        @extend %center-column;
+        margin-top: 125px;
+        margin-left: 225px;
+        margin-right: 225px;
+        .price_warning {
+            margin-top: 150px;
+            font-size: 2rem;
+            color: grey;
+            position: relative;
+            font-family: "Roboto", sans-serif;
+        }
+    }
+    &__description-title{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    .title {
+        font-size: 2.25rem;
+        color: $results-text;
+        align-self: flex-start;
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+    }
+    .description{
+        font-size: 1.25rem;
+        color: $results-text;
+        font-family: "Roboto",sans-serif;
+        font-weight: 400;
+    }
+}
+    &__separator {
+        &--green {
+            width: 100%;
+            margin-top: 1.375rem;
+            border-top: 0.125rem solid $green;
+        }
+        &--grey {
+            width: 100%;
+            margin-top: 0.5rem;
+            border-top: 0.125rem solid #e6e6e6;
+        }
+    }
+    &__dropdowns {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2.25rem;
+        margin-top: 1.25rem;
+        width: 100%;
+    }
+    &__items-control {
+        margin-top: 64px;
+        width: 100%;
+    }
+    &__tiles-area {
+        display: flex;
+        justify-content: center;
+    }
+    &__tiles-wrapper {
+        margin-top: 1.188rem;
+        @extend %center-row;
+        flex-flow: row wrap;
+        gap: 2.3rem;
+        justify-content: center;
+    }
+    &__rows-wrapper {
+        @extend %center-column;
+        width: 100%;
+        gap: 1.188rem;
+        margin-top: 0.563rem;
+    }
+    &__space-fill {
+        padding-bottom: 100px;
+    }
+    &__loader {
+        margin-top: 300px;
+    }
+}
+
+@keyframes fadein {
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,46 @@
+@import "../styles/variables.scss";
+.row-item {
+    @extend %center-row;
+    justify-content: space-between;
+    height: 97px;
+    width: 100%;
+    box-shadow: -2px -2px 4px rgba(106, 106, 106, 0.1), 2px 2px 5px rgba(95, 95, 95, 0.1);
+    border-radius: 0.938rem;
+    padding: 2.188rem;
+    background-color: $white;
+    & div {
+        text-align: left;
+    }
+    &__name {
+        color: $text;
+        text-transform: capitalize;
+        font-size: 1.25rem;
+        font-weight: bolder;
+        // font-family: "Benton Sans";
+    }
+    &__content {
+        @extend %center-row;
+    }
+    &__price {
+        color: #222e6d;
+        font-size: 1.75rem;
+        font-weight: 500;
+    }
+    &__button {
+        margin-left: 2.313rem;
+        background-color: $pink;
+        color: $white;
+        border: none;
+        cursor: pointer;
+        width: 248px;
+        height: 2.438rem;
+        border-radius: 0.625rem;
+        font-size: 1rem;
+    }
+    &__label {
+        color: #565c4d;
+        // font-weight: 700;
+        // font-family: "Benton Sans";
+        text-align: left;
+    }
+}

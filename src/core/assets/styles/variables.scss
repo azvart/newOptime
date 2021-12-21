@@ -1,0 +1,17 @@
+$white: #ffffff;
+$background: #f6f7fb;
+$text: #7d7d7d;
+$results-text: #565c4d;
+$green: #009688;
+$pink: #ff4b9c;
+
+%center-row {
+  display: flex;
+  align-items: center;
+}
+
+%center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

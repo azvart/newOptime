@@ -1,0 +1,49 @@
+@import "../styles/variables.scss";
+.tile-item {
+    @extend %center-column;
+    justify-content: space-between;
+    width: 315px;
+    min-height: 271px;
+    box-shadow: -2px -2px 4px rgba(106, 106, 106, 0.1), 2px 2px 5px rgba(95, 95, 95, 0.1);
+    border-radius: 0.938rem;
+    padding: 2.188rem;
+    background-color: $white;
+    align-self: stretch;
+    &__name {
+        color: $results-text;
+        text-transform: capitalize;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: bolder;
+    }
+    &__content {
+        @extend %center-column;
+    }
+    &__price {
+        color: #222e6d;
+        font-size: 1.625rem;
+        font-weight: 700;
+        font-family: "Benton Sans";
+    }
+    &__button {
+        font-weight: 700;
+        font-family: "Roboto", sans-serif;
+        margin-top: 1.25rem;
+        background-color: $pink;
+        color: $white;
+        border: none;
+        cursor: pointer;
+        width: 248px;
+        height: 2.438rem;
+        border-radius: 0.625rem;
+        font-size: 1rem;
+    }
+    &__label {
+        color: #565c4d;
+        text-align: center;
+        flex: auto;
+        padding: 0.5rem;
+        // padding-top: 1rem;
+        // padding-bottom: 4rem;
+    }
+}

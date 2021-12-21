@@ -1,0 +1,9 @@
+@import "../styles/variables.scss";
+
+.plug-svg {
+  @extend %center-row;
+}
+
+.plug-svg-loading {
+  background-color: rgba($white, 0.1);
+}

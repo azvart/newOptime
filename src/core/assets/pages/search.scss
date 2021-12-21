@@ -1,0 +1,56 @@
+@import "../styles/variables.scss";
+.search-page {
+    @extend %center-column;
+    justify-content: space-between;
+    height: 100%;
+    &__header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        background-color: $white;
+        height: 80px;
+    }
+    &__header-logo {
+        margin-left: 124px;
+    }
+    &__content {
+        @extend %center-column;
+        margin-top: 224px;
+    }
+    &__title {
+        font-size: 2.25rem;
+        color: $green;
+        margin-bottom: 2.688rem;
+    }
+    &__input-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 1.063rem;
+        justify-content: space-around;
+        p {
+            height: 19.09px;
+        }
+        .error_message {
+            color: red;
+            opacity: 0;
+            animation: fadein 0.5s forwards;
+            text-align: left;
+            position: relative;
+            left: 190px;
+        }
+    }
+    &__zip-code {
+        z-index: 1;
+    }
+}
+
+@keyframes fadein {
+    to {
+        opacity: 1;
+        left: 50px;
+    }
+}

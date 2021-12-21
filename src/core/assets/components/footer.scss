@@ -1,0 +1,47 @@
+@import "../styles/variables.scss";
+
+.footer {
+  position: fixed;
+  background-color: $white;
+  padding-left: 150px;
+  padding-right: 150px;
+  height: 80px;
+  width: 100%;
+  bottom: 0;
+
+  &__content {
+    height: 80px;
+    @extend %center-row;
+    justify-content: space-between;
+    border-top: 0.125rem solid $green;
+  }
+
+  &__text {
+    color: $text;
+    font-size: 0.875rem;
+    font-family: "Open Sans", sans-serif;
+  }
+
+  &__logo {
+    margin-right: 73px;
+    height: 2.813rem;
+  }
+
+  &__copyright-wrapper {
+    @extend %center-row;
+  }
+
+  &__copyright-icon {
+    margin-right: 0.25rem;
+  }
+
+  &__number {
+    color: $text;
+    font-family: "Open Sans", sans-serif;
+    margin-left: 1.563rem;
+  }
+
+  &__row {
+    @extend %center-row;
+  }
+}

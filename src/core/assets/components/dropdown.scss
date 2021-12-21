@@ -1,0 +1,45 @@
+@import "../styles/variables.scss";
+.dropdown {
+    label {
+        position: relative;
+        top: -10px;
+        left: 10px;
+        font-family: "Roboto", sans-serif;
+        font-weight: 600;
+        color: $results-text;
+    }
+    &__header {
+        @extend %center-row;
+        justify-content: space-between;
+        min-width: 209px;
+        height: 2.438rem;
+        background-color: $white;
+        cursor: pointer;
+        border-radius: 0.625rem;
+        border: 0.125rem solid $green;
+        padding-left: 1rem;
+        padding-right: 0.875rem;
+        font-size: 1.125rem;
+        font-family: "Roboto", sans-serif;
+        color: $results-text;
+    }
+    &__items {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        width: 209px;
+        z-index: 10;
+    }
+    &__item {
+        position: relative;
+        background-color: $white;
+        cursor: pointer;
+        padding-left: 1rem;
+        color: $results-text;
+        font-size: 1.125rem;
+        font-family: "Roboto", sans-serif;
+        width: 100%;
+        padding-top: 0.469rem;
+        padding-bottom: 0.469rem;
+    }
+}
