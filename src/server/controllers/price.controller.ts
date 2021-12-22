@@ -19,20 +19,34 @@ class Prices implements Controller{
   }
 
   private async getPrice(req:any, res:Response){
-    
+    const token = `Bearer ${req.cookies.token}`
+    const account = req.cookies.account;
     const { name } = req.body;
     const replacingName = name.replaceAll(" ", "+");
     const prices:any = await Price.findPrice(req.body.formulationId, req.body.quantity, req.body.searchLocation);
-    console.log(prices);
     if(!prices || prices.length <= 1){
       const optumPrice:AxiosResponse<any> = await axios({
         method:"GET",
-        url:`https://api.perks.optum.com/api/optumperks/v1/prices?quantity=${req.body.quantity}&formulationId=${req.body.formulationId}&b-g=${req.body.type}&dn=${replacingName}&gpi14=${req.body.gpi14}&ubi=${req.body.ubi}&searchLocation=${req.body.searchLocation}&searchLocationZipCode=${req.body.searchLocationZipCode}`,
+        url:`https://api.perks.optum.com/api/optumperks/v1/prices`,
+
         headers:{
-          authorization: req.body.headers.authorization,
-          'x-account-id':req.body.headers['x-account-id'] ,
+          "Content-Type":"application/json",
+          'Accept':"application/json",
+          authorization: token,
+          'x-account-id':account,
           "x-correlation-id": req.correlationId(),
-          'x-app-id': "Optum Perks"
+          'x-app-id': "Optum Perks",
+          
+        },
+        params:{
+          quantity:req.body.quantity,
+          formulationId:req.body.formulationId,
+          'b-g':req.body.type,
+          dn:replacingName,
+          gpi14:req.body.gpi14,
+          ubi:req.body.ubi,
+          searchLocation:req.body.searchLocation,
+          searchLocationZipCode:req.body.searchLocationZipCode
         }
       });
       await new Price({

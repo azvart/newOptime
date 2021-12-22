@@ -18,7 +18,7 @@ import {
   LocationIconSvg,
   SearchIconSvg,
 } from "../../assets/images";
-
+import axios from 'axios';
 import { InputField, Dropdown, ItemsControl, Footer } from "../../components";
 import { ITEMS_CONTROL_MODE } from "../../components/ItemsControl";
 import CurrentMed from "../../store/currentMed/action";
@@ -305,9 +305,9 @@ export const ResultPage: FC = () => {
           return e.distance = distance[item];
         });
         const sorting = uniq.sort((a:any,b:any)=>{
-          if(a.price.amount < b.price.amount){
+          if(parseFloat(a.price.amount) < parseFloat(b.price.amount)){
             return -1;
-          }else if(a.price.amount > b.price.amount){
+          }else if(parseFloat(a.price.amount) > parseFloat(b.price.amount)){
             return 1;
           }else{
             return a.distance.split(" ")[0] - b.distance.split(" ")[0];
@@ -325,7 +325,7 @@ export const ResultPage: FC = () => {
 
   useEffect(() => {
     if (priceSettings && priceSettings.type && priceSettings.formulationId && priceSettings.quantity) {
-        dispatch(getPrice(
+       dispatch(getPrice(
           priceSettings.quantity, 
           priceSettings.formulationId, 
           priceSettings.type.drugType, 
@@ -334,12 +334,10 @@ export const ResultPage: FC = () => {
           false,
           location.state.location[0].location,
           location.state.location[0].zip,
-          {authorization: `Bearer ${cookies['token']}`, 
-          'x-account-id':cookies['account']}
           ));
           setLoading(true);
     }
-  }, [priceSettings, dispatch]);
+  }, [priceSettings,dispatch]);
   return (
     <>
       <div className="result-page">

@@ -10,6 +10,6 @@ export async function getToken(req:Request, res:Response, next:NextFunction){
   })
   res.header("Authorization", `Bearer ${result.data.access_token}`);  
   req.body.token = `Bearer ${result.data.access_token}`;
-  res.cookie("token", `${result.data.access_token}` );
+  res.cookie("token", `${result.data.access_token}`);
   next();
 }

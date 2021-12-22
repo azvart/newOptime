@@ -14,13 +14,13 @@ gpi14:string,
 ubi:boolean,
 searchLocation:string,
 searchLocationZipCode: string,
-headers:{}
 ) => {
   return async (dispatch:Dispatch) => {
     try{
       const price:any = await axios({
         method:"POST",
         url: `${adress}/api/price/getting`,
+        withCredentials:true,
         data:{
           quantity: quantity,
           formulationId: formulationId,
@@ -30,7 +30,7 @@ headers:{}
           ubi: ubi,
           searchLocation: searchLocation,
           searchLocationZipCode: searchLocationZipCode,
-          headers: headers
+         
         }
       });
 

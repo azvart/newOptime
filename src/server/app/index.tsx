@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 import correlator from 'express-correlation-id';
 import {logger} from '../middleware/logger';
 import {Controller} from '../../../types/controller.types';
@@ -30,6 +31,7 @@ class App{
     this.app.use(express.urlencoded({extended:true}));
     this.app.use(compression());
     this.app.use(cors());
+    this.app.use(cookieParser());
     // this.app.use(helmet());
     this.app.use(express.static(__dirname));
     this.app.use(logger);
