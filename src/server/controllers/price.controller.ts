@@ -2,9 +2,8 @@ import { Controller } from "../../../types/controller.types";
 import {Request, Response, Router} from 'express';
 import Price from '../models/price.model';
 import axios, {AxiosResponse} from 'axios';
-
-
-
+import {getDistance, convertDistance} from 'geolib';
+import {Settings} from '../utils/priceSettings';
 
 class Prices implements Controller{
   public path = '/price';
@@ -24,11 +23,12 @@ class Prices implements Controller{
     const { name } = req.body;
     const replacingName = name.replaceAll(" ", "+");
     const prices:any = await Price.findPrice(req.body.formulationId, req.body.quantity, req.body.searchLocation);
-    if(!prices || prices.length <= 1){
+    const priceFormated = await Settings(prices, req.body.searchLocation);
+
+    if(!prices || prices.length <= 1){  
       const optumPrice:AxiosResponse<any> = await axios({
         method:"GET",
         url:`https://api.perks.optum.com/api/optumperks/v1/prices`,
-
         headers:{
           "Content-Type":"application/json",
           'Accept':"application/json",
@@ -56,9 +56,10 @@ class Prices implements Controller{
         data: optumPrice.data.data
       }).save();
       const priceFind = await Price.findPrice(req.body.formulationId, req.body.quantity, req.body.searchLocation);
-      return res.status(200).json(priceFind);
+      const formatted = await Settings(priceFind, req.body.searchLocation);
+      return res.status(200).json(formatted);
     }
-    return res.status(200).json(prices);
+    return res.status(200).json(priceFormated);
   }
 
 }

@@ -18,7 +18,6 @@ import {
   LocationIconSvg,
   SearchIconSvg,
 } from "../../assets/images";
-import axios from 'axios';
 import { InputField, Dropdown, ItemsControl, Footer } from "../../components";
 import { ITEMS_CONTROL_MODE } from "../../components/ItemsControl";
 import CurrentMed from "../../store/currentMed/action";
@@ -38,7 +37,6 @@ export const ResultPage: FC = () => {
   const [description,setDescription] = useState("");
   const topMed = useSelector((state:any) => state.topMedReducer.top);
   const zip = useSelector((state:any) => state.zipReducer);
-  const price = useSelector((state:any) => state.priceReducer.data);
   const newPrice = useSelector((state:any) => state.priceReducer);
   const history = useHistory();
   const location:any = useLocation();
@@ -188,7 +186,6 @@ export const ResultPage: FC = () => {
         .map((e: any) => {
           return e.display;
         });
-        console.log("render quantity",chosen.Quantity);
       return {
         manufacturer: manufacturer,
         form: form,
@@ -270,74 +267,33 @@ export const ResultPage: FC = () => {
       };
     }
     return ;
-  }, [chosen, currentMedication]);
+  }, [chosen]);
 
-  const priceUniq = useMemo(() => {
-    if (newPrice !== undefined && priceSettings?.formulationId !== undefined) {
-      const uniq = Array.from(
-        newPrice
-          ?.reduce((m: any, t: any) => m.set(t.retailer.name, t), new Map())
-          .values()
-      ).filter((item:any) => item.retailer.id !== 'store')
-      .map((e:any)=>{
-        if(e.price.display.split(".")[1].length < 2){
-          return {...e,price:{...e.price,display:e.price.display + '0'}}
-        }
-        return e;
-      });
-      const distance = uniq
-        .map((e: any) => {
-          return getDistance(
-            {
-              lat: location.state.location[0].location.split(",")[0],
-              lng: location.state.location[0].location.split(",")[1],
-            },
-            {
-              lat: e.retailer.location.coordinates.latitude,
-              lng: e.retailer.location.coordinates.longitude,
-            }
-          );
-        })
-        .map((e: any) => {
-          return `${convertDistance(e, "mi").toFixed(2)} mi`;
-        });
-        const dist = uniq.map((e:any,item:any) => {
-          return e.distance = distance[item];
-        });
-        const sorting = uniq.sort((a:any,b:any)=>{
-          if(parseFloat(a.price.amount) < parseFloat(b.price.amount)){
-            return -1;
-          }else if(parseFloat(a.price.amount) > parseFloat(b.price.amount)){
-            return 1;
-          }else{
-            return a.distance.split(" ")[0] - b.distance.split(" ")[0];
-          }
-        })
+  const requestPrice = useCallback(() => {
+    if (priceSettings && priceSettings.type && priceSettings.formulationId && priceSettings.quantity && dispatch) { 
+      dispatch(getPrice(
+        priceSettings.quantity, 
+        priceSettings.formulationId, 
+        priceSettings.type.drugType, 
+        priceSettings.type.name, 
+        priceSettings.type.gpi14, 
+        false,
+        location.state.location[0].location,
+        location.state.location[0].zip,
+        ));
         setLoading(false);
-      return {
-        uniq: sorting,
-        distance: distance,
-        sort:sorting
-      };
+     
     }
-    return ;
-  }, [newPrice]);
-
+  },[priceSettings,dispatch])
   useEffect(() => {
-    if (priceSettings && priceSettings.type && priceSettings.formulationId && priceSettings.quantity) {
-       dispatch(getPrice(
-          priceSettings.quantity, 
-          priceSettings.formulationId, 
-          priceSettings.type.drugType, 
-          priceSettings.type.name, 
-          priceSettings.type.gpi14, 
-          false,
-          location.state.location[0].location,
-          location.state.location[0].zip,
-          ));
-          setLoading(true);
-    }
-  }, [priceSettings,dispatch]);
+    
+       
+    
+      return () => requestPrice()
+    
+  
+     
+  },[requestPrice]);
   return (
     <>
       <div className="result-page">
@@ -472,48 +428,45 @@ export const ResultPage: FC = () => {
           <div className="result-page__tiles-area">
             <div className="result-page__tiles-wrapper">
                 
-             { priceUniq && !loading ? priceUniq.uniq.map((item:any, index:any) => ( 
-                   <TileItem
-                   partnerId={null}
-                   isOtcDrug={false}
-                   highPriceAmount={null}
-                   priceCurrency={"USD"}
-                   retailerName={item.retailer.name}
-                   retailerId={item.retailer.id}
-                   retailerLogo={item.retailer.logo}
-                   drugName={chosen.Manufacturer.split(" ")[0]}
-                   dosageDisplay={chosen.Dosage}
-                   pbmId={item.pbmId}
-                   formulationId={priceSettings?.formulationId}
-                   ndc={priceSettings?.formulationId}
-                   key={item.retailer.name}
-                   locationId={item.retailer.location.id}
-                   locationPhoneNumber={item.retailer.location.phoneNumber}
-                   lowPriceAmount={item.price.amount}
-                   quantityDisplay={chosen.Quantity}
-                   drugUrlSlug={chosen.Manufacturer.split(
-                     " "
-                   )[0].toLowerCase()}
-                   drugId={currentMedication[0].id}
-                   name={item.retailer.name}
-                   price={item.price.display}
-                   label=" Optum Perks"
-                   index={index}
-                   onClick={() => {}}
-                   distance={`${item.distance}`}
-                 />
-              ))  
              
-                : (<Loader />)
-              }
-             
+             {newPrice.length ? newPrice.map((item:any, index:any) => (
+                <TileItem
+                partnerId={null}
+                isOtcDrug={false}
+                highPriceAmount={null}
+                priceCurrency={"USD"}
+                retailerName={item.retailer.name}
+                retailerId={item.retailer.id}
+                retailerLogo={item.retailer.logo}
+                drugName={chosen.Manufacturer.split(" ")[0]}
+                dosageDisplay={chosen.Dosage}
+                pbmId={item.pbmId}
+                formulationId={priceSettings?.formulationId}
+                ndc={priceSettings?.formulationId}
+                key={item.retailer.name}
+                locationId={item.retailer.location.id}
+                locationPhoneNumber={item.retailer.location.phoneNumber}
+                lowPriceAmount={item.price.amount}
+                quantityDisplay={chosen.Quantity}
+                drugUrlSlug={chosen.Manufacturer.split(
+                  " "
+                )[0].toLowerCase()}
+                drugId={currentMedication[0].id}
+                name={item.retailer.name}
+                price={item.price.display}
+                label=" Optum Perks"
+                index={index}
+                onClick={() => {}}
+                distance={`${item.distance}`}
+              />
+             )):(<Loader />)}
                 
             </div>
           </div>
           )}
           {itemsMode === ITEMS_CONTROL_MODE.ROWS && (
             <div className="result-page__rows-wrapper">
-                { priceUniq  ? priceUniq.uniq.map((item:any, index:any) => ( 
+                { newPrice.length  ? newPrice.map((item:any, index:any) => ( 
                           <RowItem
                           partnerId={null}
                           isOtcDrug={false}
@@ -547,6 +500,7 @@ export const ResultPage: FC = () => {
              
                 : (<Loader />)
               }
+
             </div>
           )}
         </div>

@@ -12,6 +12,7 @@ export async function getAccountId(req:Request, res:Response, next:NextFunction)
       'x-correlation-id':`${res.getHeaders()['x-correlation-id']}`,
     }
   });
+  // axios.defaults.headers.common['x-account-id'] = `${result.data.id}`;
   res.header('x-account-id', result.data.id);
   req.body.account = result.data.id;
   res.cookie("account", result.data.id );

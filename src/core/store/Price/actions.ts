@@ -16,12 +16,33 @@ searchLocation:string,
 searchLocationZipCode: string,
 ) => {
   return async (dispatch:Dispatch) => {
-    try{
-      const price:any = await axios({
-        method:"POST",
-        url: `${adress}/api/price/getting`,
-        withCredentials:true,
-        data:{
+    // try{
+    //   const price:any = await axios({
+    //     method:"POST",
+    //     url: `${adress}/api/price/getting`,
+    //     withCredentials:true,
+    //     data:{
+    //       quantity: quantity,
+    //       formulationId: formulationId,
+    //       type: type,
+    //       name: name,
+    //       gpi14: gpi14,
+    //       ubi: ubi,
+    //       searchLocation: searchLocation,
+    //       searchLocationZipCode: searchLocationZipCode,
+         
+    //     }
+    //   });
+
+    //   dispatch({type: ActionsType.PRICE, payload: price.data});
+    // }catch(err){
+    //   console.error(err);
+    // }
+    return axios({
+      method:"POST",
+      url:`${adress}/api/price/getting`,
+      withCredentials:true,
+      data:{
           quantity: quantity,
           formulationId: formulationId,
           type: type,
@@ -30,14 +51,10 @@ searchLocationZipCode: string,
           ubi: ubi,
           searchLocation: searchLocation,
           searchLocationZipCode: searchLocationZipCode,
-         
-        }
-      });
-
-      dispatch({type: ActionsType.PRICE, payload: price.data});
-    }catch(err){
-      console.error(err);
-    }
+      }
+    }).then(({data}) => {
+      dispatch({type:ActionsType.PRICE,payload:data});
+    })
   }
 }
 

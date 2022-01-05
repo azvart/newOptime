@@ -13,7 +13,6 @@ type Props = {
 
 const Dropdown: FC<Props> = ({ items, classes, chosen, setChosen, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log('render items', chosen )
   useEffect(() => {
     if (items[0]) {
       setChosen(items[0]);

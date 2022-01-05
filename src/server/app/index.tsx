@@ -58,15 +58,9 @@ class App{
         })
   }
   private DB(){
-    // mongoose.connect(mongoLocal).then(()=>{
-    //   console.log(`DB connect success ${mongoLocal} `);
-    // })
     mongoose.connect(mongoLocal).then(() => {
       console.log(`DB connected success ${mongoLocal}`)
     })
-    // const db = mongoose.connection;
-    // db.once("open", () => console.log(`DB connect success ${process.env.MONGO}`));
-    // db.on("error", (error)=> console.error(error));
   }
   public listen(){
     this.app.listen(5000, () => {

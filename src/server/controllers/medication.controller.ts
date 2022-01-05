@@ -50,7 +50,6 @@ class Medication implements Controller{
   }
   private async searchGroup(req:Request,res:Response){
     try{
-      console.log(req.body);
       const group:any = await ModelMedication.searchGroup(req.body.name);
       const unique = async (array:any, propertyName:any) => {
         return await array.filter((e:any,i:any) => array.findIndex((a:any) => a[propertyName] === e[propertyName]) === i);
