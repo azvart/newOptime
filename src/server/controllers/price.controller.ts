@@ -25,7 +25,7 @@ class Prices implements Controller{
     const prices:any = await Price.findPrice(req.body.formulationId, req.body.quantity, req.body.searchLocation);
     const priceFormated = await Settings(prices, req.body.searchLocation);
 
-    if(!prices || prices.length <= 1){  
+    if(!prices.length){  
       const optumPrice:AxiosResponse<any> = await axios({
         method:"GET",
         url:`https://api.perks.optum.com/api/optumperks/v1/prices`,

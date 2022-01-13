@@ -26,6 +26,7 @@ import SearchZip from '../../store/SearchZip/action';
 import { ClearZip } from "../../store/SearchZip/action";
 import getPrice from '../../store/Price/actions';
 import '../../assets/pages/result.scss';
+import e from "express";
 export const ResultPage: FC = () => {
   const [error, setError] = useState(false);
   const [errorZip, setErrorZip] = useState(false);
@@ -44,6 +45,12 @@ export const ResultPage: FC = () => {
   const mockSorting = ["LOWEST", "HIGHEST"];
   const [itemsMode, setItemsMode] = useState(ITEMS_CONTROL_MODE.TILES);
   const [loading, setLoading] = useState(false);
+  const [chosen, setChosen]: any = useState({
+    Manufacturer: "no items",
+    Form: "no items",
+    Dosage: "no items",
+    Quantity: "no items",
+  });
   const dispatch = useDispatch();
   useEffect(() => {
     if (!location.state) {  
@@ -63,41 +70,26 @@ export const ResultPage: FC = () => {
   useEffect(() => {
     if(location.state.name.length > 0){
       dispatch(CurrentMed(location.state.name,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
+
     }
-  }, [dispatch, location]);
-  const [chosen, setChosen]: any = useState({
-    Manufacturer: "no items",
-    Form: "no items",
-    Dosage: "no items",
-    Quantity: "no items",
-  });
+  }, [location, dispatch]);
+
   useEffect(() => {
-      if(currentMedication.length){
-        const formId = currentMedication[0].defaultSettings.formulationId;
-        const defaultMedQuantity = currentMedication[0].defaultSettings.quantity;
-        const currentName = currentMedication[0].formulations.filter((item:any) => item.name=== location.state.name)[0];
-        const formulations = currentMedication[0].formulations;
-        const defaultArr = formulations.filter((item:any) => item.id === formId)[0];
+      if(currentMedication.length && location.state.name){
 
-        const defaultForm = defaultArr.form;
-        const defaultDosage = defaultArr.dosage.display;
-        const defaultQuantity = defaultArr.commonQuantities.find((item:any) => item.value === defaultMedQuantity).display;
-
-        const formulationsName = formulations.filter((item:any) => item.name === currentName.name);
-
-        const formulationsNameForm = formulationsName.find((item:any) => item.form === defaultForm);
-        const formulationsNameDosage = formulationsName.find((item:any) => item.dosage.display === defaultDosage);
-        const formulationsNameQuantity = formulationsName.map((e:any) => e.commonQuantities).flat().find((item:any) => item.display === defaultQuantity);
-
-        const currentForm = formulationsNameForm !== undefined ? defaultForm : currentName.form;
-        const currentDosage = formulationsNameDosage !== undefined ? defaultDosage : currentName.dosage.disaplay;
-
-        if(formulationsNameQuantity === undefined){
-          setChosen({Manufacturer:`${currentName.name} (${currentName.drugType})`, Form:currentForm, Dosage:currentDosage});
-        }else{
-          setChosen({Manufacturer:`${currentName.name} (${currentName.drugType})`, Form:currentForm, Dosage:currentDosage, Quantity: defaultQuantity});
-        }
-
+        
+          const {name, defaultSettings, brandSettings, comparing} = currentMedication[0];
+          const defaults = name === location.state.name ? brandSettings : comparing[0];
+          if(defaults){
+            
+                    setChosen({
+                      Manufacturer:`${defaults.name} (${defaults.drugType})`, 
+                      Form: defaults.form, 
+                      Dosage: defaults.dosage.display, 
+                      Quantity: defaults.commonQuantities.find(({value}:any) => value === defaultSettings.quantity).display
+                    })
+                  
+          }
         
       }
     
@@ -199,56 +191,21 @@ export const ResultPage: FC = () => {
     location.state,
     chosen.Manufacturer,
     chosen.Form,
-    chosen.Dosage,
+    chosen.Dosage
   ]);
 
   const priceSettings = useMemo(() => {
+    console.log('chosen');
     if (currentMedication.length > 0) {
-      const formulationId = currentMedication[0].formulations
-        .filter((e: any) => {
-          return (
-            e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
-          );
-        })
-        .filter((e: any) => {
-          return e.form === chosen.Form;
-        })
-        .filter((e: any) => {
-          return e.dosage.display === chosen.Dosage;
-        })
-        .map((e: any) => {
-          return e.commonQuantities;
-        })
-        .flat()
-        .filter((e: any) => {
-          return e.display === chosen.Quantity;
-        })
-        .map((e: any) => {
-          return e.ndc;
-        });
-      const value = currentMedication[0].formulations
-        .filter((e: any) => {
-          return (
-            e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
-          );
-        })
-        .filter((e: any) => {
-          return e.form === chosen.Form;
-        })
-        .filter((e: any) => {
-          return e.dosage.display === chosen.Dosage;
-        })
-        .map((e: any) => {
-          return e.commonQuantities;
-        })
-        .flat()
-        .filter((e: any) => {
-          return e.display === chosen.Quantity;
-        })
-        .map((e: any) => {
-          return e.value;
-        });
-        const info = currentMedication[0].formulations
+      const {formulations} = currentMedication[0];
+      const formulationsIds = formulations.reduce((arr:any, set:any) => {
+        if(set.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ") && set.form === chosen.Form && set.dosage.display === chosen.Dosage ){
+            arr.formulationId = set.ndc;
+            arr.quantity = set.commonQuantities.find(({display}:any) => display === chosen.Quantity).value;
+        }
+        return arr;
+      },{});
+        const info = formulations
         .filter((e: any) => {
           return (
             e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
@@ -259,19 +216,13 @@ export const ResultPage: FC = () => {
         .filter((e: any) => {
           return e.dosage.display === chosen.Dosage;
         })[0]
-        
-      return {
-        formulationId: formulationId[0],
-        quantity: value[0],
-        type: info
-      };
+      return {...formulationsIds,type:info};
     }
-    return ;
   }, [chosen]);
 
-  const requestPrice = useCallback(() => {
-    if (priceSettings && priceSettings.type && priceSettings.formulationId && priceSettings.quantity && dispatch) { 
-      dispatch(getPrice(
+  const requestPrice:any = useCallback(() => {
+    if(priceSettings && priceSettings.type && priceSettings.formulationId && priceSettings.quantity){
+      dispatch( getPrice(
         priceSettings.quantity, 
         priceSettings.formulationId, 
         priceSettings.type.drugType, 
@@ -281,18 +232,16 @@ export const ResultPage: FC = () => {
         location.state.location[0].location,
         location.state.location[0].zip,
         ));
-        setLoading(false);
-     
-    }
-  },[priceSettings,dispatch])
+      }
+  },[priceSettings, dispatch]);
+
+
+
+
   useEffect(() => {
-    
-       
-    
-      return () => requestPrice()
-    
-  
-     
+      
+      return () =>  requestPrice()
+      
   },[requestPrice]);
   return (
     <>
@@ -464,7 +413,7 @@ export const ResultPage: FC = () => {
             </div>
           </div>
           )}
-          {itemsMode === ITEMS_CONTROL_MODE.ROWS && (
+          {/* {itemsMode === ITEMS_CONTROL_MODE.ROWS && (
             <div className="result-page__rows-wrapper">
                 { newPrice.length  ? newPrice.map((item:any, index:any) => ( 
                           <RowItem
@@ -502,7 +451,7 @@ export const ResultPage: FC = () => {
               }
 
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="result-page__space-fill"> </div>
@@ -512,3 +461,91 @@ export const ResultPage: FC = () => {
   );
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* 
+        // const formId = currentMedication[0].defaultSettings.formulationId;
+        // const defaultMedQuantity = currentMedication[0].defaultSettings.quantity;
+        // const currentName = currentMedication[0].formulations.filter((item:any) => item.name=== location.state.name)[0];
+        // const formulations = currentMedication[0].formulations;
+        // const defaultArr = formulations.filter((item:any) => item.id === formId)[0];
+
+        // const defaultForm = defaultArr.form;
+        // const defaultDosage = defaultArr.dosage.display;
+        // const defaultQuantity = defaultArr.commonQuantities.find((item:any) => item.value === defaultMedQuantity).display;
+
+        // const formulationsName = formulations.filter((item:any) => item.name === currentName.name);
+
+        // const formulationsNameForm = formulationsName.find((item:any) => item.form === defaultForm);
+        // const formulationsNameDosage = formulationsName.find((item:any) => item.dosage.display === defaultDosage);
+        // const formulationsNameQuantity = formulationsName.map((e:any) => e.commonQuantities).flat().find((item:any) => item.display === defaultQuantity);
+
+        // const currentForm = formulationsNameForm !== undefined ? defaultForm : currentName.form;
+        // const currentDosage = formulationsNameDosage !== undefined ? defaultDosage : currentName.dosage.disaplay;
+
+        // if(formulationsNameQuantity === undefined){
+        //   setChosen({Manufacturer:`${currentName.name} (${currentName.drugType})`, Form:currentForm, Dosage:currentDosage});
+        // }else{
+        //   setChosen({Manufacturer:`${currentName.name} (${currentName.drugType})`, Form:currentForm, Dosage:currentDosage, Quantity: defaultQuantity});
+        // }
+          */
+
+
+              // const formulationId = formulations
+      //   .filter((e: any) => {
+      //     return (
+      //       e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
+      //     );
+      //   })
+      //   .filter((e: any) => {
+      //     return e.form === chosen.Form;
+      //   })
+      //   .filter((e: any) => {
+      //     return e.dosage.display === chosen.Dosage;
+      //   })
+      //   .map((e: any) => {
+      //     return e.commonQuantities;
+      //   })
+      //   .flat()
+      //   .filter((e: any) => {
+      //     return e.display === chosen.Quantity;
+      //   })
+      //   .map((e: any) => {
+      //     return e.ndc;
+      //   });
+      // const value = formulations
+      //   .filter((e: any) => {
+      //     return (
+      //       e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
+      //     );
+      //   })
+      //   .filter((e: any) => {
+      //     return e.form === chosen.Form;
+      //   })
+      //   .filter((e: any) => {
+      //     return e.dosage.display === chosen.Dosage;
+      //   })
+      //   .map((e: any) => {
+      //     return e.commonQuantities;
+      //   })
+      //   .flat()
+      //   .filter((e: any) => {
+      //     return e.display === chosen.Quantity;
+      //   })
+      //   .map((e: any) => {
+      //     return e.value;
+      //   });

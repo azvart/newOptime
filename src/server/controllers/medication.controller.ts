@@ -117,7 +117,6 @@ class Medication implements Controller{
 
   private async getCurrentMedication(req:any,res:Response){
     const med:any = await ModelMedication.getCurrentPharm(req.body.name);
-    console.log(med);
    if(med.length > 0){
       await med[0].variants.push({
       id: med[0].id,
@@ -125,7 +124,15 @@ class Medication implements Controller{
       drugType: med[0].drugType,
       urlSlug: med[0].name
    })
-     return res.status(200).send(med);
+
+    const manufacturer = med[0].settings.manufacturer.filter((value:any, index:any, self:any) => {
+      return self.indexOf(value) === index;
+    });
+    const form = med[0].settings.form.filter((value:any, index:any, self:any) => {
+      return self.indexOf(value) === index;
+    });
+    const data = med[0];
+    return res.status(200).json(med);
    }
   //  else{
   //   const result = await axios({

@@ -70,9 +70,9 @@ MedicationSchema.statics.getCurrentPharm = async function(name:string){
     {
       $match:{
         $or:[
-          {"name":{$regex:`.*${name}.*`,$options:"i"}},
-          {"variants.name":{$regex:`.*${name}.*`,$options:"i"}},
-          {"name":`${name}`}
+          {"name":{$regex:`.*${name}.*`,$options:"i",$in:[`${name}`]}},
+          {"variants.name":{$regex:`.*${name}.*`,$options:"i",$in:[`${name}`]}},
+          // {"name":`${name}`}
         ]
       }
     },
@@ -86,8 +86,80 @@ MedicationSchema.statics.getCurrentPharm = async function(name:string){
          "defaultSettings":1,
          "descriptionHtml":1,
          "descriptionText":1,
+         brandSettings:{
+          $reduce:{
+            input:"$formulations",
+            initialValue:{},
+            in:{
+              $cond:{
+                if:{$eq:["$$this.id","$defaultSettings.formulationId"]},
+                then:"$$this",
+                else:"$$value",
+              }
+            }
+          }
+        },
+        genericSettings:{
+          $reduce:{
+            input:"$formulations",
+            initialValue:[],
+            in:{
+              $cond:{
+                if:{$eq:["$$this.name",name]},
+                then:{$concatArrays:["$$value",["$$this"]]},
+                else:"$$value"
+              }
+            }
+          }
+        }
        },
      },
+     {
+      $project:{
+        name:1,
+        variants:1,
+        formulations:1,
+        drugType:1,
+        id:1,
+        defaultSettings:1,
+        descriptionHtml:1,
+        descriptionText:1,
+        brandSettings: 1,
+        genericSettings: 1,
+        comparing:{
+          $filter:{
+            input:"$genericSettings",
+            as:"item",
+            cond:{
+              $or:[
+              {$and:[
+                {$eq:["$$item.form", "$brandSettings.form"]},
+                {$eq:["$$item.dosage.value","$brandSettings.dosage.value"]}
+              ]},
+              {$eq:["$$item.dosage.value","$brandSettings.dosage.value"]}
+            ]
+            }
+          }
+        },
+        settings:{
+          $reduce:{
+            input:"$formulations",
+            initialValue:{
+              manufacturer:[],
+              form:[],
+            },
+            in:{
+              manufacturer:{
+                $concatArrays:["$$value.manufacturer",[{$concat:["$$this.name", " ", "(","$$this.drugType",")"]}]]
+              },
+              form:{
+                $concatArrays:["$$value.form",["$$this.form"]]
+              }
+            },
+          },
+           }
+      }
+     }
    ]);
    return med;
 }

@@ -36,9 +36,9 @@ class App{
     this.app.use(express.static(__dirname));
     this.app.use(logger);
     this.app.use(correlator());
-    this.app.use('/search',
-    getToken, getCorrelationId, getAccountId
-    );
+    // this.app.use('/search',
+    // getToken, getCorrelationId, getAccountId
+    // );
   }
     private main() {
       this.app.get("*", async (req:Request,res:Response) => {
