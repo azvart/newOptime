@@ -10,7 +10,7 @@ import React, {
 import { useLocation, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { getDistance, convertDistance } from "geolib";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore, shallowEqual } from "react-redux";
 import { useCookies } from "react-cookie";
 import { Loader, PlugSvg, RowItem, TileItem } from "../../components";
 import {
@@ -26,19 +26,21 @@ import SearchZip from '../../store/SearchZip/action';
 import { ClearZip } from "../../store/SearchZip/action";
 import getPrice from '../../store/Price/actions';
 import '../../assets/pages/result.scss';
-import e from "express";
+
 export const ResultPage: FC = () => {
+  const store = useStore();
+  const [prices, setPrices] = useState(store.getState());
   const [error, setError] = useState(false);
   const [errorZip, setErrorZip] = useState(false);
   const [searchMed, setSearchMed] = useState("");
   const [searchZip, setSearchZip] = useState("");
   const [cookies, setCookies] = useCookies();
   const [medicationError, setMedicationError] = useState(false);
-  const currentMedication = useSelector((state:any) => state.currentReducer);
+  const currentMedication = useSelector((state:any) => state.currentReducer, shallowEqual);
   const [description,setDescription] = useState("");
   const topMed = useSelector((state:any) => state.topMedReducer.top);
   const zip = useSelector((state:any) => state.zipReducer);
-  const newPrice = useSelector((state:any) => state.priceReducer);
+  const newPrice:any = useSelector((state:any) => state.priceReducer);
   const history = useHistory();
   const location:any = useLocation();
   const [open, setOpen] = useState(false);
@@ -63,37 +65,31 @@ export const ResultPage: FC = () => {
     }
     
     return () => {dispatch(ClearZip())}
-  }, [searchZip, dispatch]);
+  }, [searchZip]);
   useEffect(() => {
     dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));
   }, [])
   useEffect(() => {
     if(location.state.name.length > 0){
       dispatch(CurrentMed(location.state.name,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
-
     }
-  }, [location, dispatch]);
+  }, [location]);
 
   useEffect(() => {
-      if(currentMedication.length && location.state.name){
-
-        
-          const {name, defaultSettings, brandSettings, comparing} = currentMedication[0];
+      if(currentMedication.name){
+          const {name, defaultSettings, brandSettings, comparing} = currentMedication;
           const defaults = name === location.state.name ? brandSettings : comparing[0];
           if(defaults){
-            
                     setChosen({
                       Manufacturer:`${defaults.name} (${defaults.drugType})`, 
                       Form: defaults.form, 
                       Dosage: defaults.dosage.display, 
                       Quantity: defaults.commonQuantities.find(({value}:any) => value === defaultSettings.quantity).display
-                    })
-                  
+                    })       
           }
-        
       }
-    
   }, [currentMedication]);
+
   const SubmitActionValue = () => {
     if(searchMed && topMed.filter((item:any) => item.label.label === searchMed)[0]){
       history.push({
@@ -125,41 +121,53 @@ export const ResultPage: FC = () => {
     }
   }
 
+  const sortedFunc: any = () => {
+    if (currentMedication.name && chosen) {
+      const {formulations, settings} = currentMedication;
+      const manufacturer = settings.manufacturer;
+      const setting = formulations.reduce((acc:any, next:any, index:any) => {
+        if(chosen.Manufacturer.split(" ").slice(0, -1).join(" ") === next.name){
+          acc.form.push(next.form);
+        }
+        if(chosen.Manufacturer.split(" ").slice(0, -1).join(" ") === next.name && next.form === chosen.Form){
+          acc.dosage.push(next.dosage.display);
+          
+        }
+        if(next.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ") && chosen.Dosage === next.dosage.display && next.form === chosen.Form){
+          
+          acc.quantity.push(...next.commonQuantities);
+          acc.quantity = acc.quantity.map(({display}:any) => display);
+        }
+        acc.form = [...new Set(acc.form)];
+        return acc;
+      },{
+        manufacturer: manufacturer,
+        form:[],
+        dosage:[],
+        quantity:[]
+      })
+      return {
+        manufacturer: setting.manufacturer,
+        form: setting.form,
+        dosage: setting.dosage,
+        quantity: setting.quantity
+      };
+    }
+  };
 
-  const sorted: any = useMemo(() => {
-    if (currentMedication.length > 0) {
-      const manufacturer: any = currentMedication[0].variants.map((e: any) => {
-        return `${e.name} (${e.drugType})`;
-      });
 
-      const form: any = currentMedication[0].formulations
-        .filter((e: any) => {
-          return (
-            e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
-          );
-        })
-        .map((e: any) => {
-          return e.form;
-        })
-        .filter(function (value: any, index: any, self: any) {
-          return self.indexOf(value.trim()) === index;
-        });
-      const dosage = currentMedication[0].formulations
-        .filter((e: any) => {
-          return (
-            e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
-          );
-        })
-        .filter((e: any) => {
-          return e.form === chosen.Form;
-        })
-        .map((e: any) => {
-          return e.dosage;
-        })
-        .map((e: any) => {
-          return e.display;
-        });
-      const quantity = currentMedication[0].formulations
+
+  const priceFunc = () => {
+    if (currentMedication.name) {
+      const {formulations} = currentMedication;
+      // const formulationsIds = formulations.reduce((arr:any, set:any) => {
+      //   if(set.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ") && set.form === chosen.Form && set.dosage.display === chosen.Dosage ){
+      //       arr.formulationId = set.ndc;
+      //       arr.quantity = set.commonQuantities.find(({display}:any) => display === chosen.Quantity).value;
+      //   }
+      //   return arr;
+      // },{});
+                  const formulationId = formulations
         .filter((e: any) => {
           return (
             e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
@@ -175,36 +183,35 @@ export const ResultPage: FC = () => {
           return e.commonQuantities;
         })
         .flat()
+        .filter((e: any) => {
+          return e.display === chosen.Quantity;
+        })
         .map((e: any) => {
-          return e.display;
+          return e.ndc;
         });
-      return {
-        manufacturer: manufacturer,
-        form: form,
-        dosage: dosage,
-        quantity: quantity,
-      };
-    }
-    return;
-  }, [
-    currentMedication,
-    location.state,
-    chosen.Manufacturer,
-    chosen.Form,
-    chosen.Dosage
-  ]);
+      const value = formulations
+        .filter((e: any) => {
+          return (
+            e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
+          );
+        })
+        .filter((e: any) => {
+          return e.form === chosen.Form;
+        })
+        .filter((e: any) => {
+          return e.dosage.display === chosen.Dosage;
+        })
+        .map((e: any) => {
+          return e.commonQuantities;
+        })
+        .flat()
+        .filter((e: any) => {
+          return e.display === chosen.Quantity;
+        })
+        .map((e: any) => {
+          return e.value;
+        });
 
-  const priceSettings = useMemo(() => {
-    console.log('chosen');
-    if (currentMedication.length > 0) {
-      const {formulations} = currentMedication[0];
-      const formulationsIds = formulations.reduce((arr:any, set:any) => {
-        if(set.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ") && set.form === chosen.Form && set.dosage.display === chosen.Dosage ){
-            arr.formulationId = set.ndc;
-            arr.quantity = set.commonQuantities.find(({display}:any) => display === chosen.Quantity).value;
-        }
-        return arr;
-      },{});
         const info = formulations
         .filter((e: any) => {
           return (
@@ -216,12 +223,12 @@ export const ResultPage: FC = () => {
         .filter((e: any) => {
           return e.dosage.display === chosen.Dosage;
         })[0]
-      return {...formulationsIds,type:info};
+      return {type:info, formulationId:formulationId,quantity:value};
     }
-  }, [chosen]);
+  };
 
-  const requestPrice:any = useCallback(() => {
-    if(priceSettings && priceSettings.type && priceSettings.formulationId && priceSettings.quantity){
+  const requestPrice:any = () => {
+    if(priceSettings){
       dispatch( getPrice(
         priceSettings.quantity, 
         priceSettings.formulationId, 
@@ -233,16 +240,23 @@ export const ResultPage: FC = () => {
         location.state.location[0].zip,
         ));
       }
-  },[priceSettings, dispatch]);
+  }
 
-
-
+  const sorted = useMemo(() => {
+    return sortedFunc();
+ }, [
+   chosen.Manufacturer,
+   chosen.Form,
+   chosen.Dosage,
+   chosen.Quantity
+ ]);
+  const priceSettings = useMemo(() => {
+    return priceFunc();
+  },[chosen.Manufacturer, chosen.Form, chosen.Dosage, sorted]);
 
   useEffect(() => {
-      
-      return () =>  requestPrice()
-      
-  },[requestPrice]);
+    requestPrice()
+  },[priceSettings, sorted]);
   return (
     <>
       <div className="result-page">
@@ -378,7 +392,7 @@ export const ResultPage: FC = () => {
             <div className="result-page__tiles-wrapper">
                 
              
-             {newPrice.length ? newPrice.map((item:any, index:any) => (
+             {!newPrice && newPrice.map((item:any, index:any) => (
                 <TileItem
                 partnerId={null}
                 isOtcDrug={false}
@@ -408,11 +422,12 @@ export const ResultPage: FC = () => {
                 onClick={() => {}}
                 distance={`${item.distance}`}
               />
-             )):(<Loader />)}
+             ))}
                 
             </div>
           </div>
           )}
+
           {/* {itemsMode === ITEMS_CONTROL_MODE.ROWS && (
             <div className="result-page__rows-wrapper">
                 { newPrice.length  ? newPrice.map((item:any, index:any) => ( 
@@ -456,7 +471,8 @@ export const ResultPage: FC = () => {
 
         <div className="result-page__space-fill"> </div>
         <Footer />
-      </div>
+      </div>  
+    
     </>
   );
 };
@@ -467,7 +483,60 @@ export const ResultPage: FC = () => {
 
 
 
+/*
 
+  // const manufacturer: any = currentMedication.variants.map((e: any) => {
+      //   return `${e.name} (${e.drugType})`;
+      // });
+
+      // const form: any = currentMedication.formulations
+      //   .filter((e: any) => {
+      //     return (
+      //       e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
+      //     );
+      //   })
+      //   .map((e: any) => {
+      //     return e.form;
+      //   })
+      //   .filter(function (value: any, index: any, self: any) {
+      //     return self.indexOf(value.trim()) === index;
+      //   });
+      // const dosage = currentMedication.formulations
+      //   .filter((e: any) => {
+      //     return (
+      //       e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
+      //     );
+      //   })
+      //   .filter((e: any) => {
+      //     return e.form === chosen.Form;
+      //   })
+      //   .map((e: any) => {
+      //     return e.dosage;
+      //   })
+      //   .map((e: any) => {
+      //     return e.display;
+      //   });
+      // const quantity = currentMedication.formulations
+      //   .filter((e: any) => {
+      //     return (
+      //       e.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ")
+      //     );
+      //   })
+      //   .filter((e: any) => {
+      //     return e.form === chosen.Form;
+      //   })
+      //   .filter((e: any) => {
+      //     return e.dosage.display === chosen.Dosage;
+      //   })
+      //   .map((e: any) => {
+      //     return e.commonQuantities;
+      //   })
+      //   .flat()
+      //   .map((e: any) => {
+      //     return e.display;
+      //   });
+
+*/
 
 
 

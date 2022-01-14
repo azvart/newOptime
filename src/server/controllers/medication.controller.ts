@@ -131,8 +131,14 @@ class Medication implements Controller{
     const form = med[0].settings.form.filter((value:any, index:any, self:any) => {
       return self.indexOf(value) === index;
     });
-    const data = med[0];
-    return res.status(200).json(med);
+    const data:any = med[0];
+    const formattedData = Object.assign(data, {
+      settings:{
+        manufacturer: manufacturer,
+        form: form
+      }
+    })
+    return res.status(200).json(formattedData);
    }
   //  else{
   //   const result = await axios({

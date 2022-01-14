@@ -45,7 +45,7 @@ export const SearchPage: React.FC = () => {
     
   },[codes,dispatch]);
   useEffect(() => {
-    if(data.length > 0){
+    if(data.name){
         history.push({
         pathname:"/results",
         state:{

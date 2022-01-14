@@ -13,16 +13,16 @@ type Props = {
 
 const Dropdown: FC<Props> = ({ items, classes, chosen, setChosen, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  useEffect(() => {
-    if (items[0]) {
-      setChosen(items[0]);
-    }
-  }, [items]);
+  // useEffect(() => {
+  //   if (items[0]) {
+  //     setChosen(items[0]);
+  //   }
+  // }, [items]);
   useEffect(() => {
     if(chosen){
-      setChosen(chosen);
+      setChosen(items.find((item:any) => chosen === item) === chosen ? chosen : items[0] );
     }
-  },[chosen])
+  },[chosen, items])
   const onItemClick = (name: string) => {
     setChosen(name);
   };
