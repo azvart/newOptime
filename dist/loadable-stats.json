@@ -1,0 +1,201 @@
+{
+  "hash": "e0bc2872b7fbd2988807",
+  "publicPath": "/client/",
+  "outputPath": "C:\\Users\\User\\Desktop\\Изучение\\ssrTs\\dist\\client",
+  "assetsByChunkName": {
+    "client": [
+      "client.css",
+      "client.js"
+    ],
+    "runtime": [
+      "runtime.js"
+    ],
+    "vendor": [
+      "vendor.js"
+    ]
+  },
+  "assets": [
+    {
+      "type": "asset",
+      "name": "vendor.js",
+      "size": 4865655,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "javascriptModule": false
+      },
+      "chunkNames": [
+        "vendor"
+      ],
+      "chunkIdHints": [
+        "vendor"
+      ],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [
+        "vendor"
+      ],
+      "auxiliaryChunks": []
+    },
+    {
+      "type": "asset",
+      "name": "client.js",
+      "size": 245415,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "javascriptModule": false
+      },
+      "chunkNames": [
+        "client"
+      ],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [
+        "client"
+      ],
+      "auxiliaryChunks": []
+    },
+    {
+      "type": "asset",
+      "name": "client.css",
+      "size": 45602,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {},
+      "chunkNames": [
+        "client"
+      ],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [
+        "client"
+      ],
+      "auxiliaryChunks": []
+    },
+    {
+      "type": "asset",
+      "name": "runtime.js",
+      "size": 16808,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "javascriptModule": false
+      },
+      "chunkNames": [
+        "runtime"
+      ],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [
+        "runtime"
+      ],
+      "auxiliaryChunks": []
+    },
+    {
+      "type": "asset",
+      "name": "assets/bffa93ff91d82e8c6ac4.png",
+      "size": 5503,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "sourceFilename": "src/core/assets/images/header-logo.png",
+        "immutable": true,
+        "contenthash": "bffa93ff91d82e8c6ac4"
+      },
+      "chunkNames": [],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [
+        "client"
+      ],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [],
+      "auxiliaryChunks": [
+        "client"
+      ]
+    },
+    {
+      "type": "asset",
+      "name": "assets/d02588b9faa869a974b8.png",
+      "size": 4150,
+      "emitted": false,
+      "comparedForEmit": false,
+      "cached": true,
+      "info": {
+        "sourceFilename": "src/core/assets/images/footer-logo.png",
+        "immutable": true,
+        "contenthash": "d02588b9faa869a974b8"
+      },
+      "chunkNames": [],
+      "chunkIdHints": [],
+      "auxiliaryChunkNames": [
+        "client"
+      ],
+      "auxiliaryChunkIdHints": [],
+      "chunks": [],
+      "auxiliaryChunks": [
+        "client"
+      ]
+    }
+  ],
+  "namedChunkGroups": {
+    "client": {
+      "name": "client",
+      "chunks": [
+        "runtime",
+        "vendor",
+        "client"
+      ],
+      "assets": [
+        {
+          "name": "runtime.js"
+        },
+        {
+          "name": "vendor.js"
+        },
+        {
+          "name": "client.css"
+        },
+        {
+          "name": "client.js"
+        }
+      ],
+      "filteredAssets": 0,
+      "assetsSize": null,
+      "filteredAuxiliaryAssets": 2,
+      "auxiliaryAssetsSize": null,
+      "children": {},
+      "childAssets": {}
+    }
+  },
+  "generator": "loadable-components",
+  "chunks": [
+    {
+      "id": "client",
+      "files": [
+        "client.css",
+        "client.js"
+      ]
+    },
+    {
+      "id": "runtime",
+      "files": [
+        "runtime.js"
+      ]
+    },
+    {
+      "id": "vendor",
+      "files": [
+        "vendor.js"
+      ]
+    }
+  ]
+}
