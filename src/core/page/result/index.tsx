@@ -25,6 +25,7 @@ import TopMed from '../../store/topMed/action';
 import SearchZip from '../../store/SearchZip/action';
 import { ClearZip } from "../../store/SearchZip/action";
 import getPrice from '../../store/Price/actions';
+import { OptimeRootReducer } from "core/store/rootReducer";
 import '../../assets/pages/result.scss';
 
 export const ResultPage: FC = () => {
@@ -36,11 +37,11 @@ export const ResultPage: FC = () => {
   const [searchZip, setSearchZip] = useState("");
   const [cookies, setCookies] = useCookies();
   const [medicationError, setMedicationError] = useState(false);
-  const currentMedication = useSelector((state:any) => state.currentReducer, shallowEqual);
+  const currentMedication = useSelector((state:OptimeRootReducer) => state.currentReducer, shallowEqual);
   const [description,setDescription] = useState("");
   const topMed = useSelector((state:any) => state.topMedReducer.top);
   const zip = useSelector((state:any) => state.zipReducer);
-  const newPrice:any = useSelector((state:any) => state.priceReducer);
+  const { priceReducer } = useSelector((state:OptimeRootReducer) => state);
   const history = useHistory();
   const location:any = useLocation();
   const [open, setOpen] = useState(false);
@@ -123,6 +124,8 @@ export const ResultPage: FC = () => {
 
   const sortedFunc: any = () => {
     if (currentMedication.name && chosen) {
+      console.log('sorted 1');
+      console.log("loading sorted 1",loading);
       const {formulations, settings} = currentMedication;
       const manufacturer = settings.manufacturer;
       const setting = formulations.reduce((acc:any, next:any, index:any) => {
@@ -159,6 +162,8 @@ export const ResultPage: FC = () => {
 
   const priceFunc = () => {
     if (currentMedication.name) {
+      console.log('priceFunc 2')
+      console.log("loading priceFunc 2",loading);
       const {formulations} = currentMedication;
       // const formulationsIds = formulations.reduce((arr:any, set:any) => {
       //   if(set.name === chosen.Manufacturer.split(" ").slice(0, -1).join(" ") && set.form === chosen.Form && set.dosage.display === chosen.Dosage ){
@@ -223,12 +228,15 @@ export const ResultPage: FC = () => {
         .filter((e: any) => {
           return e.dosage.display === chosen.Dosage;
         })[0]
+
       return {type:info, formulationId:formulationId,quantity:value};
     }
   };
 
   const requestPrice:any = () => {
     if(priceSettings){
+      console.log('requestPrice 3')
+      console.log("loading requestPrice 3",loading);
       dispatch( getPrice(
         priceSettings.quantity, 
         priceSettings.formulationId, 
@@ -243,6 +251,9 @@ export const ResultPage: FC = () => {
   }
 
   const sorted = useMemo(() => {
+    console.log('sorted memo 4')
+    console.log("loading sorted memo 4",loading);
+    setLoading(true);
     return sortedFunc();
  }, [
    chosen.Manufacturer,
@@ -251,11 +262,16 @@ export const ResultPage: FC = () => {
    chosen.Quantity
  ]);
   const priceSettings = useMemo(() => {
+    console.log('priceSettings 5')
+    console.log("loading priceSettings 5",loading);
     return priceFunc();
   },[chosen.Manufacturer, chosen.Form, chosen.Dosage, sorted]);
 
   useEffect(() => {
-    requestPrice()
+    console.log('effect request 6')
+    console.log("loading effect request 6",loading);
+    requestPrice();
+   
   },[priceSettings, sorted]);
   return (
     <>
@@ -392,7 +408,7 @@ export const ResultPage: FC = () => {
             <div className="result-page__tiles-wrapper">
                 
              
-             {!newPrice && newPrice.map((item:any, index:any) => (
+             {priceReducer.data && priceReducer.load === 'idle'  ? priceReducer.data.map((item:any, index:any) => (
                 <TileItem
                 partnerId={null}
                 isOtcDrug={false}
@@ -414,7 +430,7 @@ export const ResultPage: FC = () => {
                 drugUrlSlug={chosen.Manufacturer.split(
                   " "
                 )[0].toLowerCase()}
-                drugId={currentMedication[0].id}
+                drugId={currentMedication.id}
                 name={item.retailer.name}
                 price={item.price.display}
                 label=" Optum Perks"
@@ -422,15 +438,16 @@ export const ResultPage: FC = () => {
                 onClick={() => {}}
                 distance={`${item.distance}`}
               />
-             ))}
+             )) : (<Loader />)}
                 
             </div>
           </div>
           )}
 
-          {/* {itemsMode === ITEMS_CONTROL_MODE.ROWS && (
+          {itemsMode === ITEMS_CONTROL_MODE.ROWS && (
             <div className="result-page__rows-wrapper">
-                { newPrice.length  ? newPrice.map((item:any, index:any) => ( 
+                { priceReducer.data && priceReducer.load === 'idle' ? priceReducer.data.map((item:any, index:any) => {
+                  return ( 
                           <RowItem
                           partnerId={null}
                           isOtcDrug={false}
@@ -452,7 +469,7 @@ export const ResultPage: FC = () => {
                           drugUrlSlug={chosen.Manufacturer.split(
                             " "
                           )[0].toLowerCase()}
-                          drugId={currentMedication[0].id}
+                          drugId={currentMedication.id}
                           name={item.retailer.name}
                           price={item.price.display}
                           label=" Optum Perks"
@@ -460,13 +477,13 @@ export const ResultPage: FC = () => {
                           onClick={() => {}}
                           distance={`${item.distance}`}
                         />
-              ))  
+              )})  
              
                 : (<Loader />)
               }
 
             </div>
-          )} */}
+          )}
         </div>
 
         <div className="result-page__space-fill"> </div>
