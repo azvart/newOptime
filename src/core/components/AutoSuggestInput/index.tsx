@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useEffect, useLayoutEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import Autosuggest from 'react-autosuggest';
 
 
@@ -16,19 +16,22 @@ const AutoSuggestInput = ({autocomplete = []}) => {
     if(escaped === ''){
       return []
     }
-
-    const regex = new RegExp('^' + escaped, 'i');
   
     const data:any =  autocomplete.map((section:any) => {
-      return {
+      const filtering =  {
         title: section.title,
-        label: section.label.filter((labels:any) => regex.test(labels.label)  )
+        // label: section.label.filter((labels:any) => regex.test(labels.label) )  
+        label: section.label.filter((labels:any) => labels.label.toLowerCase().includes(value.toLowerCase()))
       }
+      return filtering;
     })
     .filter((section:any) => section.label.length > 0);
+   const group = data.map((items:any) => autocomplete.find((title:any) => items.title === title.title))
+   .sort((a:any, b:any) => {
+     return (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0;
+   })
+    return group;
 
-    console.log(data);
-    return data;
   }
   const onChange = (event:any, {newValue, method}:any) => {
     setValue(newValue);

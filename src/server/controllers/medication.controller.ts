@@ -67,9 +67,11 @@ class Medication implements Controller{
         // const unique = async (array:any,propertyName:any) => {
         //   return await array.filter((e:any,i:any) => array.findIndex((a:any) => a.label[propertyName] === e.label[propertyName]) === i);
         // }
-        // const data = await unique(medication, "label");
+
         const medication:any = await ModelMedication.searchUniqueMed();
+                // const data = await unique(medication, "label");
         return res.status(200).json(medication);
+        // return res.status(200).json(data);
     }catch(err){
       console.error(err);
     }
