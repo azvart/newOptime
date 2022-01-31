@@ -1,0 +1,622 @@
+{
+    "sourceFile": "src/core/components/AutoSuggestInput/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 151,
+            "patches": [
+                {
+                    "date": 1643618170342,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1643618296212,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,12 +5,18 @@\n \n \n const AutoSuggestInput = () => {\n   const [suggest, setSuggest] = useState([]);\n+  const [value, setValue] = useState('');\n \n-\n   return (\n-    <Autosuggest />\n+    <Autosuggest \n+    inputProps={{\n+      placeholder: \"Type medications\",\n+      onChange: () => setSuggest,\n+      value: value\n+    }}\n+    />\n   )\n }\n \n \n"
+                },
+                {
+                    "date": 1643618303628,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,8 +9,9 @@\n   const [value, setValue] = useState('');\n \n   return (\n     <Autosuggest \n+    \n     inputProps={{\n       placeholder: \"Type medications\",\n       onChange: () => setSuggest,\n       value: value\n"
+                },
+                {
+                    "date": 1643618721366,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,15 +3,36 @@\n \n \n \n \n-const AutoSuggestInput = () => {\n-  const [suggest, setSuggest] = useState([]);\n+const AutoSuggestInput = ({autocomplete = []}) => {\n+  const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n+  const escapedRegexCharacters = (str:string) => {\n+    return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n+  }\n+  const getSuggestions = (value:string) => {\n+    const escapedValue = escapedRegexCharacters(value.trim());\n \n+    if(escapedValue === ''){\n+      return []\n+    }\n+    const regex = new RegExp('^' + escapedValue, 'i');\n+    return autocomplete.map((section) => {\n+      return {\n+        title: section.group,\n+        label: section.label.label\n+      }\n+    })\n+  }\n+  const onSuggestionsFetchRequested = ( {value}:any ) => {\n+    setSuggest(getSuggestions(value))\n+  }\n   return (\n     <Autosuggest \n-    \n+    multiSection={true}\n+    suggestions={suggest}\n+    onSuggestionsFetchRequested={}\n     inputProps={{\n       placeholder: \"Type medications\",\n       onChange: () => setSuggest,\n       value: value\n"
+                },
+                {
+                    "date": 1643619054913,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,5 @@\n+import React from 'react';\n import {useState} from 'react';\n import Autosuggest from 'react-autosuggest';\n \n \n@@ -26,18 +27,34 @@\n   }\n   const onSuggestionsFetchRequested = ( {value}:any ) => {\n     setSuggest(getSuggestions(value))\n   }\n+  const getSuggestionValue = (suggestion:any) => {\n+    return suggestion.label.label;\n+  }\n+  const renderSuggestion = (suggestion:any) => {\n+    return (<span>{suggestion.label.label}</span>)\n+  }\n+  const renderSectionTitle = (section:any) => {\n+    return (\n+      <strong>{section.group}</strong>\n+    )\n+  }\n+  const getSectionSuggestions = (section:any) => {\n+    return section.label;\n+  }\n   return (\n     <Autosuggest \n     multiSection={true}\n     suggestions={suggest}\n-    onSuggestionsFetchRequested={}\n+    onSuggestionsFetchRequested={onSuggestionsFetchRequested}\n     inputProps={{\n       placeholder: \"Type medications\",\n       onChange: () => setSuggest,\n       value: value\n     }}\n+    renderSuggestion={renderSuggestion}\n+    renderSectionTitle={renderSectionTitle}\n     />\n   )\n }\n \n"
+                },
+                {
+                    "date": 1643619120117,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,8 +41,11 @@\n   }\n   const getSectionSuggestions = (section:any) => {\n     return section.label;\n   }\n+  const onSuggestionsClearRequested = () => {\n+    setSuggest([]);\n+  }\n   return (\n     <Autosuggest \n     multiSection={true}\n     suggestions={suggest}\n@@ -53,8 +56,10 @@\n       value: value\n     }}\n     renderSuggestion={renderSuggestion}\n     renderSectionTitle={renderSectionTitle}\n+    getSectionSuggestions={getSectionSuggestions}\n+    onSuggestionsClearRequested={onSuggestionsClearRequested}\n     />\n   )\n }\n \n"
+                },
+                {
+                    "date": 1643619155739,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -58,8 +58,9 @@\n     renderSuggestion={renderSuggestion}\n     renderSectionTitle={renderSectionTitle}\n     getSectionSuggestions={getSectionSuggestions}\n     onSuggestionsClearRequested={onSuggestionsClearRequested}\n+    getSuggestionValue={getSuggestionValue}\n     />\n   )\n }\n \n"
+                },
+                {
+                    "date": 1643619819444,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,8 +41,11 @@\n   }\n   const getSectionSuggestions = (section:any) => {\n     return section.label;\n   }\n+  const onChange = (event, {newValue, method}) => {\n+    setValue(newValue)\n+  }\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n   }\n   return (\n@@ -51,9 +54,9 @@\n     suggestions={suggest}\n     onSuggestionsFetchRequested={onSuggestionsFetchRequested}\n     inputProps={{\n       placeholder: \"Type medications\",\n-      onChange: () => setSuggest,\n+      onChange: onChange,\n       value: value\n     }}\n     renderSuggestion={renderSuggestion}\n     renderSectionTitle={renderSectionTitle}\n"
+                },
+                {
+                    "date": 1643619827091,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n   }\n   const getSectionSuggestions = (section:any) => {\n     return section.label;\n   }\n-  const onChange = (event, {newValue, method}) => {\n+  const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue)\n   }\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n"
+                },
+                {
+                    "date": 1643619957432,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,8 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n@@ -50,9 +49,9 @@\n   }\n   return (\n     <Autosuggest \n     multiSection={true}\n-    suggestions={suggest}\n+    suggestions={autocomplete}\n     onSuggestionsFetchRequested={onSuggestionsFetchRequested}\n     inputProps={{\n       placeholder: \"Type medications\",\n       onChange: onChange,\n"
+                },
+                {
+                    "date": 1643619994976,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,8 +5,9 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n+  const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n@@ -49,9 +50,9 @@\n   }\n   return (\n     <Autosuggest \n     multiSection={true}\n-    suggestions={autocomplete}\n+    suggestions={suggest}\n     onSuggestionsFetchRequested={onSuggestionsFetchRequested}\n     inputProps={{\n       placeholder: \"Type medications\",\n       onChange: onChange,\n"
+                },
+                {
+                    "date": 1643620027095,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,16 @@\n import React from 'react';\n-import {useState} from 'react';\n+import {useState, useEffect} from 'react';\n import Autosuggest from 'react-autosuggest';\n \n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState(autocomplete);\n+  const [suggest, setSuggest] = useState([]);\n+  useEffect(() => {\n+    setSuggest(autocomplete)\n+  },[autocomplete])\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643620043315,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState([]);\n   useEffect(() => {\n     setSuggest(autocomplete)\n-  },[autocomplete])\n+  },[])\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643620061835,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,10 +7,10 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState([]);\n   useEffect(() => {\n-    setSuggest(autocomplete)\n-  },[])\n+    return () => setSuggest(autocomplete)\n+  },[autocomplete])\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643620089923,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,11 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState([]);\n   useEffect(() => {\n-    return () => setSuggest(autocomplete)\n+    if(autocomplete.length){\n+      setSuggest(autocomplete);\n+    }\n   },[autocomplete])\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n"
+                },
+                {
+                    "date": 1643624030043,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,14 +5,9 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState([]);\n-  useEffect(() => {\n-    if(autocomplete.length){\n-      setSuggest(autocomplete);\n-    }\n-  },[autocomplete])\n+  const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643624068831,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,15 @@\n import React from 'react';\n-import {useState, useEffect} from 'react';\n+import {useState, useEffect, useLayoutEffect} from 'react';\n import Autosuggest from 'react-autosuggest';\n \n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n+  useLayoutEffect(() => {}.,[autocomplete])\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestions = (value:string) => {\n"
+                },
+                {
+                    "date": 1643624096956,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n-  useLayoutEffect(() => {}.,[autocomplete])\n+  useEffect(() => {},[autocomplete]);\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestions = (value:string) => {\n"
+                },
+                {
+                    "date": 1643624129933,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,13 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n-  useEffect(() => {},[autocomplete]);\n+  useEffect(() => {\n+    if(autocomplete.length > 0){\n+      setSuggest(autocomplete);\n+    }\n+  },[autocomplete]);\n   const escapedRegexCharacters = (str:string) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestions = (value:string) => {\n"
+                },
+                {
+                    "date": 1643624182116,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,21 +54,10 @@\n     setSuggest([]);\n   }\n   return (\n     <Autosuggest \n-    multiSection={true}\n-    suggestions={suggest}\n-    onSuggestionsFetchRequested={onSuggestionsFetchRequested}\n-    inputProps={{\n-      placeholder: \"Type medications\",\n-      onChange: onChange,\n-      value: value\n-    }}\n-    renderSuggestion={renderSuggestion}\n-    renderSectionTitle={renderSectionTitle}\n-    getSectionSuggestions={getSectionSuggestions}\n-    onSuggestionsClearRequested={onSuggestionsClearRequested}\n-    getSuggestionValue={getSuggestionValue}\n+      suggestions={suggest}\n+      multiSection={true}\n     />\n   )\n }\n \n"
+                },
+                {
+                    "date": 1643624263400,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,55 +5,16 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState(autocomplete);\n+  const [suggest, setSuggest] = useState([]);\n   const [value, setValue] = useState('');\n   useEffect(() => {\n     if(autocomplete.length > 0){\n       setSuggest(autocomplete);\n     }\n   },[autocomplete]);\n-  const escapedRegexCharacters = (str:string) => {\n-    return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n-  }\n-  const getSuggestions = (value:string) => {\n-    const escapedValue = escapedRegexCharacters(value.trim());\n \n-    if(escapedValue === ''){\n-      return []\n-    }\n-    const regex = new RegExp('^' + escapedValue, 'i');\n-    return autocomplete.map((section) => {\n-      return {\n-        title: section.group,\n-        label: section.label.label\n-      }\n-    })\n-  }\n-  const onSuggestionsFetchRequested = ( {value}:any ) => {\n-    setSuggest(getSuggestions(value))\n-  }\n-  const getSuggestionValue = (suggestion:any) => {\n-    return suggestion.label.label;\n-  }\n-  const renderSuggestion = (suggestion:any) => {\n-    return (<span>{suggestion.label.label}</span>)\n-  }\n-  const renderSectionTitle = (section:any) => {\n-    return (\n-      <strong>{section.group}</strong>\n-    )\n-  }\n-  const getSectionSuggestions = (section:any) => {\n-    return section.label;\n-  }\n-  const onChange = (event:any, {newValue, method}:any) => {\n-    setValue(newValue)\n-  }\n-  const onSuggestionsClearRequested = () => {\n-    setSuggest([]);\n-  }\n   return (\n     <Autosuggest \n       suggestions={suggest}\n       multiSection={true}\n"
+                },
+                {
+                    "date": 1643624314554,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,11 @@\n     if(autocomplete.length > 0){\n       setSuggest(autocomplete);\n     }\n   },[autocomplete]);\n-\n+  const onChange = (event:any, {newValue, method}:any) => {\n+    setValue(newValue);\n+  }\n   return (\n     <Autosuggest \n       suggestions={suggest}\n       multiSection={true}\n"
+                },
+                {
+                    "date": 1643624375115,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,8 +19,13 @@\n   return (\n     <Autosuggest \n       suggestions={suggest}\n       multiSection={true}\n+      inputProps={{\n+        placeholder:\"Type medications\",\n+        onChange: (event, {newValue, method}) => onChange,\n+        value: value\n+      }}\n     />\n   )\n }\n \n"
+                },
+                {
+                    "date": 1643625054697,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,11 +12,51 @@\n     if(autocomplete.length > 0){\n       setSuggest(autocomplete);\n     }\n   },[autocomplete]);\n+  const escapedRegexCharacters =(str:any) => {\n+    return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n+  }\n+  const getSuggestion = (value:any) => {\n+    const escaped = escapedRegexCharacters(value.trim());\n+    if(escaped === ''){\n+      return []\n+    }\n+\n+    const regex = new RegExp('^' + escaped, 'i');\n+\n+    return autocomplete.map((section:any) => {\n+      return {\n+        title: section.title,\n+        label: section.label.filter((labels:any) => regex.test(labels.name)).filter((section:any) => section.label.length > 0);\n+      }\n+    })\n+  }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n+  const onSuggestionsClearRequested = () => {\n+    setSuggest([]);\n+  }\n+  const getSuggestionValue = (suggestion:any) => {\n+    return suggestion.label\n+  }\n+  const renderSuggestion = (suggestion:any) => {\n+    return (\n+      <span>{suggestion.label}</span>\n+    )\n+  }\n+  const renderSectionTitle = (section:any) => {\n+    return (\n+      <strong>{section.title}</strong>\n+    )\n+  }\n+  const getSectionSuggestions = (section:any) => {\n+    return section.label\n+  }\n+  const onSuggestionsFetchRequested = ({value}:any) => {\n+    setSuggest( getSuggestion(value) )\n+  }\n   return (\n     <Autosuggest \n       suggestions={suggest}\n       multiSection={true}\n@@ -24,8 +64,14 @@\n         placeholder:\"Type medications\",\n         onChange: (event, {newValue, method}) => onChange,\n         value: value\n       }}\n+      onSuggestionsClearRequested={onSuggestionsClearRequested}\n+      getSuggestionValue={getSuggestionValue}\n+      renderSuggestion={renderSuggestion}\n+      renderSectionTitle={renderSectionTitle}\n+      getSectionSuggestions={getSectionSuggestions}\n+      onSuggestionsFetchRequested={onSuggestionsFetchRequested}\n     />\n   )\n }\n \n"
+                },
+                {
+                    "date": 1643625098875,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,11 +26,11 @@\n \n     return autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.name)).filter((section:any) => section.label.length > 0);\n+        label: section.label.filter((labels:any) => regex.test(labels.name))\n       }\n-    })\n+    }).filter(section => section.label.length > 0)\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643625139492,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,13 +7,8 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState([]);\n   const [value, setValue] = useState('');\n-  useEffect(() => {\n-    if(autocomplete.length > 0){\n-      setSuggest(autocomplete);\n-    }\n-  },[autocomplete]);\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n"
+                },
+                {
+                    "date": 1643625152978,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -56,9 +56,9 @@\n       suggestions={suggest}\n       multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n-        onChange: (event, {newValue, method}) => onChange,\n+        onChange: () => onChange,\n         value: value\n       }}\n       onSuggestionsClearRequested={onSuggestionsClearRequested}\n       getSuggestionValue={getSuggestionValue}\n"
+                },
+                {
+                    "date": 1643625201967,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,8 +26,9 @@\n       }\n     }).filter(section => section.label.length > 0)\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n+    console.log(newValue)\n     setValue(newValue);\n   }\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n"
+                },
+                {
+                    "date": 1643625228744,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,9 @@\n       }\n     }).filter(section => section.label.length > 0)\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n-    console.log(newValue)\n+    console.log(event);\n     setValue(newValue);\n   }\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n"
+                },
+                {
+                    "date": 1643625246491,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,9 +57,9 @@\n       suggestions={suggest}\n       multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n-        onChange: () => onChange,\n+        onChange:onChange,\n         value: value\n       }}\n       onSuggestionsClearRequested={onSuggestionsClearRequested}\n       getSuggestionValue={getSuggestionValue}\n"
+                },
+                {
+                    "date": 1643625273670,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,8 @@\n       }\n     }).filter(section => section.label.length > 0)\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n-    console.log(event);\n     setValue(newValue);\n   }\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n"
+                },
+                {
+                    "date": 1643625291788,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,8 +7,13 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState([]);\n   const [value, setValue] = useState('');\n+  useEffect(() => {\n+    if(autocomplete.length > 0){\n+      setSuggest(autocomplete);\n+    }\n+  },[autocomplete]);\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n@@ -56,9 +61,9 @@\n       suggestions={suggest}\n       multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n-        onChange:onChange,\n+        onChange: onChange,\n         value: value\n       }}\n       onSuggestionsClearRequested={onSuggestionsClearRequested}\n       getSuggestionValue={getSuggestionValue}\n"
+                },
+                {
+                    "date": 1643625333137,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,9 @@\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n+    console.log(value);\n     const escaped = escapedRegexCharacters(value.trim());\n     if(escaped === ''){\n       return []\n     }\n"
+                },
+                {
+                    "date": 1643625373757,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,18 +7,12 @@\n \n const AutoSuggestInput = ({autocomplete = []}) => {\n   const [suggest, setSuggest] = useState([]);\n   const [value, setValue] = useState('');\n-  useEffect(() => {\n-    if(autocomplete.length > 0){\n-      setSuggest(autocomplete);\n-    }\n-  },[autocomplete]);\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n-    console.log(value);\n     const escaped = escapedRegexCharacters(value.trim());\n     if(escaped === ''){\n       return []\n     }\n"
+                },
+                {
+                    "date": 1643625405555,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n     setSuggest( getSuggestion(value) )\n   }\n   return (\n     <Autosuggest \n-      suggestions={suggest}\n+      suggestions={autocomplete}\n       multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n         onChange: onChange,\n"
+                },
+                {
+                    "date": 1643625469443,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n     setSuggest( getSuggestion(value) )\n   }\n   return (\n     <Autosuggest \n-      suggestions={autocomplete}\n+      suggestions={suggest}\n       multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n         onChange: onChange,\n"
+                },
+                {
+                    "date": 1643625606661,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,8 +32,9 @@\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n   }\n   const getSuggestionValue = (suggestion:any) => {\n+    console.log(suggestion);\n     return suggestion.label\n   }\n   const renderSuggestion = (suggestion:any) => {\n     return (\n"
+                },
+                {
+                    "date": 1643627251123,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState([]);\n+  const [suggest, setSuggest] = useState(autocomplete);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643627293459,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState(autocomplete);\n+  const [suggest, setSuggest] = useState([]);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643627322766,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,8 +49,10 @@\n   const getSectionSuggestions = (section:any) => {\n     return section.label\n   }\n   const onSuggestionsFetchRequested = ({value}:any) => {\n+    console.log(value);\n+    console.log(getSuggestion(value));\n     setSuggest( getSuggestion(value) )\n   }\n   return (\n     <Autosuggest \n"
+                },
+                {
+                    "date": 1643627354277,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,10 +49,9 @@\n   const getSectionSuggestions = (section:any) => {\n     return section.label\n   }\n   const onSuggestionsFetchRequested = ({value}:any) => {\n-    console.log(value);\n-    console.log(getSuggestion(value));\n+    console.log( getSuggestion(value) );\n     setSuggest( getSuggestion(value) )\n   }\n   return (\n     <Autosuggest \n"
+                },
+                {
+                    "date": 1643627367159,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,9 @@\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n+    console.log(value);\n     const escaped = escapedRegexCharacters(value.trim());\n     if(escaped === ''){\n       return []\n     }\n"
+                },
+                {
+                    "date": 1643627382856,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -50,9 +50,8 @@\n   const getSectionSuggestions = (section:any) => {\n     return section.label\n   }\n   const onSuggestionsFetchRequested = ({value}:any) => {\n-    console.log( getSuggestion(value) );\n     setSuggest( getSuggestion(value) )\n   }\n   return (\n     <Autosuggest \n"
+                },
+                {
+                    "date": 1643627397543,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,10 +11,10 @@\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n-    console.log(value);\n     const escaped = escapedRegexCharacters(value.trim());\n+    console.log(escaped);\n     if(escaped === ''){\n       return []\n     }\n \n"
+                },
+                {
+                    "date": 1643627417143,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,8 @@\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n   const getSuggestion = (value:any) => {\n     const escaped = escapedRegexCharacters(value.trim());\n-    console.log(escaped);\n     if(escaped === ''){\n       return []\n     }\n \n"
+                },
+                {
+                    "date": 1643627483901,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,14 +18,16 @@\n     }\n \n     const regex = new RegExp('^' + escaped, 'i');\n \n-    return autocomplete.map((section:any) => {\n+    const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n         label: section.label.filter((labels:any) => regex.test(labels.name))\n       }\n     }).filter(section => section.label.length > 0)\n+    console.log(data);\n+    return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643627517142,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label.filter((labels:any) => regex.test(labels.name))\n       }\n-    }).filter(section => section.label.length > 0)\n+    });\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643627543919,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label.filter((labels:any) => regex.test(labels.name))\n       }\n-    });\n+    }).filter(section => section.label.length > 0)\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643627600452,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.name))\n+        label: section.label.filter((labels:any) => regex.test(labels.label))\n       }\n     }).filter(section => section.label.length > 0)\n     console.log(data);\n     return data;\n"
+                },
+                {
+                    "date": 1643627665946,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label))\n+        label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     }).filter(section => section.label.length > 0)\n     console.log(data);\n     return data;\n"
+                },
+                {
+                    "date": 1643628776020,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].filter((labels:any) => regex.test(labels.label))\n+        label: section.label[0].find((labels:any) => regex.test(labels.label))\n       }\n     }).filter(section => section.label.length > 0)\n     console.log(data);\n     return data;\n"
+                },
+                {
+                    "date": 1643628800836,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label[0].find((labels:any) => regex.test(labels.label))\n       }\n-    }).filter(section => section.label.length > 0)\n+    });\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643628823166,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label[0].find((labels:any) => regex.test(labels.label))\n       }\n-    });\n+    }).find(section => section.label.length > 0)\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643628841924,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label[0].find((labels:any) => regex.test(labels.label))\n       }\n-    }).find(section => section.label.length > 0)\n+    }).find((section:any) => section.label.length > 0)\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643628855236,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,10 +23,10 @@\n       return {\n         title: section.title,\n         label: section.label[0].find((labels:any) => regex.test(labels.label))\n       }\n-    }).find((section:any) => section.label.length > 0)\n-    console.log(data);\n+    }).filter((section:any) => section.label.length > 0)\n+\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643628881803,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,11 +23,12 @@\n       return {\n         title: section.title,\n         label: section.label[0].find((labels:any) => regex.test(labels.label))\n       }\n-    }).filter((section:any) => section.label.length > 0)\n+    });\n+    console.log(data);\n \n-    return data;\n+    return \"\"\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643628896134,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,9 @@\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n-  const getSuggestion = (value:any) => {\n+  const getSuggestion = (value:any):string | [] => {\n     const escaped = escapedRegexCharacters(value.trim());\n     if(escaped === ''){\n       return []\n     }\n"
+                },
+                {
+                    "date": 1643628916509,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest] = useState([]);\n+  const [suggest, setSuggest]:any = useState([]);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n"
+                },
+                {
+                    "date": 1643629000828,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].find((labels:any) => regex.test(labels.label))\n+        label: section.label[0].find((labels:any) => labels.label ===  regex.test(labels.label))\n       }\n     });\n     console.log(data);\n \n"
+                },
+                {
+                    "date": 1643629086766,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,13 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].find((labels:any) => labels.label ===  regex.test(labels.label))\n+        label: section.label[0].filter((labels:any) => {\n+          if(regex.test(labels.label)){\n+            return labels.label\n+          }\n+        })\n       }\n     });\n     console.log(data);\n \n"
+                },
+                {
+                    "date": 1643629130023,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n             return labels.label\n           }\n         })\n       }\n-    });\n+    }).filter((section:any) => section.labels.length > 0)\n     console.log(data);\n \n     return \"\"\n   }\n"
+                },
+                {
+                    "date": 1643629168578,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,14 +5,14 @@\n \n \n \n const AutoSuggestInput = ({autocomplete = []}) => {\n-  const [suggest, setSuggest]:any = useState([]);\n+  const [suggest, setSuggest] = useState([]);\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n-  const getSuggestion = (value:any):string | [] => {\n+  const getSuggestion = (value:any) => {\n     const escaped = escapedRegexCharacters(value.trim());\n     if(escaped === ''){\n       return []\n     }\n@@ -21,18 +21,13 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].filter((labels:any) => {\n-          if(regex.test(labels.label)){\n-            return labels.label\n-          }\n-        })\n+        label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n-    }).filter((section:any) => section.labels.length > 0)\n-    console.log(data);\n+    }).filter((section:any) => section.label.length > 0)\n \n-    return \"\"\n+    return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643629212633,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,8 +38,9 @@\n     console.log(suggestion);\n     return suggestion.label\n   }\n   const renderSuggestion = (suggestion:any) => {\n+    console.log(suggestion);\n     return (\n       <span>{suggestion.label}</span>\n     )\n   }\n"
+                },
+                {
+                    "date": 1643629284227,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,9 +38,8 @@\n     console.log(suggestion);\n     return suggestion.label\n   }\n   const renderSuggestion = (suggestion:any) => {\n-    console.log(suggestion);\n     return (\n       <span>{suggestion.label}</span>\n     )\n   }\n"
+                },
+                {
+                    "date": 1643629291171,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,8 @@\n   const onSuggestionsClearRequested = () => {\n     setSuggest([]);\n   }\n   const getSuggestionValue = (suggestion:any) => {\n-    console.log(suggestion);\n     return suggestion.label\n   }\n   const renderSuggestion = (suggestion:any) => {\n     return (\n"
+                },
+                {
+                    "date": 1643629371818,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].filter((labels:any) => regex.test(labels.label))\n+        label: section.label[0].find((item:any) => item === section.label[0].filter((labels:any) => regex.test(labels.label)))\n       }\n     }).filter((section:any) => section.label.length > 0)\n \n     return data;\n"
+                },
+                {
+                    "date": 1643629385156,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,10 @@\n       return {\n         title: section.title,\n         label: section.label[0].find((item:any) => item === section.label[0].filter((labels:any) => regex.test(labels.label)))\n       }\n-    }).filter((section:any) => section.label.length > 0)\n+    })\n+    // .filter((section:any) => section.label.length > 0)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643629404425,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,12 +21,12 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].find((item:any) => item === section.label[0].filter((labels:any) => regex.test(labels.label)))\n+        label: section.label[0].find((item:any) => item.label === section.label[0].filter((labels:any) => regex.test(labels.label)))\n       }\n     })\n-    // .filter((section:any) => section.label.length > 0)\n+    .filter((section:any) => section.label.length > 0)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643629419378,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].find((item:any) => item.label === section.label[0].filter((labels:any) => regex.test(labels.label)))\n       }\n     })\n-    .filter((section:any) => section.label.length > 0)\n+    \n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643629439287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].find((item:any) => item.label === section.label[0].filter((labels:any) => regex.test(labels.label)))\n+        label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n     \n \n"
+                },
+                {
+                    "date": 1643629460700,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    \n+    .filter((section:any) => section.label.length > 0)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643629513863,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -39,9 +39,9 @@\n     return suggestion.label\n   }\n   const renderSuggestion = (suggestion:any) => {\n     return (\n-      <span>{suggestion.label}</span>\n+      <span>{suggestion.label} {suggestion.type}</span>\n     )\n   }\n   const renderSectionTitle = (section:any) => {\n     return (\n"
+                },
+                {
+                    "date": 1643629540289,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -39,9 +39,9 @@\n     return suggestion.label\n   }\n   const renderSuggestion = (suggestion:any) => {\n     return (\n-      <span>{suggestion.label} {suggestion.type}</span>\n+      <span>{suggestion.label} ({suggestion.type})</span>\n     )\n   }\n   const renderSectionTitle = (section:any) => {\n     return (\n"
+                },
+                {
+                    "date": 1643629676508,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    .filter((section:any) => section.label.length > 0)\n+    .find((item:any) => item.label).filter((section:any) => section.label.length > 0)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643629718527,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    .find((item:any) => item.label).filter((section:any) => section.label.length > 0)\n+    .find((item:any) => item.label[0].label === value)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643630882215,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,9 @@\n   const [value, setValue] = useState('');\n   const escapedRegexCharacters =(str:any) => {\n     return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n   }\n-  const getSuggestion = (value:any) => {\n+  const getSuggestion = (value:any):any => {\n     const escaped = escapedRegexCharacters(value.trim());\n     if(escaped === ''){\n       return []\n     }\n"
+                },
+                {
+                    "date": 1643630984592,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    .find((item:any) => item.label[0].label === value)\n+    .find((item:any) => item.label === value)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631006855,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    .find((item:any) => item.label === value)\n+    .find((item:any) => item.label[0] === value)\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631016879,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    .find((item:any) => item.label[0] === value)\n+    \n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631025810,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    \n+    .filter(section => section.languages.length > 0);\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631042355,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n-    .filter(section => section.languages.length > 0);\n+    .filter((section:any) => section.label.length > 0);\n \n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631090665,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label[0].filter((labels:any) => regex.test(labels.label))\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-\n+    console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643631583063,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].filter((labels:any) => regex.test(labels.label))\n+        label: {...section.label[0], label:section.label[0].filter((labels:any) => regex.test(labels.label) ) }\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643631677791,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: {...section.label[0], label:section.label[0].filter((labels:any) => regex.test(labels.label) ) }\n       }\n     })\n-    .filter((section:any) => section.label.length > 0);\n+    // .filter((section:any) => section.label.length > 0);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631695161,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: {...section.label[0], label:section.label[0].filter((labels:any) => regex.test(labels.label) ) }\n       }\n     })\n-    // .filter((section:any) => section.label.length > 0);\n+    .filter((section:any) => section.label.length > 0);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643631719720,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: {...section.label[0], label:section.label[0].filter((labels:any) => regex.test(labels.label) ) }\n+        label: label:section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643631728133,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: label:section.label[0].filter((labels:any) => regex.test(labels.label) ) \n+        label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n@@ -56,9 +56,9 @@\n   }\n   return (\n     <Autosuggest \n       suggestions={suggest}\n-      multiSection={true}\n+      // multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n         onChange: onChange,\n         value: value\n"
+                },
+                {
+                    "date": 1643631755983,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -56,9 +56,9 @@\n   }\n   return (\n     <Autosuggest \n       suggestions={suggest}\n-      // multiSection={true}\n+      multiSection={true}\n       inputProps={{\n         placeholder:\"Type medications\",\n         onChange: onChange,\n         value: value\n"
+                },
+                {
+                    "date": 1643631984618,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,10 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n-    })\n-    .filter((section:any) => section.label.length > 0);\n+    }).filter((section:any) => section.label.length > 0);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643632151150,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n-    }).filter((section:any) => section.label.length > 0);\n+    }).some((section:any) => section.label.length > 0);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643632174415,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     }).some((section:any) => section.label.length > 0);\n     console.log(data);\n-    return data;\n+    return [data];\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643632185201,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,11 +23,11 @@\n       return {\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n-    }).some((section:any) => section.label.length > 0);\n+    }).find((section:any) => section.label.length > 0);\n     console.log(data);\n-    return [data];\n+    return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643632212177,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,8 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     }).find((section:any) => section.label.length > 0);\n-    console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643632495043,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       return {\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n-    }).find((section:any) => section.label.length > 0);\n+    }).filter((section:any) => section.label.length > 0);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643632601726,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,10 @@\n       return {\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n-    }).filter((section:any) => section.label.length > 0);\n+    })\n+    .filter((section:any) => section.label[0].length > 0);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643632618385,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n-    .filter((section:any) => section.label[0].length > 0);\n+    .filter((section:any) => section.label.length > 0);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643632691346,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,15 +18,17 @@\n     }\n \n     const regex = new RegExp('^' + escaped, 'i');\n \n-    const data =  autocomplete.map((section:any) => {\n+    const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n+    const result = autocomplete.find((item:any) => item.title === data.title);\n+    console.log(result);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643632721658,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,8 +27,9 @@\n     })\n     .filter((section:any) => section.label.length > 0);\n     const result = autocomplete.find((item:any) => item.title === data.title);\n     console.log(result);\n+    console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643632797781,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.find((item:any) => item.title === data.title);\n+    const result = autocomplete.filter((item:any) => item.title === data.title);\n     console.log(result);\n     console.log(data);\n     return data;\n   }\n"
+                },
+                {
+                    "date": 1643632841647,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((item:any) => item.title === data.title);\n+    const result = autocomplete.filter((item:any, index:any) => item.title === data[index].title);\n     console.log(result);\n     console.log(data);\n     return data;\n   }\n"
+                },
+                {
+                    "date": 1643632920689,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((item:any, index:any) => item.title === data[index].title);\n+    const result = autocomplete.filter((item:any, index:any) => item.title === regex.test(value));\n     console.log(result);\n     console.log(data);\n     return data;\n   }\n"
+                },
+                {
+                    "date": 1643632968067,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((item:any, index:any) => item.title === regex.test(value));\n+    const result = autocomplete.filter((item:any, index:any) => item.title === data.filter((item:any) => regex.test(item.title)));\n     console.log(result);\n     console.log(data);\n     return data;\n   }\n"
+                },
+                {
+                    "date": 1643633089032,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label[0].filter((labels:any) => regex.test(labels.label) ) \n+        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     const result = autocomplete.filter((item:any, index:any) => item.title === data.filter((item:any) => regex.test(item.title)));\n"
+                },
+                {
+                    "date": 1643633122702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,10 +25,8 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((item:any, index:any) => item.title === data.filter((item:any) => regex.test(item.title)));\n-    console.log(result);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633213041,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,8 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n+    const result = autocomplete.find((item:any) => item === data);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633224338,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,8 +26,9 @@\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     const result = autocomplete.find((item:any) => item === data);\n+    console.log(result);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633247195,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,8 @@\n     })\n     .filter((section:any) => section.label.length > 0);\n     const result = autocomplete.find((item:any) => item === data);\n     console.log(result);\n-    console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643633332530,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,10 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.find((item:any) => item === data);\n-    console.log(result);\n+    const result = autocomplete.find((items:any) => items.title === data.find((item:any) => items.title === item.title));\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643633342361,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,8 +26,9 @@\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     const result = autocomplete.find((items:any) => items.title === data.find((item:any) => items.title === item.title));\n+    console.log(result)l\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643633379451,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,10 +25,10 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.find((items:any) => items.title === data.find((item:any) => items.title === item.title));\n-    console.log(result)l\n+    const result = autocomplete.filter((items:any) => items.title === data.find((item:any) => items.title === item.title));\n+    console.log(result);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643633407401,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((items:any) => items.title === data.find((item:any) => items.title === item.title));\n+    const result = autocomplete.filter((items:any) => items.title === data));\n     console.log(result);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633442986,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((items:any) => items.title === data));\n+    const result = autocomplete.filter((items:any) => items.title === data[0] ));\n     console.log(result);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633454978,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter((items:any) => items.title === data[0] ));\n+    const result = autocomplete.filter( (items:any) => items.title === data[0] );\n     console.log(result);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633462415,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter( (items:any) => items.title === data[0] );\n+    const result = autocomplete.filter( (items:any) => items.title === data[0].title );\n     console.log(result);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633494033,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n     })\n     .filter((section:any) => section.label.length > 0);\n     const result = autocomplete.filter( (items:any) => items.title === data[0].title );\n     console.log(result);\n-    return data;\n+    return result;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643633519079,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter( (items:any) => items.title === data[0].title );\n+    const result = autocomplete.filter( (items:any) => items.title === data.title );\n     console.log(result);\n     return result;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643633623847,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,11 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n-    const result = autocomplete.filter( (items:any) => items.title === data.title );\n-    console.log(result);\n-    return result;\n+    return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643634631758,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,8 +25,9 @@\n         label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n+    console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n"
+                },
+                {
+                    "date": 1643634831504,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n+        label: [...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643634940067,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n+        label: [ ...section.label, ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635082748,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [ ...section.label, ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n+        label: [autocomplete.filter((item:any) => item._id === section._id ), ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635117007,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [autocomplete.filter((item:any) => item._id === section._id ), ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n+        label: [...autocomplete.filter((item:any) => item._id === section._id ).label, ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635123100,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [...autocomplete.filter((item:any) => item._id === section._id ).label, ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n+        label: [autocomplete.filter((item:any) => item._id === section._id ), ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635148012,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [autocomplete.filter((item:any) => item._id === section._id ), ...section.label.filter((labels:any) => regex.test(labels.label) ) ]\n+        label: [autocomplete.filter((item:any) => item._id === section._id ), section.label.filter((labels:any) => regex.test(labels.label) ) ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635201446,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [autocomplete.filter((item:any) => item._id === section._id ), section.label.filter((labels:any) => regex.test(labels.label) ) ]\n+        label: section.label.filter((labels:any) => regex.test(labels.label) && section._id ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635219740,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) && section._id ) \n+        label: section.label.filter((labels:any) => regex.test(labels.label) && section.title ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635291501,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) && section.title ) \n+        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635423025,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n+        label: section.label\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635444423,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label\n+        label: section.label.find((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635463279,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label.find((labels:any) => regex.test(labels.label) ) \n       }\n     })\n-    .filter((section:any) => section.label.length > 0);\n+    .find((section:any) => section.label.length > 0);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643635488331,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.find((labels:any) => regex.test(labels.label) ) \n+        label: section.label.some((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .find((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635499746,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n         title: section.title,\n         label: section.label.some((labels:any) => regex.test(labels.label) ) \n       }\n     })\n-    .find((section:any) => section.label.length > 0);\n+    .filter((section:any) => section.label.length > 0);\n     console.log(data);\n     return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643635531554,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.some((labels:any) => regex.test(labels.label) ) \n+        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n     console.log(data);\n"
+                },
+                {
+                    "date": 1643635644299,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,17 +18,19 @@\n     }\n \n     const regex = new RegExp('^' + escaped, 'i');\n \n-    const data:any =  autocomplete.map((section:any) => {\n-      return {\n-        title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n-      }\n-    })\n-    .filter((section:any) => section.label.length > 0);\n+    // const data:any =  autocomplete.map((section:any) => {\n+    //   return {\n+    //     title: section.title,\n+    //     label: section.label.filter((labels:any) => regex.test(labels.label) ) \n+    //   }\n+    // })\n+    // .filter((section:any) => section.label.length > 0);\n+    // console.log(data);\n+    const data = autocomplete.filter((items:any) => items.label.label.toLowerCase().includes(value.toLowerCase()) );\n     console.log(data);\n-    return data;\n+    return '';\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643635756983,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,9 @@\n     //   }\n     // })\n     // .filter((section:any) => section.label.length > 0);\n     // console.log(data);\n-    const data = autocomplete.filter((items:any) => items.label.label.toLowerCase().includes(value.toLowerCase()) );\n+    const data = autocomplete.filter((items:any) => items.label.map((e:any) => e.label.toLowerCase().includes(value.toLowerCase())) );\n     console.log(data);\n     return '';\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643635789519,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n     // .filter((section:any) => section.label.length > 0);\n     // console.log(data);\n     const data = autocomplete.filter((items:any) => items.label.map((e:any) => e.label.toLowerCase().includes(value.toLowerCase())) );\n     console.log(data);\n-    return '';\n+    return [];\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643635833872,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,17 +18,16 @@\n     }\n \n     const regex = new RegExp('^' + escaped, 'i');\n \n-    // const data:any =  autocomplete.map((section:any) => {\n-    //   return {\n-    //     title: section.title,\n-    //     label: section.label.filter((labels:any) => regex.test(labels.label) ) \n-    //   }\n-    // })\n-    // .filter((section:any) => section.label.length > 0);\n-    // console.log(data);\n-    const data = autocomplete.filter((items:any) => items.label.map((e:any) => e.label.toLowerCase().includes(value.toLowerCase())) );\n+    const data:any =  autocomplete.map((section:any) => {\n+      return {\n+        title: section.title,\n+        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n+      }\n+    })\n+    .filter((section:any) => section.label.length > 0);\n+\n     console.log(data);\n     return [];\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n"
+                },
+                {
+                    "date": 1643636130750,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) ) \n+        label: [section.label.filter((labels:any) => regex.test(labels.label) ), ...section.label ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636171721,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [section.label.filter((labels:any) => regex.test(labels.label) ), ...section.label ]\n+        label: [section.label.filter((labels:any) => regex.test(labels.label) && section.label === labels ),  ]\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636198096,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: [section.label.filter((labels:any) => regex.test(labels.label) && section.label === labels ),  ]\n+        label: section.label.filter((labels:any) => regex.test(labels.label) )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636394678,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) )\n+        label: section.filter((items:any) =>  items.label.includes(section.label.filter((labels:any) => regex.test(labels.label) )) )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636421938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.filter((items:any) =>  items.label.includes(section.label.filter((labels:any) => regex.test(labels.label) )) )\n+        label: section.label.filter((items:any) =>  items.label.includes(section.label.filter((labels:any) => regex.test(labels.label) )) )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636483404,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,13 +17,13 @@\n       return []\n     }\n \n     const regex = new RegExp('^' + escaped, 'i');\n-\n+    console.log(section.label.filter((labels:any) => regex.test(labels.label) );\n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((items:any) =>  items.label.includes(section.label.filter((labels:any) => regex.test(labels.label) )) )\n+        label: section.label.filter((items:any) => items.label.includes( )) )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636514653,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,13 +17,14 @@\n       return []\n     }\n \n     const regex = new RegExp('^' + escaped, 'i');\n-    console.log(section.label.filter((labels:any) => regex.test(labels.label) );\n+  \n     const data:any =  autocomplete.map((section:any) => {\n+      console.log(  section.label.filter((labels:any) => regex.test(labels.label) )  );\n       return {\n         title: section.title,\n-        label: section.label.filter((items:any) => items.label.includes( )) )\n+        label: section.label.filter((labels:any) => regex.test(labels.label) )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636618862,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n \n     const regex = new RegExp('^' + escaped, 'i');\n   \n     const data:any =  autocomplete.map((section:any) => {\n-      console.log(  section.label.filter((labels:any) => regex.test(labels.label) )  );\n+      const find =   section.label.filter((labels:any) => regex.test(labels.label) );\n       return {\n         title: section.title,\n         label: section.label.filter((labels:any) => regex.test(labels.label) )\n       }\n"
+                },
+                {
+                    "date": 1643636720792,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n     })\n     .filter((section:any) => section.label.length > 0);\n \n     console.log(data);\n-    return [];\n+    return data;\n   }\n   const onChange = (event:any, {newValue, method}:any) => {\n     setValue(newValue);\n   }\n"
+                },
+                {
+                    "date": 1643636932537,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,12 +19,11 @@\n \n     const regex = new RegExp('^' + escaped, 'i');\n   \n     const data:any =  autocomplete.map((section:any) => {\n-      const find =   section.label.filter((labels:any) => regex.test(labels.label) );\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) )\n+        label: section.label.filter((labels:any) => {return {regex.test(labels.label)}} )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636938870,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n   \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => {return {regex.test(labels.label)}} )\n+        label: section.label.filter((labels:any) => {return regex.test(labels.label) } )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643636999448,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n   \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => {return regex.test(labels.label) } )\n+        label: section.label.filter((labels:any) => {return { label:regex.test(labels.label),...labels} } )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643637126836,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n   \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => {return { label:regex.test(labels.label),...labels} } )\n+        label: section.label.filter((labels:any) => regex.test(labels.label), || labels  )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643637133125,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n   \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label), || labels  )\n+        label: section.label.filter((labels:any) => regex.test(labels.label) || labels  )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                },
+                {
+                    "date": 1643637149022,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n   \n     const data:any =  autocomplete.map((section:any) => {\n       return {\n         title: section.title,\n-        label: section.label.filter((labels:any) => regex.test(labels.label) || labels  )\n+        label: section.label.filter((labels:any) => regex.test(labels.label)  )\n       }\n     })\n     .filter((section:any) => section.label.length > 0);\n \n"
+                }
+            ],
+            "date": 1643618170342,
+            "name": "Commit-0",
+            "content": "import {useState} from 'react';\nimport Autosuggest from 'react-autosuggest';\n\n\n\n\nconst AutoSuggestInput = () => {\n  const [suggest, setSuggest] = useState([]);\n\n\n  return (\n    <Autosuggest />\n  )\n}\n\n\n\n\nexport default AutoSuggestInput;"
+        }
+    ]
+}
