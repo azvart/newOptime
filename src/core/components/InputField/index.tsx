@@ -43,8 +43,8 @@ const InputField: FC<Props> = ({
   filtered,
   setFiltered,
 }) => {
-  const submitAction = (value: string) => {
-    if (onSubmit) onSubmit(value);
+  const submitAction = () => {
+    if (onSubmit) onSubmit();
   };
 
   return (
@@ -80,7 +80,7 @@ const InputField: FC<Props> = ({
         {haveSubmit && (
           <button
             className="input-field__submit-button"
-            onClick={() => submitAction(value)}
+            onClick={() => submitAction()}
           >
             {buttonText}
           </button>

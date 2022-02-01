@@ -7,7 +7,7 @@ import '../../assets/components/autocomplete.scss';
 
 const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput}:any) => {
   const [suggest, setSuggest] = useState([]);
-  const [value, setValue] = useState(input);
+  // const [value, setValue] = useState(input);
   const node:any = useRef();
   const escapedRegexCharacters =(str:any) => {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -45,7 +45,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
   return sorting;
   }
   const onChange = (event:any, {newValue, method}:any) => {
-    setValue(newValue);
+    setInput(newValue);
   }
   const onSuggestionsClearRequested = () => {
     setSuggest([]);
@@ -71,11 +71,11 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
     setSuggest( getSuggestion(value))
   }
   const enterKeyDown = (event:any) => {
-    if(event.key === 'Enter' && value.length){
+    if(event.key === 'Enter' && input.length){
       const data = suggest.map(({label}:any) => {
-        return label.filter(({label}:any) => label.toLowerCase().includes(value.toLowerCase()))[0];
+        return label.filter(({label}:any) => label.toLowerCase().includes(input.toLowerCase()))[0];
       })[0]
-      setValue(data.label);
+      setInput(data.label);
     } 
   }
   useEffect(() => {
@@ -91,15 +91,15 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
       }
   },[])
   useEffect(() => {
-    setInput(value)
-  },[value]);
+    setInput(input)
+  },[input]);
   return (
     <Autosuggest 
       suggestions={suggest}
       inputProps={{
         placeholder:placeholder,
         onChange: onChange,
-        value: value,
+        value: input,
         onKeyDown: enterKeyDown,
         ref: node
       }}

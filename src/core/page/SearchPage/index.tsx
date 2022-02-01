@@ -57,28 +57,64 @@ export const SearchPage: React.FC = () => {
       })
     }
   }, [data]);
-  const submitAction = () => {
-    const item = state.map(({label}:any) => {
-      return {
-        label: label.filter(({label}:any) => label === search)
-      }
-    }).filter(({label}:any) => label.length > 0)[0]
-    console.log(item);
-    if(search && codes && item.label[0].label){
-      dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
-      return true;
-    }else{
-      codes ? setZipError(false) :setZipError(true);
-      search && state.filter((item:any) => item.label.label === search)[0] ? setError(false) : setError(true);
-      return false;
-    }
-  }
-  // useEffect(() => {
-  //   if(search.length || codes.length){
-  //     setError(false);
-  //     setZipError(false);
+  // const submitAction = () => {
+  //   const item = state.map(({label}:any) => {
+  //     return {
+  //       label: label.filter(({label}:any) => label === search)
+  //     }
+  //   }).filter(({label}:any) => label.length > 0)[0]
+  //   console.log(item);
+  //   if(search && codes && item.label[0].label){
+  //     dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
+  //     return true;
+  //   }else{
+  //     codes ? setZipError(false) :setZipError(true);
+  //     search && state.filter((item:any) => item.label.label === search)[0] ? setError(false) : setError(true);
+  //     return false;
   //   }
-  // },[search, codes])
+  // }
+  const escapedRegexCharacters =(str:any) => {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+  const submitAction = () => {
+    const escaped = escapedRegexCharacters(search.trim());
+    const regex = new RegExp('^' + escaped, 'i');
+    if(search.length > 0){
+    const searchSubmit = state.map(({label}:any) => {
+      return {
+        label: label.filter(({label}:any) => regex.test(label))
+      }
+    })
+    .filter(({label}:any) => label.length > 0)
+    const sorting = searchSubmit.map(({label}:any) => label).flat()
+    .sort((a:any,b:any) => {
+      return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
+    }).map((e:any) => {
+      return {
+        label:[{label: e.label, type: e.type}]
+      }
+    })[0].label[0].label;
+    setSearch(sorting);
+  }else{
+    setError(true);
+  }
+  if(codes.length >=3){
+    setCodes(zip[0].label)
+  }else{
+    setZipError(true);
+  }
+
+  }
+  useEffect(() => {
+    if(search.length > 0){
+      setError(false);
+    }
+  },[search])
+  useEffect(() => {
+    if(codes.length > 0 ){
+      setZipError(false);
+    }
+  },[codes]);
   return (
     <div className="search-page">
       <div>

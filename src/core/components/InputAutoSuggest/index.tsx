@@ -1,11 +1,13 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import AutoSuggestInput from '../AutoSuggestInput';
 import '../../assets/components/inputField.scss';
 
 
 const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='', value='', setValue = () => {}}) => {
 
-
+  useEffect(() => {
+    setValue(value);
+  },[value]);
 
   return (
     <div style={{display: "flex", flexGrow: 1, alignItems:"flex-end"}}>
