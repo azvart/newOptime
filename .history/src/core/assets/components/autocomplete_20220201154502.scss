@@ -1,0 +1,59 @@
+@import "../styles/variables.scss";
+
+.autocomplete {
+  &__item {
+    background-color: $white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    &:hover{
+      background-color: $pink;
+      color: $white;
+    }
+  }
+  &__item--selected {
+    background-color: $pink;
+    color: $white;
+  }
+  &__item,
+  &__item--selected {
+    display: flex;
+    align-items: center;
+    padding-left: 3.875rem;
+    height: 2.5rem;
+  }
+
+}
+
+.menuSelected {
+          border-radius: 3px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.9);
+        margin-top: 2px;
+        position: fixed;
+        z-index: 2;
+        overflow: auto;
+        margin-left: -3.875rem;
+        max-height: 50%;
+}
+.menu{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  overflow: auto;
+  z-index: 10;
+  width: 661px;
+  left: 5px;
+  top: 50px;
+  border-radius: 3px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+}
+.none{
+  display: none;
+}
+.ishigh{
+  background: $pink !important;
+  color: rgb(255,255,255)
+}

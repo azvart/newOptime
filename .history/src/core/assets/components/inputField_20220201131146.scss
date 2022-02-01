@@ -1,0 +1,67 @@
+@import "../styles/variables.scss";
+.input-field {
+    @extend %center-row;
+    position: relative;
+    justify-content: space-between;
+    width: 661px;
+    height: 3.125rem;
+    border-radius: 1.563rem;
+    background-color: #fefefe;
+    padding-left: 1.688rem;
+    box-shadow: 3px 3px 6px 0px #a8aba438, -2px -2px 6px 0px #a8aba438;
+    &__row {
+        display: flex;
+    }
+    &__icon-wrapper {
+        width: 2.188rem;
+        display: flex;
+        align-items: center;
+    }
+    &__input {
+        background-color: transparent;
+        border: none;
+        width: 661px;
+        height: 3.125rem;
+        font-family: "Roboto", sans-serif;
+    }
+    &__submit-button {
+        width: 203px;
+        height: 50px;
+        border-radius: 1.563rem;
+        color: $white;
+        font-size: 1.125rem;
+        background-color: $pink;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+    }
+    &__autocomplete {
+        position: absolute;
+    }
+    &__autocomplete-item {
+        display: flex;
+        align-items: center;
+        background-color: $white;
+        cursor: pointer;
+        height: 30px;
+    }
+}
+
+.error {
+    border: 2px solid red;
+}
+
+.react-autosuggest__suggestions-container--open {
+    border-radius: 3px;
+    box-shadow: 0 2px 12px rgba(0,0,0, 0.1);
+    margin-top: 2px;
+    z-index: 2;
+    overflow: auto;
+    position: absolute;
+    background: rgba(255,255,255, 0.9);
+    max-height: 300px;
+    left: 5px;
+    top: 50px;
+    width: 661px;
+}
