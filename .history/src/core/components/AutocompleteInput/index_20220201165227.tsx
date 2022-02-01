@@ -35,10 +35,15 @@ const AutocompleteInput: FC<Props> = ({
   selected,
   grouping,
 }) => {
+  const inputRef:any = useRef();
   const enterHandler = (e: KeyboardEvent) => {
     const data = autocomplete.filter(({label}:any) => label.toLowerCase().includes(value))[0];
     if(e.key === 'Enter'){
       setValue(data.label);
+    }else{
+      if(e.key === 'Enter' && value.split(" ").length > 1){
+        onSubmit(value);
+      }
     }
     
   };

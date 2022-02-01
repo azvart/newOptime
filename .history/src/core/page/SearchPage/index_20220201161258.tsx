@@ -95,13 +95,7 @@ export const SearchPage: React.FC = () => {
           </h1>
 
           <div className="search-page__input-wrapper">
-            <InputAutoSuggest
-              value={search}
-              setValue={setSearch}
-              autocomplete={state}
-              iconUrl={SearchIconSvg}
-              placeholder="Search Medications"
-            />
+            <InputAutoSuggest value={search} setValue={setSearch} autocomplete={state} iconUrl={SearchIconSvg} placeholder="Search Medications" />
             {error ? (
                  <p className="error_message">Please choose correct medication</p>
                  ) : (

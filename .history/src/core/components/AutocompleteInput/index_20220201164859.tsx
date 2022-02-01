@@ -35,12 +35,13 @@ const AutocompleteInput: FC<Props> = ({
   selected,
   grouping,
 }) => {
+  const inputRef:any = useRef();
   const enterHandler = (e: KeyboardEvent) => {
     const data = autocomplete.filter(({label}:any) => label.toLowerCase().includes(value))[0];
     if(e.key === 'Enter'){
       setValue(data.label);
     }
-    
+    console.log(inputRef.current);
   };
   const node:any = useRef();
   const [show,setShow] = useState(true)
@@ -122,7 +123,7 @@ const AutocompleteInput: FC<Props> = ({
             onKeyDown={enterHandler}
             maxLength={30}
             value={value}
-            
+            ref={inputRef}
           />
         );
       }}

@@ -35,12 +35,13 @@ const AutocompleteInput: FC<Props> = ({
   selected,
   grouping,
 }) => {
+  const inputRef:any = useRef();
   const enterHandler = (e: KeyboardEvent) => {
     const data = autocomplete.filter(({label}:any) => label.toLowerCase().includes(value))[0];
-    if(e.key === 'Enter'){
+    if(e.key === 'Enter' && inputRef.current.focus){
       setValue(data.label);
     }
-    
+    console.log(inputRef.current.focus());
   };
   const node:any = useRef();
   const [show,setShow] = useState(true)
@@ -112,6 +113,7 @@ const AutocompleteInput: FC<Props> = ({
           }
         }}
         autoHighlight={true}
+        ref={inputRef}
         renderInput={(props) => {
         return (
           <input
@@ -122,7 +124,6 @@ const AutocompleteInput: FC<Props> = ({
             onKeyDown={enterHandler}
             maxLength={30}
             value={value}
-            
           />
         );
       }}
