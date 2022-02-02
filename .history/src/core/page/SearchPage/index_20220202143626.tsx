@@ -75,53 +75,36 @@ export const SearchPage: React.FC = () => {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
   const submitAction = () => {
-    const escaped = escapedRegexCharacters(search.trim());
-    const regex = new RegExp('^' + escaped, 'i');
-    if(search.length > 0){
-    const searchSubmit = state.map(({label}:any) => {
-      return {
-        label: label.filter(({label}:any) => regex.test(label))
-      }
-    })
-    .filter(({label}:any) => label.length > 0)
-    if(searchSubmit.length === 0){
-      setError(true)
-      return;
-    }
-    const sorting = searchSubmit.map(({label}:any) => label).flat()
-    .sort((a:any,b:any) => {
-      return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
-    }).map((e:any) => {
-      return {
-        label:[{label: e.label, type: e.type}]
-      }
-    })[0].label[0].label; 
-    setSearchBool(true);
-    setSearch(sorting);
-    return;
-  }else{
-    setSearchBool(false);
-    setError(true);
-
-  }
-  codes.length >= 3 ? setCodes(zip[0].label) :  null;
-  codes.length < 3 ? setZipError(true) : null
-  // const searchSubmit = state.map(({label}:any) => {
-  //   return {
-  //     label:label.find(({label}:any) => regex.test(label))
+  //   const escaped = escapedRegexCharacters(search.trim());
+  //   const regex = new RegExp('^' + escaped, 'i');
+  //   if(search.length > 0){
+  //   const searchSubmit = state.map(({label}:any) => {
+  //     return {
+  //       label: label.filter(({label}:any) => regex.test(label))
+  //     }
+  //   })
+  //   .filter(({label}:any) => label.length > 0)
+  //   const sorting = searchSubmit.map(({label}:any) => label).flat()
+  //   .sort((a:any,b:any) => {
+  //     return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
+  //   }).map((e:any) => {
+  //     return {
+  //       label:[{label: e.label, type: e.type}]
+  //     }
+  //   })[0].label[0].label; 
+  //   if(!sorting.length){
+  //     setError(true)
+  //     return;
   //   }
-  // })
-  // .filter(({label}:any) => label.length > 0)
-  // if(searchSubmit.length === 0){
-  //   setError(true)
-  //   return;
-  // }
-  // const sorting = searchSubmit.map(({label}:any) => label).flat()
-  // .sort((a:any, b:any) => {
-  //   return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
-  // })
-}
+  //   setSearchBool(true);
+  //   setSearch(sorting);
+  // }else{
+  //   setSearchBool(false);
+  //   setError(true);
 
+  // }
+  // codes.length >= 3 ? setCodes(zip[0].label) :  setZipError(true);
+}
   useEffect(() => {
     if(search.length > 0){
       setError(false);
@@ -150,7 +133,7 @@ export const SearchPage: React.FC = () => {
     const handleClick = (event:any) => {
       const {key} = event;
       if(key === 'Enter'){
-        submitAction();
+        return submitAction();
       }
     }
 

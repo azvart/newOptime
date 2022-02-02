@@ -19,6 +19,8 @@ import "../../assets/pages/search.scss";
 export const SearchPage: React.FC = () => {
   const history = useHistory();
   const state = useSelector((state:any) => state.topMedReducer.top);
+  const grouping = useSelector((state:any) => state.topMedReducer.group)
+  const [group,setGroup] = useState(false);
   const zip = useSelector((zip:any) => zip.zipReducer.sort((a:any,b:any) => {return (a.label < b.label)? -1 :(a.label > b.label) ? 1 : 0 }));
   const data = useSelector((state:any) => state.currentReducer);
   const [cookies, setCookies] = useCookies();
@@ -26,6 +28,8 @@ export const SearchPage: React.FC = () => {
   const [error,setError] = useState(false);
   const [zipError,setZipError] = useState(false);
   const [codes, setCodes] = useState("");
+  const [groups,setGroups] = useState([]);
+  const [filteredItems,setFilteredItems] = useState([]);
   const [searchBool, setSearchBool] = useState(false);
   const [zipBool, setZipBool] = useState(false);
   const dispatch = useDispatch();
@@ -84,10 +88,6 @@ export const SearchPage: React.FC = () => {
       }
     })
     .filter(({label}:any) => label.length > 0)
-    if(searchSubmit.length === 0){
-      setError(true)
-      return;
-    }
     const sorting = searchSubmit.map(({label}:any) => label).flat()
     .sort((a:any,b:any) => {
       return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
@@ -95,33 +95,16 @@ export const SearchPage: React.FC = () => {
       return {
         label:[{label: e.label, type: e.type}]
       }
-    })[0].label[0].label; 
+    })[0].label[0].label;
     setSearchBool(true);
     setSearch(sorting);
-    return;
   }else{
     setSearchBool(false);
     setError(true);
 
   }
-  codes.length >= 3 ? setCodes(zip[0].label) :  null;
-  codes.length < 3 ? setZipError(true) : null
-  // const searchSubmit = state.map(({label}:any) => {
-  //   return {
-  //     label:label.find(({label}:any) => regex.test(label))
-  //   }
-  // })
-  // .filter(({label}:any) => label.length > 0)
-  // if(searchSubmit.length === 0){
-  //   setError(true)
-  //   return;
-  // }
-  // const sorting = searchSubmit.map(({label}:any) => label).flat()
-  // .sort((a:any, b:any) => {
-  //   return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
-  // })
+  codes.length >= 3 ? setCodes(zip[0].label) :  setZipError(true);
 }
-
   useEffect(() => {
     if(search.length > 0){
       setError(false);
@@ -150,11 +133,12 @@ export const SearchPage: React.FC = () => {
     const handleClick = (event:any) => {
       const {key} = event;
       if(key === 'Enter'){
-        submitAction();
+        console.log(node)
+        return submitAction();
       }
     }
 
-    document.addEventListener('keydown', handleClick, {once: true, passive: true});
+    document.addEventListener('keydown', handleClick);
 
     return () => {
       document.removeEventListener('keydown', handleClick);
@@ -177,7 +161,7 @@ export const SearchPage: React.FC = () => {
           </h1>
 
           <div className="search-page__input-wrapper">
-            
+            <div ref={node}>
             <InputAutoSuggest
               value={search}
               setValue={setSearch}
@@ -190,7 +174,8 @@ export const SearchPage: React.FC = () => {
                  ) : (
                    <p></p>
             )}
-            
+            </div>
+            <div>
             <InputField
               iconUrl={LocationIconSvg}
               value={codes}
@@ -208,7 +193,7 @@ export const SearchPage: React.FC = () => {
             ) : (
               <p></p>
             )}
-            
+            </div>
           </div>
         </div>
       </div>

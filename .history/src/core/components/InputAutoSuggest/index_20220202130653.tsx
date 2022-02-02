@@ -3,7 +3,7 @@ import AutoSuggestInput from '../AutoSuggestInput';
 import '../../assets/components/inputField.scss';
 
 
-const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='', value='', setValue = () => {}}) => {
+const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='', value='', setValue = () => {}, ref}) => {
 
   useEffect(() => {
     setValue(value);
@@ -16,7 +16,7 @@ const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='
             <div className='input-field__icon-wrapper'>
                 <img src={iconUrl} alt="" className='input-field__icon' />
             </div>
-            <AutoSuggestInput  input={value} setInput={setValue} autocomplete={autocomplete} placeholder={placeholder}  />
+            <AutoSuggestInput ref={ref} input={value} setInput={setValue} autocomplete={autocomplete} placeholder={placeholder}  />
         </div>
         {}
       </div>

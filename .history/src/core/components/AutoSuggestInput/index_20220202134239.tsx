@@ -7,7 +7,6 @@ import '../../assets/components/autocomplete.scss';
 
 const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput}:any) => {
   const [suggest, setSuggest] = useState([]);
-  const node:any = useRef();
   const escapedRegexCharacters =(str:any) => {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -83,14 +82,12 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
     setSuggest( getSuggestion(value))
   }
   const enterKeyDown = (event:any) => {
-    if(input.length && node.current.contains(event.target)){
-    if(event.key === 'Enter'){
+    if(event.key === 'Enter' && input.length){
       const data = suggest.map(({label}:any) => {
         return label.filter(({label}:any) => label.toLowerCase().includes(input.toLowerCase()))[0];
       })[0]
       setInput(data.label);
     } 
-  }
   }
   useEffect(() => {
       const hanldeClick = (event:any) => {
@@ -99,7 +96,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
         
       };
 
-      document.addEventListener('mousedown', hanldeClick, {once: true});
+      document.addEventListener('mousedown', hanldeClick);
       return () => {
         document.removeEventListener('mousedown',hanldeClick);
       }
@@ -115,7 +112,6 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
         onChange: onChange,
         value: input,
         onKeyDown: enterKeyDown,
-        ref: node
       }}
       multiSection={true}
       onSuggestionsClearRequested={onSuggestionsClearRequested}

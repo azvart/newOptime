@@ -83,23 +83,21 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
     setSuggest( getSuggestion(value))
   }
   const enterKeyDown = (event:any) => {
-    if(input.length && node.current.contains(event.target)){
-    if(event.key === 'Enter'){
+    if(event.key === 'Enter' && input.length && node.current){
       const data = suggest.map(({label}:any) => {
         return label.filter(({label}:any) => label.toLowerCase().includes(input.toLowerCase()))[0];
       })[0]
       setInput(data.label);
     } 
   }
-  }
   useEffect(() => {
       const hanldeClick = (event:any) => {
-       
+        if(node.current && !node.current.contains(event.target)){
           enterKeyDown(event);
-        
+        }
       };
 
-      document.addEventListener('mousedown', hanldeClick, {once: true});
+      document.addEventListener('mousedown', hanldeClick);
       return () => {
         document.removeEventListener('mousedown',hanldeClick);
       }

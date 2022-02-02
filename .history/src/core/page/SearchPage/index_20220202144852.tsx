@@ -84,6 +84,7 @@ export const SearchPage: React.FC = () => {
       }
     })
     .filter(({label}:any) => label.length > 0)
+    console.log(searchSubmit);
     if(searchSubmit.length === 0){
       setError(true)
       return;
@@ -98,30 +99,14 @@ export const SearchPage: React.FC = () => {
     })[0].label[0].label; 
     setSearchBool(true);
     setSearch(sorting);
-    return;
   }else{
     setSearchBool(false);
     setError(true);
 
   }
-  codes.length >= 3 ? setCodes(zip[0].label) :  null;
-  codes.length < 3 ? setZipError(true) : null
-  // const searchSubmit = state.map(({label}:any) => {
-  //   return {
-  //     label:label.find(({label}:any) => regex.test(label))
-  //   }
-  // })
-  // .filter(({label}:any) => label.length > 0)
-  // if(searchSubmit.length === 0){
-  //   setError(true)
-  //   return;
-  // }
-  // const sorting = searchSubmit.map(({label}:any) => label).flat()
-  // .sort((a:any, b:any) => {
-  //   return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
-  // })
+  codes.length >= 3 ? setCodes(zip[0].label) :  setZipError(true);
+  return;
 }
-
   useEffect(() => {
     if(search.length > 0){
       setError(false);
@@ -150,7 +135,7 @@ export const SearchPage: React.FC = () => {
     const handleClick = (event:any) => {
       const {key} = event;
       if(key === 'Enter'){
-        submitAction();
+        return submitAction();
       }
     }
 

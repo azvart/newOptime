@@ -84,7 +84,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
   }
   const enterKeyDown = (event:any) => {
     if(input.length && node.current.contains(event.target)){
-    if(event.key === 'Enter'){
+    if(event.key === 'Enter')){
       const data = suggest.map(({label}:any) => {
         return label.filter(({label}:any) => label.toLowerCase().includes(input.toLowerCase()))[0];
       })[0]
