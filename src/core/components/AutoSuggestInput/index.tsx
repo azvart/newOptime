@@ -55,7 +55,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
   }
   const renderSuggestion = (suggestion:any) => {
     return (
-      <span className='autocomplete__item' >{suggestion.label} ({suggestion.type})</span>
+      <span >{suggestion.label} ({suggestion.type})</span>
     )
   }
   const renderSectionTitle = (section:any) => {
