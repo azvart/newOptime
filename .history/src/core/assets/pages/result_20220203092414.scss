@@ -39,7 +39,7 @@
         @extend %center-row;
         height: 100%;
         .input_search_error {
-            .input-field{
+            .react-autosuggest__container{
                 width: 416px;
             }
             display: flex;

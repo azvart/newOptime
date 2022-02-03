@@ -3,7 +3,7 @@ import AutoSuggestInput from '../AutoSuggestInput';
 import '../../assets/components/inputField.scss';
 
 
-const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='', value='', setValue = () => {}, error, haveSubmit = false, onSubmit = () => {}, buttonText}) => {
+const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='', value='', setValue = () => {}, error}) => {
 
   useEffect(() => {
     setValue(value);
@@ -11,21 +11,14 @@ const InputAutoSuggest:FC<any> = ({autocomplete = [], iconUrl= '', placeholder='
 
   return (
     <div style={{display: "flex", flexGrow: 1, alignItems:"flex-end"}}>
-      <div className={`input-field ${error === true ? 'error' : null} `}>
+      <div className={`input-field`}>
         <div className='input-field__row'>
             <div className='input-field__icon-wrapper'>
                 <img src={iconUrl} alt="" className='input-field__icon' />
             </div>
             <AutoSuggestInput  input={value} setInput={setValue} autocomplete={autocomplete} placeholder={placeholder}  />
         </div>
-        {haveSubmit && (
-          <button
-            className='input-field__submit-button'
-            onClick={onSubmit}
-          >
-            {buttonText}
-          </button>
-        )}
+        {}
       </div>
     </div>
   )

@@ -173,7 +173,7 @@ const submitActionZip = () => {
       if(key === 'Enter' && codes.length){
         console.log('click zip')
           try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
+            submitActionZip();
           }catch(e){
             console.error(e);
           }

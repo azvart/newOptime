@@ -99,12 +99,6 @@
     
 }
 .react-autosuggest__suggestion--highlighted{
-    
-            .autocomplete__item
-                {
-                background-color: $pink !important;
-                color: rgb(255,255,255);
-                }
-            
-    
+    background-color: $pink !important;
+    color: rgb(255,255,255);
  }

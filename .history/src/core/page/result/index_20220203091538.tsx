@@ -125,7 +125,7 @@ export const ResultPage: FC<any> = () => {
   }
 }
   const SubmitActionZip = () => {
-    if(searchZip.length > 0){
+    if(searchZip){
       history.push({
         state:{
           ...location.state,
@@ -283,33 +283,7 @@ export const ResultPage: FC<any> = () => {
     if(searchMed.length > 0){
       setError(false);
     }
-  },[searchMed]);
-  useEffect(() => {
-    const hanldeClick = (event:any) => {
-      const { key } = event;
-      if(key === 'Enter' && searchMed.length){
-        SubmitActionValue();
-      }
-    }
-    document.addEventListener('keydown', hanldeClick);
-    return () => {
-      document.removeEventListener('keydown', hanldeClick);
-    }
-  },[searchMed, SubmitActionValue]);
-
-  useEffect(() => {
-    const handleClick = (event:any) => {
-      const { key } = event;
-      if(key === 'Enter' && searchZip.length && open){
-        SubmitActionZip()
-      } 
-    }
-    document.addEventListener('keypress', handleClick);
-
-    return () => {
-      document.removeEventListener('keypress', handleClick);
-    }
-  },[open, searchZip, SubmitActionZip])
+  },[searchMed])
   return (
     <>
       <div className="result-page">
@@ -319,6 +293,22 @@ export const ResultPage: FC<any> = () => {
               <img src={HeaderLogoImage} alt="" />
             </Link>
             <div className="input_search_error">
+              {/* <InputField
+                value={searchMed}
+                onChange={setSearchMed}
+                placeholder="Type your drug name"
+                iconUrl={SearchIconSvg}
+                classes="result-page__header-input"
+                autocompleteClasses="result-page__autocomplete"
+                onSubmit={SubmitActionValue}
+                grouping={true}
+                autocomplete={searchMed.length >= 3 ? topMed : []}
+                errorHandle={error}
+                haveSubmit
+                buttonText="Search"
+                error="Incorrect medication"
+                selected={true}
+              /> */}
               <InputAutoSuggest 
                   value={searchMed}
                   setValue={setSearchMed}

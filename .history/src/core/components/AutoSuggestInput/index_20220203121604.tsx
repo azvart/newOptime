@@ -48,7 +48,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
     setInput(newValue);
   }
   const onSuggestionsClearRequested = () => {
-    setSuggest([]);
+    // setSuggest([]);
   }
   const getSuggestionValue = (suggestion:any) => {
     return suggestion.label
@@ -113,6 +113,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
       getSectionSuggestions={getSectionSuggestions}
       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
       highlightFirstSuggestion={true}
+      alwaysRenderSuggestions
     />
   )
 }

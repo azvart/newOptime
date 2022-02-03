@@ -28,7 +28,7 @@ import getPrice from '../../store/Price/actions';
 import { OptimeRootReducer } from "core/store/rootReducer";
 import '../../assets/pages/result.scss';
 
-export const ResultPage: FC<any> = () => {
+export const ResultPage: FC = () => {
   const store = useStore();
   const [prices, setPrices] = useState(store.getState());
   const [error, setError] = useState(false);
@@ -36,10 +36,11 @@ export const ResultPage: FC<any> = () => {
   const [searchMed, setSearchMed] = useState("");
   const [searchZip, setSearchZip] = useState("");
   const [cookies, setCookies] = useCookies();
+  const [medicationError, setMedicationError] = useState(false);
   const currentMedication = useSelector((state:OptimeRootReducer) => state.currentReducer, shallowEqual);
   const [description,setDescription] = useState("");
   const topMed = useSelector((state:any) => state.topMedReducer.top);
-  const zip = useSelector((state:any) => state.zipReducer.sort((a:any, b:any) => {return (a.label < b.label)? -1 :(a.label > b.label) ? 1 : 0 }));
+  const zip = useSelector((state:any) => state.zipReducer);
   const { priceReducer } = useSelector((state:OptimeRootReducer) => state);
   const history = useHistory();
   const location:any = useLocation();
@@ -89,43 +90,24 @@ export const ResultPage: FC<any> = () => {
           }
       }
   }, [currentMedication]);
-  
+
   const SubmitActionValue = () => {
-    const escapedRegexCharacters =(str:any) => {
-      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if(searchMed && topMed.filter((item:any) => item.label.label === searchMed)[0]){
+      history.push({
+        state:{
+          ...location.state,
+          name: searchMed,
+        }
+      })
+      setError(false);
+      return true;
+    }else{
+      searchMed && topMed.filter((item:any) => item.label.label === searchMed)[0] ? setError(false) : setError(true);
+      return false;
     }
-    const escaped = escapedRegexCharacters(searchMed.trim());
-    const regex = new RegExp('^' + escaped, 'i');
-    if(searchMed.length > 0){
-    const searchSubmit = topMed.map(({label}:any) => {
-      return {
-        label: label.filter(({label}:any) => regex.test(label))
-      }
-    })
-    .filter(({label}:any) => label.length > 0)
-    if(searchSubmit.length === 0){
-      setError(true)
-      return;
-    }
-    const sorting = searchSubmit.map(({label}:any) => label).flat()
-    .sort((a:any,b:any) => {
-      return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
-    }).map((e:any) => {
-      return {
-        label:[{label: e.label, type: e.type}]
-      }
-    })[0].label[0].label; 
-    setSearchMed(sorting);
-    return history.push({
-      state:{
-        ...location.state,
-        name: sorting
-      }
-    })
   }
-}
   const SubmitActionZip = () => {
-    if(searchZip.length > 0){
+    if(searchZip){
       history.push({
         state:{
           ...location.state,
@@ -276,40 +258,11 @@ export const ResultPage: FC<any> = () => {
   },[chosen.Manufacturer, chosen.Form, chosen.Dosage, sorted]);
 
   useEffect(() => {
+    console.log('effect request 6')
+    console.log("loading effect request 6",loading);
     requestPrice();
    
   },[priceSettings, sorted]);
-  useEffect(() => {
-    if(searchMed.length > 0){
-      setError(false);
-    }
-  },[searchMed]);
-  useEffect(() => {
-    const hanldeClick = (event:any) => {
-      const { key } = event;
-      if(key === 'Enter' && searchMed.length){
-        SubmitActionValue();
-      }
-    }
-    document.addEventListener('keydown', hanldeClick);
-    return () => {
-      document.removeEventListener('keydown', hanldeClick);
-    }
-  },[searchMed, SubmitActionValue]);
-
-  useEffect(() => {
-    const handleClick = (event:any) => {
-      const { key } = event;
-      if(key === 'Enter' && searchZip.length && open){
-        SubmitActionZip()
-      } 
-    }
-    document.addEventListener('keypress', handleClick);
-
-    return () => {
-      document.removeEventListener('keypress', handleClick);
-    }
-  },[open, searchZip, SubmitActionZip])
   return (
     <>
       <div className="result-page">
@@ -319,16 +272,30 @@ export const ResultPage: FC<any> = () => {
               <img src={HeaderLogoImage} alt="" />
             </Link>
             <div className="input_search_error">
+              {/* <InputField
+                value={searchMed}
+                onChange={setSearchMed}
+                placeholder="Type your drug name"
+                iconUrl={SearchIconSvg}
+                classes="result-page__header-input"
+                autocompleteClasses="result-page__autocomplete"
+                onSubmit={SubmitActionValue}
+                grouping={true}
+                autocomplete={searchMed.length >= 3 ? topMed : []}
+                errorHandle={error}
+                haveSubmit
+                buttonText="Search"
+                error="Incorrect medication"
+                selected={true}
+              /> */}
               <InputAutoSuggest 
-                  value={searchMed}
-                  setValue={setSearchMed}
-                  autocomplete={topMed}
+                  value={}
+                  setValue={}
+                  autocomplete={}
                   iconUrl={SearchIconSvg}
-                  placeholder="Type your drug name"
+                  placeholder="Type yout drug name"
                   haveSubmit
                   buttonText="Search"
-                  onSubmit={SubmitActionValue}
-                  error={error}
               />
               {error ? (
                 <div className="error_message">

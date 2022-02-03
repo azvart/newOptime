@@ -125,7 +125,7 @@ export const ResultPage: FC<any> = () => {
   }
 }
   const SubmitActionZip = () => {
-    if(searchZip.length > 0){
+    if(searchZip){
       history.push({
         state:{
           ...location.state,

@@ -99,12 +99,14 @@
     
 }
 .react-autosuggest__suggestion--highlighted{
-    
+    ul{
+        li:first-child{
             .autocomplete__item
                 {
                 background-color: $pink !important;
                 color: rgb(255,255,255);
                 }
             
-    
+        }
+    }
  }

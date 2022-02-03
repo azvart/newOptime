@@ -39,9 +39,6 @@
         @extend %center-row;
         height: 100%;
         .input_search_error {
-            .input-field{
-                width: 416px;
-            }
             display: flex;
             flex-direction: column;
             height: 100%;

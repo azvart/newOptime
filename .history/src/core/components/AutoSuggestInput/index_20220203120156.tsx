@@ -17,6 +17,18 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
       return []
     }
     const regex = new RegExp('^' + escaped, 'i');
+    // const data:any =  autocomplete.map((section:any) => {
+    //   const filtering =  {
+    //     label: section.label.filter((labels:any) => labels.label.toLowerCase().includes(value.toLowerCase()))
+    //   }
+    //   return filtering;
+    // })
+    // .filter((section:any) => section.label.length > 0);
+  //  const group = data.map((items:any) => autocomplete.find((title:any) => items.title === title.title))
+  //  .sort((a:any, b:any) => {
+  //    return (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0;
+  //  })
+    // return data;
   const data = autocomplete.map((section:any) => {
     return {
       title: section.title,
@@ -48,7 +60,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
     setInput(newValue);
   }
   const onSuggestionsClearRequested = () => {
-    setSuggest([]);
+    // setSuggest([]);
   }
   const getSuggestionValue = (suggestion:any) => {
     return suggestion.label
@@ -113,6 +125,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
       getSectionSuggestions={getSectionSuggestions}
       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
       highlightFirstSuggestion={true}
+      alwaysRenderSuggestions
     />
   )
 }

@@ -29,6 +29,7 @@ export const SearchPage: React.FC = () => {
   const [searchBool, setSearchBool] = useState(false);
   const [zipBool, setZipBool] = useState(false);
   const dispatch = useDispatch();
+  const node = useRef();
   useEffect(() => {
     
     dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));
@@ -76,7 +77,6 @@ export const SearchPage: React.FC = () => {
   const submitAction = () => {
     const escaped = escapedRegexCharacters(search.trim());
     const regex = new RegExp('^' + escaped, 'i');
-
     if(search.length > 0){
     const searchSubmit = state.map(({label}:any) => {
       return {
@@ -98,26 +98,30 @@ export const SearchPage: React.FC = () => {
     })[0].label[0].label; 
     setSearchBool(true);
     setSearch(sorting);
-    return ;
+    return;
   }else{
     setSearchBool(false);
     setError(true);
-    return ;
 
   }
-
-  
+  codes.length >= 3 ? setCodes(zip[0].label) :  null;
+  codes.length < 3 ? setZipError(true) : null
+  // const searchSubmit = state.map(({label}:any) => {
+  //   return {
+  //     label:label.find(({label}:any) => regex.test(label))
+  //   }
+  // })
+  // .filter(({label}:any) => label.length > 0)
+  // if(searchSubmit.length === 0){
+  //   setError(true)
+  //   return;
+  // }
+  // const sorting = searchSubmit.map(({label}:any) => label).flat()
+  // .sort((a:any, b:any) => {
+  //   return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
+  // })
 }
 
-const submitActionZip = () => {
-  try{
-    setCodes(zip[0].label);
-    return true;
-  }catch(e){
-    setZipError(true);
-    return false;
-  }
-}
   useEffect(() => {
     if(search.length > 0){
       setError(false);
@@ -129,64 +133,34 @@ const submitActionZip = () => {
     }
   },[codes]);
 
+  useEffect(() => {
+
+    zip.length >=0 && zip.length < 3 ? setZipBool(true) : setZipBool(false);
+
+  },[zipBool,zip])
 
   useEffect(() => {
 
-    if(zipBool && searchBool ){
-      const timer = setTimeout(() => {
-        dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
-      }, 500)
-      return () => {
-        clearTimeout(timer);
-      }  
+    if(zipBool && searchBool){
+      dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
     }
-    
-  },[zipBool,searchBool, search, codes])
+  },[zipBool,searchBool])
 
   useEffect(() => {
-    
     const handleClick = (event:any) => {
-     
       const {key} = event;
-      if(key === 'Enter' && search.length){
-        console.log('click med')
-          try{
-          submitAction();
-          }catch(e){
-            console.error(e);
-          }
-        
+      if(key === 'Enter'){
+        submitAction();
       }
     }
 
-    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keydown', handleClick, {once: true, passive: true});
 
     return () => {
       document.removeEventListener('keydown', handleClick);
     }
-  },[submitAction, search]);
-  useEffect(() => {
-    
-    const handleClick = (event:any) => {
-      
-      const {key} = event;
-      if(key === 'Enter' && codes.length){
-        console.log('click zip')
-          try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
-          }catch(e){
-            console.error(e);
-          }
-        
-      }
-    }
+  },[submitAction]);
 
-    document.addEventListener('keypress', handleClick);
-
-    return () => {
-      document.removeEventListener('keypress', handleClick);
-    }
-  },[submitActionZip, codes]);
   return (
     <div className="search-page">
       <div>
@@ -223,7 +197,7 @@ const submitActionZip = () => {
               value={codes}
               placeholder="ZIP (enter at least 3 characters)"
               onChange={setCodes}
-              onSubmit={submitActionZip}
+              onSubmit={submitAction}
               buttonText="Find lowest prices"
               autocomplete={zip}
               errorHandle={zipError}

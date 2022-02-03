@@ -29,6 +29,7 @@ export const SearchPage: React.FC = () => {
   const [searchBool, setSearchBool] = useState(false);
   const [zipBool, setZipBool] = useState(false);
   const dispatch = useDispatch();
+  const node = useRef();
   useEffect(() => {
     
     dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));
@@ -74,37 +75,47 @@ export const SearchPage: React.FC = () => {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
   const submitAction = () => {
+    try{
     const escaped = escapedRegexCharacters(search.trim());
     const regex = new RegExp('^' + escaped, 'i');
-
-    if(search.length > 0){
+    
     const searchSubmit = state.map(({label}:any) => {
       return {
         label: label.filter(({label}:any) => regex.test(label))
       }
     })
-    .filter(({label}:any) => label.length > 0)
-    if(searchSubmit.length === 0){
-      setError(true)
-      return;
+    .filter(({label}:any) => label.length > 0) ;
+    }catch(e){
+      console.error(e);
     }
-    const sorting = searchSubmit.map(({label}:any) => label).flat()
-    .sort((a:any,b:any) => {
-      return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
-    }).map((e:any) => {
-      return {
-        label:[{label: e.label, type: e.type}]
-      }
-    })[0].label[0].label; 
-    setSearchBool(true);
-    setSearch(sorting);
-    return ;
-  }else{
-    setSearchBool(false);
-    setError(true);
-    return ;
+  //   if(search.length > 0){
+  //   const searchSubmit = state.map(({label}:any) => {
+  //     return {
+  //       label: label.filter(({label}:any) => regex.test(label))
+  //     }
+  //   })
+  //   .filter(({label}:any) => label.length > 0)
+  //   if(searchSubmit.length === 0){
+  //     setError(true)
+  //     return;
+  //   }
+  //   const sorting = searchSubmit.map(({label}:any) => label).flat()
+  //   .sort((a:any,b:any) => {
+  //     return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;
+  //   }).map((e:any) => {
+  //     return {
+  //       label:[{label: e.label, type: e.type}]
+  //     }
+  //   })[0].label[0].label; 
+  //   setSearchBool(true);
+  //   setSearch(sorting);
+  //   return ;
+  // }else{
+  //   setSearchBool(false);
+  //   setError(true);
+  //   return ;
 
-  }
+  // }
 
   
 }
@@ -129,6 +140,11 @@ const submitActionZip = () => {
     }
   },[codes]);
 
+  useEffect(() => {
+
+    zip.length === 1 ? setZipBool(true) : setZipBool(false);
+
+  },[zipBool,zip])
 
   useEffect(() => {
 
@@ -141,17 +157,15 @@ const submitActionZip = () => {
       }  
     }
     
-  },[zipBool,searchBool, search, codes])
+  },[zipBool,searchBool, dispatch])
 
   useEffect(() => {
-    
     const handleClick = (event:any) => {
-     
       const {key} = event;
-      if(key === 'Enter' && search.length){
-        console.log('click med')
+      if(key === 'Enter'){
           try{
           submitAction();
+          submitActionZip() ? setZipBool(true) : setZipBool(false);
           }catch(e){
             console.error(e);
           }
@@ -159,34 +173,13 @@ const submitActionZip = () => {
       }
     }
 
-    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keydown', handleClick, {once: true, passive: true});
 
     return () => {
       document.removeEventListener('keydown', handleClick);
     }
-  },[submitAction, search]);
-  useEffect(() => {
-    
-    const handleClick = (event:any) => {
-      
-      const {key} = event;
-      if(key === 'Enter' && codes.length){
-        console.log('click zip')
-          try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
-          }catch(e){
-            console.error(e);
-          }
-        
-      }
-    }
-
-    document.addEventListener('keypress', handleClick);
-
-    return () => {
-      document.removeEventListener('keypress', handleClick);
-    }
-  },[submitActionZip, codes]);
+  },[submitAction, submitActionZip]);
+  
   return (
     <div className="search-page">
       <div>

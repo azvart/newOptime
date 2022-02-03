@@ -125,7 +125,7 @@ export const ResultPage: FC<any> = () => {
   }
 }
   const SubmitActionZip = () => {
-    if(searchZip.length > 0){
+    if(searchZip){
       history.push({
         state:{
           ...location.state,
@@ -300,14 +300,14 @@ export const ResultPage: FC<any> = () => {
   useEffect(() => {
     const handleClick = (event:any) => {
       const { key } = event;
-      if(key === 'Enter' && searchZip.length && open){
+      if(key === 'enter' && searchZip.length && open){
         SubmitActionZip()
       } 
     }
-    document.addEventListener('keypress', handleClick);
+    document.addEventListener('keydown', handleClick);
 
     return () => {
-      document.removeEventListener('keypress', handleClick);
+      document.removeEventListener('keydown', handleClick);
     }
   },[open, searchZip, SubmitActionZip])
   return (

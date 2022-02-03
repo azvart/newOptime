@@ -29,6 +29,7 @@ export const SearchPage: React.FC = () => {
   const [searchBool, setSearchBool] = useState(false);
   const [zipBool, setZipBool] = useState(false);
   const dispatch = useDispatch();
+  const node = useRef();
   useEffect(() => {
     
     dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));
@@ -76,7 +77,6 @@ export const SearchPage: React.FC = () => {
   const submitAction = () => {
     const escaped = escapedRegexCharacters(search.trim());
     const regex = new RegExp('^' + escaped, 'i');
-
     if(search.length > 0){
     const searchSubmit = state.map(({label}:any) => {
       return {
@@ -129,6 +129,11 @@ const submitActionZip = () => {
     }
   },[codes]);
 
+  useEffect(() => {
+
+    zip.length === 1 ? setZipBool(true) : setZipBool(false);
+
+  },[zipBool,zip])
 
   useEffect(() => {
 
@@ -141,17 +146,15 @@ const submitActionZip = () => {
       }  
     }
     
-  },[zipBool,searchBool, search, codes])
+  },[zipBool,searchBool, dispatch])
 
   useEffect(() => {
-    
     const handleClick = (event:any) => {
-     
       const {key} = event;
-      if(key === 'Enter' && search.length){
-        console.log('click med')
+      if(key === 'Enter'){
           try{
           submitAction();
+          submitActionZip() ? setZipBool(true) : setZipBool(false);
           }catch(e){
             console.error(e);
           }
@@ -159,34 +162,13 @@ const submitActionZip = () => {
       }
     }
 
-    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keydown', handleClick, {once: true, passive: true});
 
     return () => {
       document.removeEventListener('keydown', handleClick);
     }
-  },[submitAction, search]);
-  useEffect(() => {
-    
-    const handleClick = (event:any) => {
-      
-      const {key} = event;
-      if(key === 'Enter' && codes.length){
-        console.log('click zip')
-          try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
-          }catch(e){
-            console.error(e);
-          }
-        
-      }
-    }
-
-    document.addEventListener('keypress', handleClick);
-
-    return () => {
-      document.removeEventListener('keypress', handleClick);
-    }
-  },[submitActionZip, codes]);
+  },[submitAction, submitActionZip]);
+  
   return (
     <div className="search-page">
       <div>

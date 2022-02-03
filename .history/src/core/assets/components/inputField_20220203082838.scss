@@ -83,14 +83,11 @@
 }
 
  .react-autosuggest__section-container--first{
-
         ul{
             li:first-child{
                 .autocomplete__item{
-                    &:hover{
                     background-color: $pink !important;
                     color: rgb(255,255,255);
-                    }
                 }
             }
         }
@@ -98,13 +95,3 @@
     
     
 }
-.react-autosuggest__suggestion--highlighted{
-    
-            .autocomplete__item
-                {
-                background-color: $pink !important;
-                color: rgb(255,255,255);
-                }
-            
-    
- }

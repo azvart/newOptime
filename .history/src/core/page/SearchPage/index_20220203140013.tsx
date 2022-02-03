@@ -112,10 +112,10 @@ export const SearchPage: React.FC = () => {
 const submitActionZip = () => {
   try{
     setCodes(zip[0].label);
-    return true;
+    return;
   }catch(e){
     setZipError(true);
-    return false;
+    return;
   }
 }
   useEffect(() => {
@@ -173,7 +173,7 @@ const submitActionZip = () => {
       if(key === 'Enter' && codes.length){
         console.log('click zip')
           try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
+            submitActionZip();
           }catch(e){
             console.error(e);
           }

@@ -29,6 +29,7 @@ export const SearchPage: React.FC = () => {
   const [searchBool, setSearchBool] = useState(false);
   const [zipBool, setZipBool] = useState(false);
   const dispatch = useDispatch();
+  const node = useRef();
   useEffect(() => {
     
     dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));
@@ -76,7 +77,6 @@ export const SearchPage: React.FC = () => {
   const submitAction = () => {
     const escaped = escapedRegexCharacters(search.trim());
     const regex = new RegExp('^' + escaped, 'i');
-
     if(search.length > 0){
     const searchSubmit = state.map(({label}:any) => {
       return {
@@ -86,7 +86,7 @@ export const SearchPage: React.FC = () => {
     .filter(({label}:any) => label.length > 0)
     if(searchSubmit.length === 0){
       setError(true)
-      return;
+      return false;
     }
     const sorting = searchSubmit.map(({label}:any) => label).flat()
     .sort((a:any,b:any) => {
@@ -98,11 +98,11 @@ export const SearchPage: React.FC = () => {
     })[0].label[0].label; 
     setSearchBool(true);
     setSearch(sorting);
-    return ;
+    return true;
   }else{
     setSearchBool(false);
     setError(true);
-    return ;
+    return false;
 
   }
 
@@ -129,64 +129,38 @@ const submitActionZip = () => {
     }
   },[codes]);
 
+  useEffect(() => {
+
+    zip.length === 1 ? setZipBool(true) : setZipBool(false);
+
+  },[zipBool,zip])
 
   useEffect(() => {
 
-    if(zipBool && searchBool ){
-      const timer = setTimeout(() => {
-        dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
-      }, 500)
-      return () => {
-        clearTimeout(timer);
-      }  
+    if(zipBool && searchBool && submitAction && submitActionZip){
+      dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
     }
-    
-  },[zipBool,searchBool, search, codes])
+  },[zipBool,searchBool, search, zip])
 
   useEffect(() => {
-    
     const handleClick = (event:any) => {
-     
       const {key} = event;
-      if(key === 'Enter' && search.length){
-        console.log('click med')
-          try{
-          submitAction();
-          }catch(e){
-            console.error(e);
-          }
+      if(key === 'Enter'){
+        
+          submitAction() ? setSearchBool(true) : setSearchBool(false);
+          submitActionZip() ? setZipBool(true) : setZipBool(false);
+        
         
       }
     }
 
-    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keydown', handleClick, {once: true, passive: true});
 
     return () => {
       document.removeEventListener('keydown', handleClick);
     }
-  },[submitAction, search]);
-  useEffect(() => {
-    
-    const handleClick = (event:any) => {
-      
-      const {key} = event;
-      if(key === 'Enter' && codes.length){
-        console.log('click zip')
-          try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
-          }catch(e){
-            console.error(e);
-          }
-        
-      }
-    }
-
-    document.addEventListener('keypress', handleClick);
-
-    return () => {
-      document.removeEventListener('keypress', handleClick);
-    }
-  },[submitActionZip, codes]);
+  },[submitAction]);
+  
   return (
     <div className="search-page">
       <div>

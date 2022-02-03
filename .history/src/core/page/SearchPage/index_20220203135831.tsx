@@ -112,10 +112,10 @@ export const SearchPage: React.FC = () => {
 const submitActionZip = () => {
   try{
     setCodes(zip[0].label);
-    return true;
+    return;
   }catch(e){
     setZipError(true);
-    return false;
+    return;
   }
 }
   useEffect(() => {
@@ -141,7 +141,7 @@ const submitActionZip = () => {
       }  
     }
     
-  },[zipBool,searchBool, search, codes])
+  },[zipBool,searchBool, search, zip])
 
   useEffect(() => {
     
@@ -170,10 +170,10 @@ const submitActionZip = () => {
     const handleClick = (event:any) => {
       
       const {key} = event;
-      if(key === 'Enter' && codes.length){
+      if(key === 'Enter' && zip.length){
         console.log('click zip')
           try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
+            submitActionZip();
           }catch(e){
             console.error(e);
           }
@@ -186,7 +186,7 @@ const submitActionZip = () => {
     return () => {
       document.removeEventListener('keypress', handleClick);
     }
-  },[submitActionZip, codes]);
+  },[submitActionZip, zip]);
   return (
     <div className="search-page">
       <div>

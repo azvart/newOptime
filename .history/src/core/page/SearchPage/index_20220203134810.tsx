@@ -129,6 +129,11 @@ const submitActionZip = () => {
     }
   },[codes]);
 
+  useEffect(() => {
+
+    zip.length === 1 ? setZipBool(true) : setZipBool(false);
+
+  },[zipBool,zip])
 
   useEffect(() => {
 
@@ -141,15 +146,12 @@ const submitActionZip = () => {
       }  
     }
     
-  },[zipBool,searchBool, search, codes])
+  },[zipBool,searchBool, search, zip])
 
   useEffect(() => {
-    
     const handleClick = (event:any) => {
-     
       const {key} = event;
       if(key === 'Enter' && search.length){
-        console.log('click med')
           try{
           submitAction();
           }catch(e){
@@ -159,21 +161,18 @@ const submitActionZip = () => {
       }
     }
 
-    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keydown', handleClick, {once: true, passive: true});
 
     return () => {
       document.removeEventListener('keydown', handleClick);
     }
-  },[submitAction, search]);
+  },[submitAction]);
   useEffect(() => {
-    
     const handleClick = (event:any) => {
-      
       const {key} = event;
-      if(key === 'Enter' && codes.length){
-        console.log('click zip')
+      if(key === 'Enter' && zip.length){
           try{
-            submitActionZip() ? setZipBool(true) : setZipBool(false);
+            submitActionZip();
           }catch(e){
             console.error(e);
           }
@@ -181,12 +180,12 @@ const submitActionZip = () => {
       }
     }
 
-    document.addEventListener('keypress', handleClick);
+    document.addEventListener('keydown', handleClick, {once: true, passive: true});
 
     return () => {
-      document.removeEventListener('keypress', handleClick);
+      document.removeEventListener('keydown', handleClick);
     }
-  },[submitActionZip, codes]);
+  },[submitActionZip]);
   return (
     <div className="search-page">
       <div>

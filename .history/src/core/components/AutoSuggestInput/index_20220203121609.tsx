@@ -113,6 +113,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
       getSectionSuggestions={getSectionSuggestions}
       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
       highlightFirstSuggestion={true}
+      alwaysRenderSuggestions
     />
   )
 }
