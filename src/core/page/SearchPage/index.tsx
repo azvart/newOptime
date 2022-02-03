@@ -110,13 +110,22 @@ export const SearchPage: React.FC = () => {
 }
 
 const submitActionZip = () => {
-  try{
-    setCodes(zip[0].label);
-    return setZipBool(true);
+  // try{
+  //   setCodes(zip[0].label);
+  //   return setZipBool(true);
   
-  }catch(e){
-    setZipError(true);
-    setZipBool(false);
+  // }catch(e){
+  //   setZipError(true);
+  //   setZipBool(false);
+  //   return;
+  // }
+  if(codes.length >= 3 && zip.length >= 1 ){
+    setCodes(zip[0].label);
+    setZipBool(true);
+    return;
+  }else{
+    setZipBool(false)
+    setZipError(false);
     return;
   }
 }
