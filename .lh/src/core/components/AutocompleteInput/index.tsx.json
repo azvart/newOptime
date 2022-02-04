@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 26,
+            "activePatchIndex": 44,
             "patches": [
                 {
                     "date": 1643610332916,
@@ -112,6 +112,78 @@
                 {
                     "date": 1643618056242,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,8 @@\n   useState,\r\n   useMemo,\r\n } from \"react\";\r\n import Autocomplete from \"react-autocomplete\";\r\n-import Autosuggest from \"react-autosuggest\";\r\n import \"../../assets/components/autocomplete.scss\";\r\n \r\n type Props = {\r\n   placeholder?: string;\r\n"
+                },
+                {
+                    "date": 1643974107816,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,11 +35,13 @@\n   selected,\r\n   grouping,\r\n }) => {\r\n   const enterHandler = (e: KeyboardEvent) => {\r\n-    if (onSubmit) {\r\n-      if (e.key === \"Enter\") onSubmit(value);\r\n+    const data = autocomplete.filter(({label}:any) => label.toLowerCase().includes(value))[0];\r\n+    if(e.key === 'Enter'){\r\n+      setValue(data.label);\r\n     }\r\n+    \r\n   };\r\n   const node:any = useRef();\r\n   const [show,setShow] = useState(true)\r\n   const onClick = useCallback((e:any,index:any) => {\r\n@@ -95,22 +97,23 @@\n       shouldItemRender={(item: any, value) => {\r\n         return grouping === true ? item.label.label.toLowerCase().includes(value) : item.label.toLowerCase().includes(value);\r\n \r\n       }}\r\n-      renderItem={(item,isHighlighted)=>grouping === true ? (<div className=\"none\"></div>) : <div className=\"autocomplete\" key={item.label} ><div className=\"autocomplete__item\">{item.label}</div></div>}\r\n+      renderItem={(item,isHighlighted)=>grouping === true ? (<div className=\"none\"></div>) : <div className={`autocomplete`} key={item.label} ><div className={`autocomplete__item ${isHighlighted ? 'ishigh' : null}`}>{item.label}</div></div>}\r\n       value={value}\r\n       menuStyle={grouping === true ? {display:\"none\"} : {borderRadius:\"3px\",boxShadow:\"0 2px 12px rgba(0, 0, 0, 0.1)\",marginTop:\"2px\",zIndex:2,overflow:\"auto\",position:'absolute',background:'rgba(255, 255, 255, 0.9)',maxHeight:\"300px\",left:\"5px\",top:\"50px\",width:\"661px\"}}\r\n       onChange={(e: any) => {\r\n         setShow(true)\r\n         setValue(e.target.value)}}\r\n-        onSelect={(value) => {\r\n+      onSelect={(val) => {\r\n           if(grouping === true){\r\n             return false;\r\n           }else{\r\n-            setValue(value)\r\n+            value = val\r\n           }\r\n         }}\r\n-      renderInput={(props) => {\r\n+        autoHighlight={true}\r\n+        renderInput={(props) => {\r\n         return (\r\n           <input\r\n             {...props}\r\n             aria-invalid=\"false\"\r\n@@ -118,8 +121,9 @@\n             placeholder={placeholder}\r\n             onKeyDown={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n+            \r\n           />\r\n         );\r\n       }}\r\n     />\r\n"
+                },
+                {
+                    "date": 1643974185026,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -102,9 +102,11 @@\n       value={value}\r\n       menuStyle={grouping === true ? {display:\"none\"} : {borderRadius:\"3px\",boxShadow:\"0 2px 12px rgba(0, 0, 0, 0.1)\",marginTop:\"2px\",zIndex:2,overflow:\"auto\",position:'absolute',background:'rgba(255, 255, 255, 0.9)',maxHeight:\"300px\",left:\"5px\",top:\"50px\",width:\"661px\"}}\r\n       onChange={(e: any) => {\r\n         setShow(true)\r\n-        setValue(e.target.value)}}\r\n+        // setValue(e.target.value)}}\r\n+        value = e.target.value\r\n+      }}\r\n       onSelect={(val) => {\r\n           if(grouping === true){\r\n             return false;\r\n           }else{\r\n"
+                },
+                {
+                    "date": 1643974205130,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -102,10 +102,10 @@\n       value={value}\r\n       menuStyle={grouping === true ? {display:\"none\"} : {borderRadius:\"3px\",boxShadow:\"0 2px 12px rgba(0, 0, 0, 0.1)\",marginTop:\"2px\",zIndex:2,overflow:\"auto\",position:'absolute',background:'rgba(255, 255, 255, 0.9)',maxHeight:\"300px\",left:\"5px\",top:\"50px\",width:\"661px\"}}\r\n       onChange={(e: any) => {\r\n         setShow(true)\r\n-        // setValue(e.target.value)}}\r\n-        value = e.target.value\r\n+        setValue(e.target.value)}}\r\n+\r\n       }}\r\n       onSelect={(val) => {\r\n           if(grouping === true){\r\n             return false;\r\n"
+                },
+                {
+                    "date": 1643974354553,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -97,14 +97,14 @@\n       shouldItemRender={(item: any, value) => {\r\n         return grouping === true ? item.label.label.toLowerCase().includes(value) : item.label.toLowerCase().includes(value);\r\n \r\n       }}\r\n-      renderItem={(item,isHighlighted)=>grouping === true ? (<div className=\"none\"></div>) : <div className={`autocomplete`} key={item.label} ><div className={`autocomplete__item ${isHighlighted ? 'ishigh' : null}`}>{item.label}</div></div>}\r\n+      renderItem={(item,isHighlighted)=>grouping === true ? (<div className=\"none\"></div>) : <div className={`autocomplete`} key={item.label} ><div className={`autocomplete__item`} style={{background : isHighlighted ? '#ff4b9c' : 'white'}}>{item.label}</div></div>}\r\n       value={value}\r\n       menuStyle={grouping === true ? {display:\"none\"} : {borderRadius:\"3px\",boxShadow:\"0 2px 12px rgba(0, 0, 0, 0.1)\",marginTop:\"2px\",zIndex:2,overflow:\"auto\",position:'absolute',background:'rgba(255, 255, 255, 0.9)',maxHeight:\"300px\",left:\"5px\",top:\"50px\",width:\"661px\"}}\r\n       onChange={(e: any) => {\r\n         setShow(true)\r\n-        setValue(e.target.value)}}\r\n+        setValue(e.target.value)\r\n \r\n       }}\r\n       onSelect={(val) => {\r\n           if(grouping === true){\r\n"
+                },
+                {
+                    "date": 1643974469608,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -97,9 +97,9 @@\n       shouldItemRender={(item: any, value) => {\r\n         return grouping === true ? item.label.label.toLowerCase().includes(value) : item.label.toLowerCase().includes(value);\r\n \r\n       }}\r\n-      renderItem={(item,isHighlighted)=>grouping === true ? (<div className=\"none\"></div>) : <div className={`autocomplete`} key={item.label} ><div className={`autocomplete__item`} style={{background : isHighlighted ? '#ff4b9c' : 'white'}}>{item.label}</div></div>}\r\n+      renderItem={(item,isHighlighted)=>grouping === true ? (<div className=\"none\"></div>) : <div className={`autocomplete`} key={item.label} ><div className={`autocomplete__item`} style={{background : isHighlighted ? '#ff4b9c' : 'white', color: isHighlighted ? '#fff': '#7d7d7d' }}>{item.label}</div></div>}\r\n       value={value}\r\n       menuStyle={grouping === true ? {display:\"none\"} : {borderRadius:\"3px\",boxShadow:\"0 2px 12px rgba(0, 0, 0, 0.1)\",marginTop:\"2px\",zIndex:2,overflow:\"auto\",position:'absolute',background:'rgba(255, 255, 255, 0.9)',maxHeight:\"300px\",left:\"5px\",top:\"50px\",width:\"661px\"}}\r\n       onChange={(e: any) => {\r\n         setShow(true)\r\n"
+                },
+                {
+                    "date": 1643974861449,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -112,8 +112,11 @@\n           }else{\r\n             value = val\r\n           }\r\n         }}\r\n+        renderMenu={(items,value, style) => {\r\n+          return <div style={{...style}} children={items} />\r\n+        }}\r\n         autoHighlight={true}\r\n         renderInput={(props) => {\r\n         return (\r\n           <input\r\n"
+                },
+                {
+                    "date": 1643974893463,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -112,11 +112,8 @@\n           }else{\r\n             value = val\r\n           }\r\n         }}\r\n-        renderMenu={(items,value, style) => {\r\n-          return <div style={{...style}} children={items} />\r\n-        }}\r\n         autoHighlight={true}\r\n         renderInput={(props) => {\r\n         return (\r\n           <input\r\n"
+                },
+                {
+                    "date": 1643974940087,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -112,9 +112,10 @@\n           }else{\r\n             value = val\r\n           }\r\n         }}\r\n-        autoHighlight={true}\r\n+        // autoHighlight={true}\r\n+        open={true}\r\n         renderInput={(props) => {\r\n         return (\r\n           <input\r\n             {...props}\r\n"
+                },
+                {
+                    "date": 1643975107769,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,9 +121,9 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            onKeyDown={enterHandler}\r\n+            // onKeyDown={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975142429,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -122,8 +122,9 @@\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n             // onKeyDown={enterHandler}\r\n+            onClick={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975165600,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -122,9 +122,9 @@\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n             // onKeyDown={enterHandler}\r\n-            onClick={enterHandler}\r\n+            onKeyPress={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975243145,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,10 +121,9 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            // onKeyDown={enterHandler}\r\n-            onKeyPress={enterHandler}\r\n+            onKeyDown={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975270628,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,9 +121,9 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            onKeyDown={enterHandler}\r\n+            onKeyUp={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975358285,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,9 +121,9 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            onKeyUp={enterHandler}\r\n+            onKeyDown={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975410531,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,9 +121,10 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            onKeyDown={enterHandler}\r\n+            // onKeyDown={enterHandler}\r\n+            onKeyDownCapture={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975457425,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,9 +121,8 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            // onKeyDown={enterHandler}\r\n             onKeyDownCapture={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n"
+                },
+                {
+                    "date": 1643975501644,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,9 +121,10 @@\n             {...props}\r\n             aria-invalid=\"false\"\r\n             className={classes}\r\n             placeholder={placeholder}\r\n-            onKeyDownCapture={enterHandler}\r\n+            onKeyDown={enterHandler}\r\n+            // onKeyDownCapture={enterHandler}\r\n             maxLength={30}\r\n             value={value}\r\n             \r\n           />\r\n"
+                },
+                {
+                    "date": 1643975544678,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -113,9 +113,8 @@\n             value = val\r\n           }\r\n         }}\r\n         // autoHighlight={true}\r\n-        open={true}\r\n         renderInput={(props) => {\r\n         return (\r\n           <input\r\n             {...props}\r\n"
                 }
             ],
             "date": 1643610332916,

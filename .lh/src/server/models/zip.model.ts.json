@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/server/models/zip.model.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1643952090614,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1643953029063,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,10 +66,12 @@\n   let code = await this.aggregate([\n     {\n       $match: {\n         $or: [\n-          { zip: { $regex: `^${zip}`, $options:'im'  } },\n-          { city: { $regex: `^${zip}`, $options:'im' } },\n+          // { zip: { $regex: `^${zip}`, $options:'im'  } },\n+          // { city: { $regex: `^${zip}`, $options:'im' } },\n+          {zip:{$regex:'.*.*',$options:'im'}},\n+          {city:{$regex:'.*.*',$options:\"im\"}}\n         ],\n       },\n     },\n     {\n"
+                },
+                {
+                    "date": 1643953346981,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,12 +66,12 @@\n   let code = await this.aggregate([\n     {\n       $match: {\n         $or: [\n-          // { zip: { $regex: `^${zip}`, $options:'im'  } },\n-          // { city: { $regex: `^${zip}`, $options:'im' } },\n-          {zip:{$regex:'.*.*',$options:'im'}},\n-          {city:{$regex:'.*.*',$options:\"im\"}}\n+          { zip: { $regex: `^${zip}`, $options:'im'  } },\n+          { city: { $regex: `^${zip}`, $options:'im' } },\n+          // {zip:{$regex:'.*.*',$options:'im'}},\n+          // {city:{$regex:'.*.*',$options:\"im\"}}\n         ],\n       },\n     },\n     {\n"
+                },
+                {
+                    "date": 1643953783848,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -80,14 +80,14 @@\n         label: { $concat: [\"$zip\", \" \", \"$city\"] },\n         location: { $concat: [\"$lat\", \",\", \"$lng\"] },\n       },\n     },\n-    {\n-      $project:{\n-        zip:'$zip',\n-        label:[{label:\"$label\", type:\"$location\"}]\n-      }\n-    }\n+    // {\n+    //   $project:{\n+    //     zip:'$zip',\n+    //     label:[{label:\"$label\", type:\"$location\"}]\n+    //   }\n+    // }\n   ]);\n \n   return code;\n }\n"
+                }
+            ],
+            "date": 1643952090614,
+            "name": "Commit-0",
+            "content": "import mongoose, {Document, Schema, Model} from 'mongoose';\nimport {IZip} from '../../../types/zip.types';\n\ninterface ZipDocument extends IZip, Document{};\ninterface ZipModel extends Model<ZipDocument>{\n  findZip: (zip:string) => Promise<ZipDocument>;\n};\n\n\n\nconst ZipShema:Schema = new Schema(  {\n  zip: {\n    type: String,\n  },\n  lat: {\n    type: String,\n  },\n  lng: {\n    type: String,\n  },\n  city: {\n    type: String,\n  },\n  state_id: {\n    type: String,\n  },\n  state_name: {\n    type: String,\n  },\n  zcta: {\n    type: String,\n  },\n  population: {\n    type: String,\n  },\n  density: {\n    type: String,\n  },\n  county_fips: {\n    type: String,\n  },\n  county_name: {\n    type: String,\n  },\n  county_weigths: {\n    type: Object,\n  },\n  county_names_all: {\n    type: String,\n  },\n  county_fips_all: {\n    type: String,\n  },\n  imprecise: {\n    type: String,\n  },\n  military: {\n    type: String,\n  },\n  timezone: {\n    type: String,\n  },\n},{versionKey:false, toJSON: {virtuals: true}});\n\nZipShema.statics.findZip = async function(zip:string){\n  let code = await this.aggregate([\n    {\n      $match: {\n        $or: [\n          { zip: { $regex: `^${zip}`, $options:'im'  } },\n          { city: { $regex: `^${zip}`, $options:'im' } },\n        ],\n      },\n    },\n    {\n      $project: {\n        zip: \"$zip\",\n        label: { $concat: [\"$zip\", \" \", \"$city\"] },\n        location: { $concat: [\"$lat\", \",\", \"$lng\"] },\n      },\n    },\n    {\n      $project:{\n        zip:'$zip',\n        label:[{label:\"$label\", type:\"$location\"}]\n      }\n    }\n  ]);\n\n  return code;\n}\n\n\nconst ModelZip = mongoose.model<ZipDocument, ZipModel>(\"zip\", ZipShema);\n\n\nexport default ModelZip;"
+        }
+    ]
+}

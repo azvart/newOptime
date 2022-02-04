@@ -1,0 +1,758 @@
+{
+    "sourceFile": "src/core/page/result/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 185,
+            "patches": [
+                {
+                    "date": 1643955364007,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1643956063389,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,9 +290,9 @@\n       if(key === 'Enter' ){\r\n         if(searchMed.length){\r\n         SubmitActionValue();\r\n         }\r\n-        if(searchZip.length && open){\r\n+        if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n         }\r\n       }\r\n     }\r\n"
+                },
+                {
+                    "date": 1643956083234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -288,9 +288,9 @@\n     const hanldeClick = (event:any) => {\r\n       const { key } = event;\r\n       if(key === 'Enter' ){\r\n         if(searchMed.length){\r\n-        SubmitActionValue();\r\n+          SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n         }\r\n"
+                },
+                {
+                    "date": 1643956303414,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -115,11 +115,10 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    return history.push({\r\n+    return history.replace({\r\n       state:{\r\n-        ...location.state,\r\n         name: sorting\r\n       }\r\n     })\r\n   }\r\n"
+                },
+                {
+                    "date": 1643956342938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -115,10 +115,11 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    return history.replace({\r\n+    return history.push({\r\n       state:{\r\n+        ...location.state,\r\n         name: sorting\r\n       }\r\n     })\r\n   }\r\n"
+                },
+                {
+                    "date": 1643956511405,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -124,20 +124,32 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-    if(searchZip.length > 0){\r\n-      history.push({\r\n+    // if(searchZip.length > 0){\r\n+    //   history.push({\r\n+    //     state:{\r\n+    //       ...location.state,\r\n+    //       location:zip\r\n+    //     }\r\n+    //   })\r\n+    //   setErrorZip(false);\r\n+    //   return true;\r\n+    // }else{\r\n+    //   searchZip ? setErrorZip(false) : setErrorZip(true);\r\n+    //   return false;\r\n+    // }\r\n+    try{\r\n+      setSearchZip(zip[0].label);\r\n+      return history.push({\r\n         state:{\r\n           ...location.state,\r\n           location:zip\r\n         }\r\n       })\r\n-      setErrorZip(false);\r\n-      return true;\r\n-    }else{\r\n-      searchZip ? setErrorZip(false) : setErrorZip(true);\r\n-      return false;\r\n+    }catch(e){\r\n+      setErrorZip(true);\r\n+      return;\r\n     }\r\n   }\r\n \r\n   const sortedFunc: any = () => {\r\n"
+                },
+                {
+                    "date": 1643956640151,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -139,14 +139,15 @@\n     //   return false;\r\n     // }\r\n     try{\r\n       setSearchZip(zip[0].label);\r\n-      return history.push({\r\n+      history.push({\r\n         state:{\r\n           ...location.state,\r\n           location:zip\r\n         }\r\n-      })\r\n+      });\r\n+      return;\r\n     }catch(e){\r\n       setErrorZip(true);\r\n       return;\r\n     }\r\n"
+                },
+                {
+                    "date": 1643956702623,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -139,14 +139,16 @@\n     //   return false;\r\n     // }\r\n     try{\r\n       setSearchZip(zip[0].label);\r\n+      if(searchZip.length){\r\n       history.push({\r\n         state:{\r\n           ...location.state,\r\n           location:zip\r\n         }\r\n       });\r\n+    }\r\n       return;\r\n     }catch(e){\r\n       setErrorZip(true);\r\n       return;\r\n"
+                },
+                {
+                    "date": 1643956743659,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -139,16 +139,9 @@\n     //   return false;\r\n     // }\r\n     try{\r\n       setSearchZip(zip[0].label);\r\n-      if(searchZip.length){\r\n-      history.push({\r\n-        state:{\r\n-          ...location.state,\r\n-          location:zip\r\n-        }\r\n-      });\r\n-    }\r\n+    \r\n       return;\r\n     }catch(e){\r\n       setErrorZip(true);\r\n       return;\r\n"
+                },
+                {
+                    "date": 1643956759507,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -300,16 +300,22 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          history.push({\r\n+            state:{\r\n+              ...location.state,\r\n+              location:zip\r\n+            }\r\n+          });\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, zip]);\r\n \r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643956787216,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -313,9 +313,9 @@\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, zip]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, zip, history]);\r\n \r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643956818426,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -300,22 +300,16 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n-          history.push({\r\n-            state:{\r\n-              ...location.state,\r\n-              location:zip\r\n-            }\r\n-          });\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, zip, history]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n \r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643956845775,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -124,24 +124,16 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-    // if(searchZip.length > 0){\r\n-    //   history.push({\r\n-    //     state:{\r\n-    //       ...location.state,\r\n-    //       location:zip\r\n-    //     }\r\n-    //   })\r\n-    //   setErrorZip(false);\r\n-    //   return true;\r\n-    // }else{\r\n-    //   searchZip ? setErrorZip(false) : setErrorZip(true);\r\n-    //   return false;\r\n-    // }\r\n     try{\r\n       setSearchZip(zip[0].label);\r\n-    \r\n+      history.push({\r\n+        state:{\r\n+          ...location.state,\r\n+          location:zip\r\n+        }\r\n+      });\r\n       return;\r\n     }catch(e){\r\n       setErrorZip(true);\r\n       return;\r\n"
+                },
+                {
+                    "date": 1643956862526,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -134,8 +134,9 @@\n         }\r\n       });\r\n       return;\r\n     }catch(e){\r\n+      console.log(e);\r\n       setErrorZip(true);\r\n       return;\r\n     }\r\n   }\r\n"
+                },
+                {
+                    "date": 1643956927625,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,16 +125,18 @@\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n     try{\r\n+      if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n       history.push({\r\n         state:{\r\n           ...location.state,\r\n           location:zip\r\n         }\r\n       });\r\n       return;\r\n+    }\r\n     }catch(e){\r\n       console.log(e);\r\n       setErrorZip(true);\r\n       return;\r\n"
+                },
+                {
+                    "date": 1643956975238,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,15 +127,15 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      history.push({\r\n+      return history.push({\r\n         state:{\r\n           ...location.state,\r\n           location:zip\r\n         }\r\n       });\r\n-      return;\r\n+      \r\n     }\r\n     }catch(e){\r\n       console.log(e);\r\n       setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643957071724,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,14 +127,9 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      return history.push({\r\n-        state:{\r\n-          ...location.state,\r\n-          location:zip\r\n-        }\r\n-      });\r\n+      return;\r\n       \r\n     }\r\n     }catch(e){\r\n       console.log(e);\r\n"
+                },
+                {
+                    "date": 1643957111800,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -131,14 +131,12 @@\n       return;\r\n       \r\n     }\r\n     }catch(e){\r\n-      console.log(e);\r\n       setErrorZip(true);\r\n       return;\r\n     }\r\n   }\r\n-\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n       const manufacturer = settings.manufacturer;\r\n"
+                },
+                {
+                    "date": 1643957173079,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -296,9 +296,16 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-\r\n+  useEffect(() => {\r\n+    history.push({\r\n+      state:{\r\n+        name:searchMed,\r\n+        location:zip,\r\n+      }\r\n+    })\r\n+  },[history, searchZip, searchMed, zip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643957193390,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -115,14 +115,15 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    return history.push({\r\n-      state:{\r\n-        ...location.state,\r\n-        name: sorting\r\n-      }\r\n-    })\r\n+    // return history.push({\r\n+    //   state:{\r\n+    //     ...location.state,\r\n+    //     name: sorting\r\n+    //   }\r\n+    // })\r\n+    return;\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n     try{\r\n"
+                },
+                {
+                    "date": 1643957204916,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -304,9 +304,9 @@\n         name:searchMed,\r\n         location:zip,\r\n       }\r\n     })\r\n-  },[history, searchZip, searchMed, zip]);\r\n+  },[history, searchZip, searchMed, zip, SubmitActionValue, SubmitActionZip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643957220904,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -304,9 +304,9 @@\n         name:searchMed,\r\n         location:zip,\r\n       }\r\n     })\r\n-  },[history, searchZip, searchMed, zip, SubmitActionValue, SubmitActionZip]);\r\n+  },[SubmitActionValue, SubmitActionZip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643957257800,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -298,14 +298,16 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n+    if(searchMed.length && searchZip.length){\r\n     history.push({\r\n       state:{\r\n         name:searchMed,\r\n         location:zip,\r\n       }\r\n     })\r\n+  }\r\n   },[SubmitActionValue, SubmitActionZip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643958188433,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -298,9 +298,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(searchMed.length && searchZip.length){\r\n+    if(searchMed.length && searchZip.length && zip.length){\r\n     history.push({\r\n       state:{\r\n         name:searchMed,\r\n         location:zip,\r\n"
+                },
+                {
+                    "date": 1643958195221,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,9 +306,9 @@\n         location:zip,\r\n       }\r\n     })\r\n   }\r\n-  },[SubmitActionValue, SubmitActionZip]);\r\n+  },[SubmitActionValue, SubmitActionZip, zip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643958475592,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,9 +306,9 @@\n         location:zip,\r\n       }\r\n     })\r\n   }\r\n-  },[SubmitActionValue, SubmitActionZip, zip]);\r\n+  },[SubmitActionValue, SubmitActionZip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643958504676,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,9 +306,9 @@\n         location:zip,\r\n       }\r\n     })\r\n   }\r\n-  },[SubmitActionValue, SubmitActionZip]);\r\n+  },[SubmitActionValue, SubmitActionZip, searchMed, searchZip, zip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643958559756,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -297,18 +297,18 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  useEffect(() => {\r\n-    if(searchMed.length && searchZip.length && zip.length){\r\n-    history.push({\r\n-      state:{\r\n-        name:searchMed,\r\n-        location:zip,\r\n-      }\r\n-    })\r\n-  }\r\n-  },[SubmitActionValue, SubmitActionZip, searchMed, searchZip, zip]);\r\n+  // useEffect(() => {\r\n+  //   if(searchMed.length && searchZip.length && zip.length){\r\n+  //   history.push({\r\n+  //     state:{\r\n+  //       name:searchMed,\r\n+  //       location:zip,\r\n+  //     }\r\n+  //   })\r\n+  // }\r\n+  // },[SubmitActionValue, SubmitActionZip, searchMed, searchZip, zip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643958642857,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -286,8 +286,14 @@\n       const { key } = event;\r\n       if(key === 'Enter' ){\r\n         if(searchMed.length){\r\n           SubmitActionValue();\r\n+          history.push({\r\n+            state:{\r\n+              ...location.state,\r\n+              name: searchMed\r\n+            }\r\n+          })\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n         }\r\n"
+                },
+                {
+                    "date": 1643958680812,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -295,8 +295,14 @@\n           })\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          history.push({\r\n+            state:{\r\n+              ...location.state,\r\n+              location: zip\r\n+            }\r\n+          })\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643958761912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -302,8 +302,16 @@\n               location: zip\r\n             }\r\n           })\r\n         }\r\n+        if(searchMed.length && zip.length){\r\n+          history.push({\r\n+            state:{\r\n+              name: searchMed,\r\n+              location: zip\r\n+            }\r\n+          })\r\n+        }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n"
+                },
+                {
+                    "date": 1643958770813,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -286,23 +286,11 @@\n       const { key } = event;\r\n       if(key === 'Enter' ){\r\n         if(searchMed.length){\r\n           SubmitActionValue();\r\n-          history.push({\r\n-            state:{\r\n-              ...location.state,\r\n-              name: searchMed\r\n-            }\r\n-          })\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n-          history.push({\r\n-            state:{\r\n-              ...location.state,\r\n-              location: zip\r\n-            }\r\n-          })\r\n         }\r\n         if(searchMed.length && zip.length){\r\n           history.push({\r\n             state:{\r\n"
+                },
+                {
+                    "date": 1643958834034,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,9 +290,9 @@\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n         }\r\n-        if(searchMed.length && zip.length){\r\n+        if(SubmitActionValue && zip.length){\r\n           history.push({\r\n             state:{\r\n               name: searchMed,\r\n               location: zip\r\n"
+                },
+                {
+                    "date": 1643958968555,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -305,18 +305,8 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  // useEffect(() => {\r\n-  //   if(searchMed.length && searchZip.length && zip.length){\r\n-  //   history.push({\r\n-  //     state:{\r\n-  //       name:searchMed,\r\n-  //       location:zip,\r\n-  //     }\r\n-  //   })\r\n-  // }\r\n-  // },[SubmitActionValue, SubmitActionZip, searchMed, searchZip, zip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643958988930,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -115,14 +115,14 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    // return history.push({\r\n-    //   state:{\r\n-    //     ...location.state,\r\n-    //     name: sorting\r\n-    //   }\r\n-    // })\r\n+    return history.push({\r\n+      state:{\r\n+        ...location.state,\r\n+        name: sorting\r\n+      }\r\n+    })\r\n     return;\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n"
+                },
+                {
+                    "date": 1643958997945,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,16 +290,8 @@\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n         }\r\n-        if(SubmitActionValue && zip.length){\r\n-          history.push({\r\n-            state:{\r\n-              name: searchMed,\r\n-              location: zip\r\n-            }\r\n-          })\r\n-        }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n"
+                },
+                {
+                    "date": 1643959121594,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,8 +53,12 @@\n     Dosage: \"no items\",\r\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n+  const [historyParams, setHistory] = useState({\r\n+    name:'',\r\n+    location:''\r\n+  })\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n"
+                },
+                {
+                    "date": 1643959304287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -119,14 +119,12 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    return history.push({\r\n-      state:{\r\n-        ...location.state,\r\n-        name: sorting\r\n-      }\r\n-    })\r\n+    setHistory({\r\n+      ...historyParams,\r\n+      name: sorting\r\n+    });\r\n     return;\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n"
+                },
+                {
+                    "date": 1643959363692,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,8 +130,12 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n+      setHistory({\r\n+        ...historyParams,\r\n+        location:zip\r\n+      })\r\n       return;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643959461530,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -132,9 +132,9 @@\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n       setHistory({\r\n         ...historyParams,\r\n-        location:zip\r\n+        location:zip[0]\r\n       })\r\n       return;\r\n       \r\n     }\r\n"
+                },
+                {
+                    "date": 1643959541197,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,12 +130,14 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n+      if(zip.length === 1){\r\n       setHistory({\r\n         ...historyParams,\r\n         location:zip[0]\r\n       })\r\n+    }\r\n       return;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643959593524,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,14 +130,8 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      if(zip.length === 1){\r\n-      setHistory({\r\n-        ...historyParams,\r\n-        location:zip[0]\r\n-      })\r\n-    }\r\n       return;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643959607289,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -291,8 +291,12 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          setHistory({\r\n+            ...historyParams,\r\n+            location: zip\r\n+          })\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643959640012,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -302,9 +302,9 @@\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, historyParams, zip]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643959675893,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -291,13 +291,15 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          if(zip){\r\n           setHistory({\r\n             ...historyParams,\r\n             location: zip\r\n           })\r\n         }\r\n+        }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n"
+                },
+                {
+                    "date": 1643959725175,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -291,15 +291,9 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n-          if(zip){\r\n-          setHistory({\r\n-            ...historyParams,\r\n-            location: zip\r\n-          })\r\n         }\r\n-        }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n"
+                },
+                {
+                    "date": 1643959768572,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -298,9 +298,15 @@\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, historyParams, zip]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  useEffect(() => {\r\n+    setHistory({\r\n+      ...historyParams,\r\n+      location: zip\r\n+    })\r\n+  },[zip, history]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643959881668,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,10 +54,10 @@\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n   const [historyParams, setHistory] = useState({\r\n-    name:'',\r\n-    location:''\r\n+    name:location.state.name,\r\n+    location:location.state.location\r\n   })\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n@@ -305,8 +305,11 @@\n       ...historyParams,\r\n       location: zip\r\n     })\r\n   },[zip, history]);\r\n+  useEffect(() => {\r\n+\r\n+  },[history]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643959894122,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -305,11 +305,11 @@\n       ...historyParams,\r\n       location: zip\r\n     })\r\n   },[zip, history]);\r\n-  useEffect(() => {\r\n+  // useEffect(() => {\r\n \r\n-  },[history]);\r\n+  // },[history]);\r\n   return (\r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643959923907,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,12 +53,13 @@\n     Dosage: \"no items\",\r\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n-  const [historyParams, setHistory] = useState({\r\n-    name:location.state.name,\r\n-    location:location.state.location\r\n-  })\r\n+  // const [historyParams, setHistory] = useState({\r\n+  //   name:location.state.name,\r\n+  //   location:location.state.location\r\n+  // })\r\n+  console.log(location);\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n"
+                },
+                {
+                    "date": 1643959959132,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,12 +53,12 @@\n     Dosage: \"no items\",\r\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n-  // const [historyParams, setHistory] = useState({\r\n-  //   name:location.state.name,\r\n-  //   location:location.state.location\r\n-  // })\r\n+  const [historyParams, setHistory] = useState({\r\n+    name: '',\r\n+    location: ''\r\n+  })\r\n   console.log(location);\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n"
+                },
+                {
+                    "date": 1643960010132,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,10 +57,15 @@\n   const [historyParams, setHistory] = useState({\r\n     name: '',\r\n     location: ''\r\n   })\r\n-  console.log(location);\r\n   useEffect(() => {\r\n+    setHistory({\r\n+      name: location.state.name,\r\n+      location: location.state.location\r\n+    })\r\n+  },[location])\r\n+  useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n   }, [location]);\r\n"
+                },
+                {
+                    "date": 1643960075001,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,17 +57,17 @@\n   const [historyParams, setHistory] = useState({\r\n     name: '',\r\n     location: ''\r\n   })\r\n+\r\n   useEffect(() => {\r\n-    setHistory({\r\n-      name: location.state.name,\r\n-      location: location.state.location\r\n-    })\r\n-  },[location])\r\n-  useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n+    }else{\r\n+      setHistory({\r\n+        name: location.state.name,\r\n+        location: location.state.location\r\n+      })\r\n     }\r\n   }, [location]);\r\n   useEffect(() => {\r\n     if(searchZip){\r\n"
+                },
+                {
+                    "date": 1643960114879,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -63,10 +63,9 @@\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }else{\r\n       setHistory({\r\n-        name: location.state.name,\r\n-        location: location.state.location\r\n+        ...location.state\r\n       })\r\n     }\r\n   }, [location]);\r\n   useEffect(() => {\r\n"
+                },
+                {
+                    "date": 1643960168935,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -61,12 +61,8 @@\n \r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n-    }else{\r\n-      setHistory({\r\n-        ...location.state\r\n-      })\r\n     }\r\n   }, [location]);\r\n   useEffect(() => {\r\n     if(searchZip){\r\n"
+                },
+                {
+                    "date": 1643960253439,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,12 +306,18 @@\n       ...historyParams,\r\n       location: zip\r\n     })\r\n   },[zip, history]);\r\n-  // useEffect(() => {\r\n-\r\n-  // },[history]);\r\n-  return (\r\n+  useEffect(() => {\r\n+    if(historyParams.name && historyParams.location){\r\n+      history.push({\r\n+        state:{\r\n+          ...historyParams\r\n+        }\r\n+      })\r\n+    }\r\n+  },[historyParams]);\r\n+  return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n           <div className=\"result-page__row\">\r\n"
+                },
+                {
+                    "date": 1643960588300,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -305,9 +305,9 @@\n     setHistory({\r\n       ...historyParams,\r\n       location: zip\r\n     })\r\n-  },[zip, history]);\r\n+  },[zip]);\r\n   useEffect(() => {\r\n     if(historyParams.name && historyParams.location){\r\n       history.push({\r\n         state:{\r\n"
+                },
+                {
+                    "date": 1643960629604,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -301,14 +301,8 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    setHistory({\r\n-      ...historyParams,\r\n-      location: zip\r\n-    })\r\n-  },[zip]);\r\n-  useEffect(() => {\r\n     if(historyParams.name && historyParams.location){\r\n       history.push({\r\n         state:{\r\n           ...historyParams\r\n"
+                },
+                {
+                    "date": 1643960692117,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -309,8 +309,16 @@\n         }\r\n       })\r\n     }\r\n   },[historyParams]);\r\n+  useEffect(() => {\r\n+    if(zip.length){\r\n+      setHistory({\r\n+        ...historyParams,\r\n+        location: zip\r\n+      })\r\n+    }\r\n+  },[historyParams, zip])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643960736831,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -309,16 +309,8 @@\n         }\r\n       })\r\n     }\r\n   },[historyParams]);\r\n-  useEffect(() => {\r\n-    if(zip.length){\r\n-      setHistory({\r\n-        ...historyParams,\r\n-        location: zip\r\n-      })\r\n-    }\r\n-  },[historyParams, zip])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643960812376,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -309,8 +309,14 @@\n         }\r\n       })\r\n     }\r\n   },[historyParams]);\r\n+  useEffect(() => {\r\n+    setHistory({\r\n+      ...historyParams,\r\n+      location: zip\r\n+    })\r\n+  },[SubmitActionZip])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643960827045,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -314,9 +314,9 @@\n     setHistory({\r\n       ...historyParams,\r\n       location: zip\r\n     })\r\n-  },[SubmitActionZip])\r\n+  },[SubmitActionZip, zip])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643960838988,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -309,14 +309,8 @@\n         }\r\n       })\r\n     }\r\n   },[historyParams]);\r\n-  useEffect(() => {\r\n-    setHistory({\r\n-      ...historyParams,\r\n-      location: zip\r\n-    })\r\n-  },[SubmitActionZip, zip])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643960936506,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -300,17 +300,9 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  useEffect(() => {\r\n-    if(historyParams.name && historyParams.location){\r\n-      history.push({\r\n-        state:{\r\n-          ...historyParams\r\n-        }\r\n-      })\r\n-    }\r\n-  },[historyParams]);\r\n+\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643960991060,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,12 +53,10 @@\n     Dosage: \"no items\",\r\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n-  const [historyParams, setHistory] = useState({\r\n-    name: '',\r\n-    location: ''\r\n-  })\r\n+  const [historyName, setHistoryName] = useState('');\r\n+  const [historyLocation, setHistoryLocation] = useState([]);\r\n \r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n@@ -120,12 +118,8 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    setHistory({\r\n-      ...historyParams,\r\n-      name: sorting\r\n-    });\r\n     return;\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n"
+                },
+                {
+                    "date": 1643961002147,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -118,8 +118,9 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n+    setHistoryName(sorting);\r\n     return;\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n"
+                },
+                {
+                    "date": 1643961011196,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,8 +126,9 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n+      setHistoryLocation(zip);\r\n       return;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643961075339,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,9 +126,12 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      setHistoryLocation(zip);\r\n+      setTimeout(() => {\r\n+        setHistoryLocation(zip);\r\n+      }, 500)\r\n+      \r\n       return;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643961120956,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,11 +126,11 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      setTimeout(() => {\r\n+      if(zip.length === 1){\r\n         setHistoryLocation(zip);\r\n-      }, 500)\r\n+      }\r\n       \r\n       return;\r\n       \r\n     }\r\n"
+                },
+                {
+                    "date": 1643961149805,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,11 +126,8 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      if(zip.length === 1){\r\n-        setHistoryLocation(zip);\r\n-      }\r\n       \r\n       return;\r\n       \r\n     }\r\n"
+                },
+                {
+                    "date": 1643961187026,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -296,9 +296,13 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-\r\n+  useEffect(() => {\r\n+    if(zip.length === 1){\r\n+      setHistoryLocation(zip);\r\n+    }\r\n+  },[SubmitActionZip, zip, historyLocation])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643961230370,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -297,9 +297,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(zip.length === 1){\r\n+    if(zip.length === 1 && SubmitActionZip){\r\n       setHistoryLocation(zip);\r\n     }\r\n   },[SubmitActionZip, zip, historyLocation])\r\n   return ( \r\n"
+                },
+                {
+                    "date": 1643961305134,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,14 +127,14 @@\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n       \r\n-      return;\r\n+      return true;\r\n       \r\n     }\r\n     }catch(e){\r\n       setErrorZip(true);\r\n-      return;\r\n+      return false;\r\n     }\r\n   }\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n@@ -297,9 +297,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(zip.length === 1 && SubmitActionZip){\r\n+    if(zip.length === 1 && SubmitActionZip === true){\r\n       setHistoryLocation(zip);\r\n     }\r\n   },[SubmitActionZip, zip, historyLocation])\r\n   return ( \r\n"
+                },
+                {
+                    "date": 1643961313220,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -297,9 +297,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(zip.length === 1 && SubmitActionZip === true){\r\n+    if(zip.length === 1 && SubmitActionZip){\r\n       setHistoryLocation(zip);\r\n     }\r\n   },[SubmitActionZip, zip, historyLocation])\r\n   return ( \r\n"
+                },
+                {
+                    "date": 1643961343160,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -297,9 +297,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(zip.length === 1 && SubmitActionZip){\r\n+    if(SubmitActionZip){\r\n       setHistoryLocation(zip);\r\n     }\r\n   },[SubmitActionZip, zip, historyLocation])\r\n   return ( \r\n"
+                },
+                {
+                    "date": 1643961382380,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -300,9 +300,9 @@\n   useEffect(() => {\r\n     if(SubmitActionZip){\r\n       setHistoryLocation(zip);\r\n     }\r\n-  },[SubmitActionZip, zip, historyLocation])\r\n+  },[SubmitActionZip, historyLocation])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643961421392,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -296,13 +296,8 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  useEffect(() => {\r\n-    if(SubmitActionZip){\r\n-      setHistoryLocation(zip);\r\n-    }\r\n-  },[SubmitActionZip, historyLocation])\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643961431644,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,9 +126,9 @@\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n       setSearchZip(zip[0].label);\r\n-      \r\n+      setHistoryLocation(zip[0]);\r\n       return true;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643961485576,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,10 +125,11 @@\n }\r\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n-      setSearchZip(zip[0].label);\r\n-      setHistoryLocation(zip[0]);\r\n+        const dataZip = zip[0];\r\n+      setSearchZip(dataZip.label);\r\n+      setHistoryLocation(dataZip);\r\n       return true;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643961615948,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -297,8 +297,18 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  useEffect(() => {\r\n+    if(historyName.length && historyLocation.length === 1){\r\n+      history.push({\r\n+        state:{\r\n+          name: historyName,\r\n+          location: historyLocation\r\n+        }\r\n+      })\r\n+    }\r\n+  },[historyLocation, historyName]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643961672839,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,9 +306,9 @@\n           location: historyLocation\r\n         }\r\n       })\r\n     }\r\n-  },[historyLocation, historyName]);\r\n+  },[historyLocation, historyName, history]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643961754266,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,9 +127,9 @@\n     try{\r\n       if(zip.length){\r\n         const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n-      setHistoryLocation(dataZip);\r\n+      setHistoryLocation([dataZip]);\r\n       return true;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643961803209,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -297,18 +297,8 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  useEffect(() => {\r\n-    if(historyName.length && historyLocation.length === 1){\r\n-      history.push({\r\n-        state:{\r\n-          name: historyName,\r\n-          location: historyLocation\r\n-        }\r\n-      })\r\n-    }\r\n-  },[historyLocation, historyName, history]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643961835077,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,10 +53,8 @@\n     Dosage: \"no items\",\r\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n-  const [historyName, setHistoryName] = useState('');\r\n-  const [historyLocation, setHistoryLocation] = useState([]);\r\n \r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n@@ -118,9 +116,8 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    setHistoryName(sorting);\r\n     return;\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n"
+                },
+                {
+                    "date": 1643961841920,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -124,9 +124,8 @@\n     try{\r\n       if(zip.length){\r\n         const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n-      setHistoryLocation([dataZip]);\r\n       return true;\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643961872383,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -116,9 +116,15 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-    return;\r\n+\r\n+    return history.push({\r\n+      state:{\r\n+        ...location.state,\r\n+        name: sorting\r\n+      }\r\n+    })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n     try{\r\n"
+                },
+                {
+                    "date": 1643961904686,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,9 +130,14 @@\n     try{\r\n       if(zip.length){\r\n         const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n-      return true;\r\n+      return history.push({\r\n+        state:{\r\n+          ...location.state,\r\n+          location[dataZip]\r\n+        }\r\n+      })\r\n       \r\n     }\r\n     }catch(e){\r\n       setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643961953171,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,14 +130,8 @@\n     try{\r\n       if(zip.length){\r\n         const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n-      return history.push({\r\n-        state:{\r\n-          ...location.state,\r\n-          location[dataZip]\r\n-        }\r\n-      })\r\n       \r\n     }\r\n     }catch(e){\r\n       setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643962003198,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,8 +290,16 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          const timeout = setTimeout(() => {\r\n+            history.push({\r\n+              state:{\r\n+                ...location.state,\r\n+                location: zip\r\n+              }\r\n+            })\r\n+          },500)\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643962014518,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -298,8 +298,9 @@\n                 location: zip\r\n               }\r\n             })\r\n           },500)\r\n+          return clearTimeout(tick);\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643962072398,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,17 +290,8 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n-          const timeout = setTimeout(() => {\r\n-            history.push({\r\n-              state:{\r\n-                ...location.state,\r\n-                location: zip\r\n-              }\r\n-            })\r\n-          },500)\r\n-          return clearTimeout(tick);\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643962145582,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -298,8 +298,18 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  useEffect(() => {\r\n+    const timeOut = setTimeout(() => {\r\n+        history.push({\r\n+          state:{\r\n+            ...location.state,\r\n+            location: zip\r\n+          }\r\n+        })\r\n+    },500);\r\n+  },[SubmitActionZip]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643962163234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -307,8 +307,11 @@\n             location: zip\r\n           }\r\n         })\r\n     },500);\r\n+    return () =>{ \r\n+      clearTimeout(timeOut);\r\n+    }\r\n   },[SubmitActionZip]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643962200798,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -299,8 +299,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n+    if(zip.length){\r\n     const timeOut = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n@@ -310,9 +311,10 @@\n     },500);\r\n     return () =>{ \r\n       clearTimeout(timeOut);\r\n     }\r\n-  },[SubmitActionZip]);\r\n+  }\r\n+  },[SubmitActionZip, zip]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643962260703,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -299,9 +299,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(zip.length){\r\n+    if(zip.length && SubmitActionZip){\r\n     const timeOut = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n"
+                },
+                {
+                    "date": 1643962290121,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -298,23 +298,8 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  useEffect(() => {\r\n-    if(zip.length && SubmitActionZip){\r\n-    const timeOut = setTimeout(() => {\r\n-        history.push({\r\n-          state:{\r\n-            ...location.state,\r\n-            location: zip\r\n-          }\r\n-        })\r\n-    },500);\r\n-    return () =>{ \r\n-      clearTimeout(timeOut);\r\n-    }\r\n-  }\r\n-  },[SubmitActionZip, zip]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643962366266,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,8 +290,14 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          history.push({\r\n+            state:{\r\n+              ...location.state,\r\n+              location: zip\r\n+            }\r\n+          })\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643962387128,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -303,9 +303,9 @@\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, zip]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643962571630,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -290,14 +290,8 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n-          history.push({\r\n-            state:{\r\n-              ...location.state,\r\n-              location: zip\r\n-            }\r\n-          })\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643962608817,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -128,9 +128,9 @@\n }\r\n   const SubmitActionZip = () => {\r\n     try{\r\n       if(zip.length){\r\n-        const dataZip = zip[0];\r\n+      const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n       \r\n     }\r\n     }catch(e){\r\n"
+                },
+                {
+                    "date": 1643962688662,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,18 +126,16 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-    try{\r\n       if(zip.length){\r\n       const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n       \r\n-    }\r\n-    }catch(e){\r\n+    }else{\r\n       setErrorZip(true);\r\n-      return false;\r\n     }\r\n+    \r\n   }\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n"
+                },
+                {
+                    "date": 1643963504720,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -129,9 +129,9 @@\n   const SubmitActionZip = () => {\r\n       if(zip.length){\r\n       const dataZip = zip[0];\r\n       setSearchZip(dataZip.label);\r\n-      \r\n+        \r\n     }else{\r\n       setErrorZip(true);\r\n     }\r\n     \r\n"
+                },
+                {
+                    "date": 1643963524766,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,10 +126,13 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-      if(zip.length){\r\n+    if(zip.length){\r\n       const dataZip = zip[0];\r\n+      if(!dataZip){\r\n+        setError(true);\r\n+      }\r\n       setSearchZip(dataZip.label);\r\n         \r\n     }else{\r\n       setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643963587457,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,18 +126,13 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-    if(zip.length){\r\n-      const dataZip = zip[0];\r\n-      if(!dataZip){\r\n-        setError(true);\r\n-      }\r\n-      setSearchZip(dataZip.label);\r\n-        \r\n-    }else{\r\n-      setErrorZip(true);\r\n-    }\r\n+   try{\r\n+\r\n+   }catch(e){\r\n+     \r\n+   }\r\n     \r\n   }\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643963607564,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,11 +127,11 @@\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n    try{\r\n-\r\n+    setSearchZip(zip[0].label)\r\n    }catch(e){\r\n-     \r\n+    setErrorZip(true)\r\n    }\r\n     \r\n   }\r\n   const sortedFunc: any = () => {\r\n"
+                },
+                {
+                    "date": 1643963673882,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -278,8 +278,13 @@\n       setError(false);\r\n     }\r\n   },[searchMed]);\r\n   useEffect(() => {\r\n+    if(searchZip.length > 0){\r\n+      setErrorZip(false);\r\n+    }\r\n+  },[searchZip]);\r\n+  useEffect(() => {\r\n     const hanldeClick = (event:any) => {\r\n       const { key } = event;\r\n       if(key === 'Enter' ){\r\n         if(searchMed.length){\r\n"
+                },
+                {
+                    "date": 1643963744382,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,9 +127,12 @@\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n    try{\r\n-    setSearchZip(zip[0].label)\r\n+     if(zip.length){\r\n+      setSearchZip(zip[0].label)\r\n+     }\r\n+    \r\n    }catch(e){\r\n     setErrorZip(true)\r\n    }\r\n     \r\n"
+                },
+                {
+                    "date": 1643963795927,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -301,9 +301,9 @@\n     document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n-  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open, zip]);\r\n+  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643963863921,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,17 +126,10 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-   try{\r\n-     if(zip.length){\r\n-      setSearchZip(zip[0].label)\r\n-     }\r\n+  console.log(zip.length)\r\n     \r\n-   }catch(e){\r\n-    setErrorZip(true)\r\n-   }\r\n-    \r\n   }\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n"
+                },
+                {
+                    "date": 1643963945878,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,9 +126,13 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-  console.log(zip.length)\r\n+  if(zip.length){\r\n+\r\n+  }else{\r\n+    setErrorZip(true)\r\n+  }\r\n     \r\n   }\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643963972859,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,10 +126,10 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-  if(zip.length){\r\n-\r\n+  if(zip.length !==0){\r\n+    \r\n   }else{\r\n     setErrorZip(true)\r\n   }\r\n     \r\n"
+                },
+                {
+                    "date": 1643963979645,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,9 +127,9 @@\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n   if(zip.length !==0){\r\n-    \r\n+    console.log('dsadfsafsafsafsafgdsagdagfas')\r\n   }else{\r\n     setErrorZip(true)\r\n   }\r\n     \r\n"
+                },
+                {
+                    "date": 1643964012264,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,13 +126,9 @@\n     })\r\n   }\r\n }\r\n   const SubmitActionZip = () => {\r\n-  if(zip.length !==0){\r\n-    console.log('dsadfsafsafsafsafgdsagdagfas')\r\n-  }else{\r\n-    setErrorZip(true)\r\n-  }\r\n+  \r\n     \r\n   }\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643964221454,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,12 +125,19 @@\n       }\r\n     })\r\n   }\r\n }\r\n-  const SubmitActionZip = () => {\r\n+  // const SubmitActionZip = () => {\r\n   \r\n     \r\n-  }\r\n+  // }\r\n+  const SubmitActionZip = useCallback(() => {\r\n+      try{\r\n+        setSearchZip(zip[0].label);\r\n+      }catch(e){\r\n+        setErrorZip(true)\r\n+      }\r\n+  },[zip, searchZip]);\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n       const manufacturer = settings.manufacturer;\r\n"
+                },
+                {
+                    "date": 1643964298973,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,12 +130,12 @@\n   \r\n     \r\n   // }\r\n   const SubmitActionZip = useCallback(() => {\r\n-      try{\r\n-        setSearchZip(zip[0].label);\r\n-      }catch(e){\r\n-        setErrorZip(true)\r\n+      if(searchZip.length >= 3){\r\n+        setSearchZip(zip[0].label)\r\n+      }else{\r\n+        setErrorZip(true);\r\n       }\r\n   },[zip, searchZip]);\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643964307550,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -131,9 +131,10 @@\n     \r\n   // }\r\n   const SubmitActionZip = useCallback(() => {\r\n       if(searchZip.length >= 3){\r\n-        setSearchZip(zip[0].label)\r\n+        setSearchZip(zip[0].label);\r\n+        return;\r\n       }else{\r\n         setErrorZip(true);\r\n       }\r\n   },[zip, searchZip]);\r\n"
+                },
+                {
+                    "date": 1643964359704,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,13 +130,14 @@\n   \r\n     \r\n   // }\r\n   const SubmitActionZip = useCallback(() => {\r\n-      if(searchZip.length >= 3){\r\n+      if(searchZip.length >= 3 && zip[0].label === searchZip){\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n+        return;\r\n       }\r\n   },[zip, searchZip]);\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643964447182,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,9 +130,9 @@\n   \r\n     \r\n   // }\r\n   const SubmitActionZip = useCallback(() => {\r\n-      if(searchZip.length >= 3 && zip[0].label === searchZip){\r\n+      if(searchZip.length >= 3 && zip[0].label){\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643964455757,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,9 +130,9 @@\n   \r\n     \r\n   // }\r\n   const SubmitActionZip = useCallback(() => {\r\n-      if(searchZip.length >= 3 && zip[0].label){\r\n+      if(searchZip.length >= 3){\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643964458476,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,9 +130,9 @@\n   \r\n     \r\n   // }\r\n   const SubmitActionZip = useCallback(() => {\r\n-      if(searchZip.length >= 3){\r\n+      if(searchZip.length >= 3 && zip[0].label){\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643964490464,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,14 +125,11 @@\n       }\r\n     })\r\n   }\r\n }\r\n-  // const SubmitActionZip = () => {\r\n-  \r\n-    \r\n-  // }\r\n+\r\n   const SubmitActionZip = useCallback(() => {\r\n-      if(searchZip.length >= 3 && zip[0].label){\r\n+      if(searchZip.length >= 3 && zip[0].label === searchZip){\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643964539990,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -116,15 +116,15 @@\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n     setSearchMed(sorting);\r\n-\r\n-    return history.push({\r\n-      state:{\r\n-        ...location.state,\r\n-        name: sorting\r\n-      }\r\n-    })\r\n+    return;\r\n+    // return history.push({\r\n+    //   state:{\r\n+    //     ...location.state,\r\n+    //     name: sorting\r\n+    //   }\r\n+    // })\r\n   }\r\n }\r\n \r\n   const SubmitActionZip = useCallback(() => {\r\n"
+                },
+                {
+                    "date": 1643964568949,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -53,9 +53,10 @@\n     Dosage: \"no items\",\r\n     Quantity: \"no items\",\r\n   });\r\n   const dispatch = useDispatch();\r\n-\r\n+  const [searchBool, setSearchBool] = useState(false);\r\n+  const [zipBool, setZipBool] = useState(false);\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n"
+                },
+                {
+                    "date": 1643964580706,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,8 +55,9 @@\n   });\r\n   const dispatch = useDispatch();\r\n   const [searchBool, setSearchBool] = useState(false);\r\n   const [zipBool, setZipBool] = useState(false);\r\n+  \r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n"
+                },
+                {
+                    "date": 1643964597549,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n   });\r\n   const dispatch = useDispatch();\r\n   const [searchBool, setSearchBool] = useState(false);\r\n   const [zipBool, setZipBool] = useState(false);\r\n-  \r\n+\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n@@ -117,8 +117,9 @@\n       return {\r\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n+    setSearchBool(true);\r\n     setSearchMed(sorting);\r\n     return;\r\n     // return history.push({\r\n     //   state:{\r\n"
+                },
+                {
+                    "date": 1643964613904,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -304,8 +304,9 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n+  useEffect(() => {},[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643964701234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -304,9 +304,22 @@\n     return () => {\r\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n-  useEffect(() => {},[searchBool, zipBool]);\r\n+  useEffect(() => {\r\n+    if(searchBool && !zipBool){\r\n+      const timeout = setTimeout(() => {\r\n+        history.push({\r\n+          state:{\r\n+            ...location.state,\r\n+            name: searchMed,\r\n+          }\r\n+        })\r\n+      }, 200)\r\n+\r\n+      return clearTimeout(timeout);\r\n+    }\r\n+  },[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643964733613,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -305,9 +305,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(searchBool && !zipBool){\r\n+    if(searchBool){\r\n       const timeout = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n@@ -317,9 +317,9 @@\n       }, 200)\r\n \r\n       return clearTimeout(timeout);\r\n     }\r\n-  },[searchBool, zipBool]);\r\n+  },[searchBool, zipBool, searchMed]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643964775671,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -317,9 +317,9 @@\n       }, 200)\r\n \r\n       return clearTimeout(timeout);\r\n     }\r\n-  },[searchBool, zipBool, searchMed]);\r\n+  },[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643964801613,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,18 +306,18 @@\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n     if(searchBool){\r\n-      const timeout = setTimeout(() => {\r\n+      \r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n             name: searchMed,\r\n           }\r\n         })\r\n-      }, 200)\r\n+      \r\n \r\n-      return clearTimeout(timeout);\r\n+      \r\n     }\r\n   },[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n"
+                },
+                {
+                    "date": 1643964870818,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -306,19 +306,23 @@\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n     if(searchBool){\r\n-      \r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n             name: searchMed,\r\n           }\r\n-        })\r\n-      \r\n-\r\n-      \r\n+        }) \r\n     }\r\n+    if(zipBool){\r\n+      history.push({\r\n+        state:{\r\n+          ...location.state,\r\n+          location: zip\r\n+        }\r\n+      })\r\n+    }\r\n   },[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643965069176,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -132,8 +132,9 @@\n \r\n   const SubmitActionZip = useCallback(() => {\r\n       if(searchZip.length >= 3 && zip[0].label === searchZip){\r\n         setSearchZip(zip[0].label);\r\n+        setZipBool(true);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n         return;\r\n"
+                },
+                {
+                    "date": 1643965093251,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -131,10 +131,11 @@\n }\r\n \r\n   const SubmitActionZip = useCallback(() => {\r\n       if(searchZip.length >= 3 && zip[0].label === searchZip){\r\n+        setZipBool(true);\r\n         setSearchZip(zip[0].label);\r\n-        setZipBool(true);\r\n+        \r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n         return;\r\n"
+                },
+                {
+                    "date": 1643965101398,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,12 +130,11 @@\n   }\r\n }\r\n \r\n   const SubmitActionZip = useCallback(() => {\r\n-      if(searchZip.length >= 3 && zip[0].label === searchZip){\r\n+      if(searchZip.length >= 3){\r\n         setZipBool(true);\r\n         setSearchZip(zip[0].label);\r\n-        \r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n         return;\r\n"
+                },
+                {
+                    "date": 1643965153466,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -117,10 +117,11 @@\n       return {\r\n         label:[{label: e.label, type: e.type}]\r\n       }\r\n     })[0].label[0].label; \r\n+    \r\n+    setSearchMed(sorting);\r\n     setSearchBool(true);\r\n-    setSearchMed(sorting);\r\n     return;\r\n     // return history.push({\r\n     //   state:{\r\n     //     ...location.state,\r\n"
+                },
+                {
+                    "date": 1643965556334,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -308,14 +308,19 @@\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n     if(searchBool){\r\n+      const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n             name: searchMed,\r\n           }\r\n         }) \r\n+      },500)\r\n+       return () => {\r\n+         clearTimeout(timer)\r\n+       }\r\n     }\r\n     if(zipBool){\r\n       history.push({\r\n         state:{\r\n"
+                },
+                {
+                    "date": 1643965607843,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -321,14 +321,19 @@\n          clearTimeout(timer)\r\n        }\r\n     }\r\n     if(zipBool){\r\n-      history.push({\r\n-        state:{\r\n-          ...location.state,\r\n-          location: zip\r\n-        }\r\n-      })\r\n+      const timer = setTimeout(() => {\r\n+        history.push({\r\n+          state:{\r\n+            ...location.state,\r\n+            location: zip\r\n+          }\r\n+        })\r\n+      }, 500)\r\n+     return () => {\r\n+       clearTimeout(timer);\r\n+     }\r\n     }\r\n   },[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n"
+                },
+                {
+                    "date": 1643965634064,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -328,9 +328,9 @@\n             ...location.state,\r\n             location: zip\r\n           }\r\n         })\r\n-      }, 500)\r\n+      }, 700)\r\n      return () => {\r\n        clearTimeout(timer);\r\n      }\r\n     }\r\n"
+                },
+                {
+                    "date": 1643965838023,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -307,9 +307,9 @@\n       document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n-    if(searchBool){\r\n+    if(searchBool && !zipBool){\r\n       const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n@@ -320,9 +320,9 @@\n        return () => {\r\n          clearTimeout(timer)\r\n        }\r\n     }\r\n-    if(zipBool){\r\n+    if(zipBool && !searchBool){\r\n       const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n@@ -333,8 +333,21 @@\n      return () => {\r\n        clearTimeout(timer);\r\n      }\r\n     }\r\n+    if(searchBool && zipBool){\r\n+      const timer = setTimeout(() => {\r\n+        history.push({\r\n+          state:{\r\n+            name:searchMed,\r\n+            location: zip\r\n+          }\r\n+        })\r\n+      }, 700)\r\n+     return () => {\r\n+       clearTimeout(timer);\r\n+     }\r\n+    }\r\n   },[searchBool, zipBool]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643965870173,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,18 +130,18 @@\n     // })\r\n   }\r\n }\r\n \r\n-  const SubmitActionZip = useCallback(() => {\r\n+  const SubmitActionZip = () => {\r\n       if(searchZip.length >= 3){\r\n         setZipBool(true);\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n         return;\r\n       }\r\n-  },[zip, searchZip]);\r\n+  };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n       const manufacturer = settings.manufacturer;\r\n"
+                },
+                {
+                    "date": 1643965947896,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -131,9 +131,9 @@\n   }\r\n }\r\n \r\n   const SubmitActionZip = () => {\r\n-      if(searchZip.length >= 3){\r\n+      if(searchZip.length >= 3 && zip){\r\n         setZipBool(true);\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n"
+                },
+                {
+                    "date": 1643966005394,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -321,8 +321,9 @@\n          clearTimeout(timer)\r\n        }\r\n     }\r\n     if(zipBool && !searchBool){\r\n+      console.log('sdsadasda',zip);\r\n       const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n"
+                },
+                {
+                    "date": 1643966030407,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -321,9 +321,8 @@\n          clearTimeout(timer)\r\n        }\r\n     }\r\n     if(zipBool && !searchBool){\r\n-      console.log('sdsadasda',zip);\r\n       const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n"
+                },
+                {
+                    "date": 1643966136111,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -137,8 +137,9 @@\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n+        setZipBool(false);\r\n         return;\r\n       }\r\n   };\r\n   const sortedFunc: any = () => {\r\n@@ -346,9 +347,9 @@\n      return () => {\r\n        clearTimeout(timer);\r\n      }\r\n     }\r\n-  },[searchBool, zipBool]);\r\n+  },[searchBool, zipBool, zip]);\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643966225849,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -121,14 +121,8 @@\n     \r\n     setSearchMed(sorting);\r\n     setSearchBool(true);\r\n     return;\r\n-    // return history.push({\r\n-    //   state:{\r\n-    //     ...location.state,\r\n-    //     name: sorting\r\n-    //   }\r\n-    // })\r\n   }\r\n }\r\n \r\n   const SubmitActionZip = () => {\r\n"
+                },
+                {
+                    "date": 1643966240802,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,9 +126,8 @@\n }\r\n \r\n   const SubmitActionZip = () => {\r\n       if(searchZip.length >= 3 && zip){\r\n-        setZipBool(true);\r\n         setSearchZip(zip[0].label);\r\n         return;\r\n       }else{\r\n         setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643966274604,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -292,8 +292,13 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n+          if(zip){\r\n+            setZipBool(true);\r\n+          }else{\r\n+            setZipBool(false);\r\n+          }\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643966292186,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -292,13 +292,8 @@\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n           SubmitActionZip();\r\n-          if(zip){\r\n-            setZipBool(true);\r\n-          }else{\r\n-            setZipBool(false);\r\n-          }\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643966633646,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -341,8 +341,11 @@\n        clearTimeout(timer);\r\n      }\r\n     }\r\n   },[searchBool, zipBool, zip]);\r\n+  const obj1 = { test: 7 }; \r\n+  const obj2 = obj1; obj2.test = 10;\r\n+  console.log(obj2)\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643966658828,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -342,10 +342,11 @@\n      }\r\n     }\r\n   },[searchBool, zipBool, zip]);\r\n   const obj1 = { test: 7 }; \r\n-  const obj2 = obj1; obj2.test = 10;\r\n-  console.log(obj2)\r\n+  const obj2 = obj1; \r\n+  obj2.test = 10;\r\n+  console.log(obj2, obj1)\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643966680059,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -344,9 +344,9 @@\n   },[searchBool, zipBool, zip]);\r\n   const obj1 = { test: 7 }; \r\n   const obj2 = obj1; \r\n   obj2.test = 10;\r\n-  console.log(obj2, obj1)\r\n+  console.log('obj2',obj2, 'obj1'obj1)\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643966682343,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -344,9 +344,9 @@\n   },[searchBool, zipBool, zip]);\r\n   const obj1 = { test: 7 }; \r\n   const obj2 = obj1; \r\n   obj2.test = 10;\r\n-  console.log('obj2',obj2, 'obj1'obj1)\r\n+  console.log('obj2',obj2, 'obj1',obj1)\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643966778627,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -341,12 +341,9 @@\n        clearTimeout(timer);\r\n      }\r\n     }\r\n   },[searchBool, zipBool, zip]);\r\n-  const obj1 = { test: 7 }; \r\n-  const obj2 = obj1; \r\n-  obj2.test = 10;\r\n-  console.log('obj2',obj2, 'obj1',obj1)\r\n+\r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n         <div className=\"result-page__header\">\r\n"
+                },
+                {
+                    "date": 1643967043383,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,15 +125,28 @@\n   }\r\n }\r\n \r\n   const SubmitActionZip = () => {\r\n-      if(searchZip.length >= 3 && zip){\r\n-        setSearchZip(zip[0].label);\r\n-        return;\r\n-      }else{\r\n+      // if(searchZip.length >= 3 && zip){\r\n+      //   setSearchZip(zip[0].label);\r\n+      //   return;\r\n+      // }else{\r\n+      //   setErrorZip(true);\r\n+      //   setZipBool(false);\r\n+      //   return;\r\n+      // }\r\n+      try{\r\n+        const data = zip[0].label;\r\n+        setSearchZip(data);\r\n+        const zips = zip.find(({label}:any) => label === searchZip);\r\n+        if(zips){\r\n+          setSearchZip(zips[0].label);\r\n+          setZipBool(true);\r\n+          return\r\n+        }\r\n+      }catch(e){\r\n         setErrorZip(true);\r\n         setZipBool(false);\r\n-        return;\r\n       }\r\n   };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643967081504,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -136,9 +136,9 @@\n       // }\r\n       try{\r\n         const data = zip[0].label;\r\n         setSearchZip(data);\r\n-        const zips = zip.find(({label}:any) => label === searchZip);\r\n+        const zips = zip.filter(({label}:any) => label === searchZip);\r\n         if(zips){\r\n           setSearchZip(zips[0].label);\r\n           setZipBool(true);\r\n           return\r\n"
+                },
+                {
+                    "date": 1643967122287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -133,20 +133,20 @@\n       //   setErrorZip(true);\r\n       //   setZipBool(false);\r\n       //   return;\r\n       // }\r\n-      try{\r\n+\r\n         const data = zip[0].label;\r\n         setSearchZip(data);\r\n         const zips = zip.filter(({label}:any) => label === searchZip);\r\n         if(zips){\r\n           setSearchZip(zips[0].label);\r\n           setZipBool(true);\r\n           return\r\n+        }else{\r\n+          setErrorZip(true)\r\n+          setZipBool(false);\r\n         }\r\n-      }catch(e){\r\n-        setErrorZip(true);\r\n-        setZipBool(false);\r\n       }\r\n   };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643967132983,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -145,9 +145,9 @@\n         }else{\r\n           setErrorZip(true)\r\n           setZipBool(false);\r\n         }\r\n-      }\r\n+      \r\n   };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n"
+                },
+                {
+                    "date": 1643967165643,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -137,8 +137,9 @@\n \r\n         const data = zip[0].label;\r\n         setSearchZip(data);\r\n         const zips = zip.filter(({label}:any) => label === searchZip);\r\n+        console.log(zips);\r\n         if(zips){\r\n           setSearchZip(zips[0].label);\r\n           setZipBool(true);\r\n           return\r\n"
+                },
+                {
+                    "date": 1643967268900,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -136,8 +136,9 @@\n       // }\r\n \r\n         const data = zip[0].label;\r\n         setSearchZip(data);\r\n+        if(zip){\r\n         const zips = zip.filter(({label}:any) => label === searchZip);\r\n         console.log(zips);\r\n         if(zips){\r\n           setSearchZip(zips[0].label);\r\n@@ -146,8 +147,10 @@\n         }else{\r\n           setErrorZip(true)\r\n           setZipBool(false);\r\n         }\r\n+        }\r\n+        \r\n       \r\n   };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643969439821,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,16 +125,8 @@\n   }\r\n }\r\n \r\n   const SubmitActionZip = () => {\r\n-      // if(searchZip.length >= 3 && zip){\r\n-      //   setSearchZip(zip[0].label);\r\n-      //   return;\r\n-      // }else{\r\n-      //   setErrorZip(true);\r\n-      //   setZipBool(false);\r\n-      //   return;\r\n-      // }\r\n \r\n         const data = zip[0].label;\r\n         setSearchZip(data);\r\n         if(zip){\r\n"
+                },
+                {
+                    "date": 1643969849225,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n   });\r\n   const dispatch = useDispatch();\r\n   const [searchBool, setSearchBool] = useState(false);\r\n   const [zipBool, setZipBool] = useState(false);\r\n-\r\n+  const [zipObj, setZipObj] = useState([]);\r\n   useEffect(() => {\r\n     if (!location.state) {  \r\n       return history.push(\"/search\");\r\n     }\r\n@@ -126,23 +126,25 @@\n }\r\n \r\n   const SubmitActionZip = () => {\r\n \r\n+        // const data = zip[0].label;\r\n+        // setSearchZip(data);\r\n+        // if(zip){\r\n+        // const zips = zip.filter(({label}:any) => label === searchZip);\r\n+        // console.log(zips);\r\n+        // if(zips){\r\n+        //   setSearchZip(zips[0].label);\r\n+        //   setZipBool(true);\r\n+        //   return\r\n+        // }else{\r\n+        //   setErrorZip(true)\r\n+        //   setZipBool(false);\r\n+        // }\r\n+        // }\r\n+        \r\n         const data = zip[0].label;\r\n-        setSearchZip(data);\r\n-        if(zip){\r\n-        const zips = zip.filter(({label}:any) => label === searchZip);\r\n-        console.log(zips);\r\n-        if(zips){\r\n-          setSearchZip(zips[0].label);\r\n-          setZipBool(true);\r\n-          return\r\n-        }else{\r\n-          setErrorZip(true)\r\n-          setZipBool(false);\r\n-        }\r\n-        }\r\n-        \r\n+\r\n       \r\n   };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643969925287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -142,8 +142,16 @@\n         // }\r\n         // }\r\n         \r\n         const data = zip[0].label;\r\n+        const filtering = zip.filter(({label}:any) => label === data);\r\n+        if(filtering){\r\n+          setZipObj(filtering);\r\n+          setSearchZip(data);\r\n+          setZipBool(true);\r\n+        }else{\r\n+          setErrorZip(true);\r\n+        }\r\n \r\n       \r\n   };\r\n   const sortedFunc: any = () => {\r\n"
+                },
+                {
+                    "date": 1643969933379,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,22 +126,8 @@\n }\r\n \r\n   const SubmitActionZip = () => {\r\n \r\n-        // const data = zip[0].label;\r\n-        // setSearchZip(data);\r\n-        // if(zip){\r\n-        // const zips = zip.filter(({label}:any) => label === searchZip);\r\n-        // console.log(zips);\r\n-        // if(zips){\r\n-        //   setSearchZip(zips[0].label);\r\n-        //   setZipBool(true);\r\n-        //   return\r\n-        // }else{\r\n-        //   setErrorZip(true)\r\n-        //   setZipBool(false);\r\n-        // }\r\n-        // }\r\n         \r\n         const data = zip[0].label;\r\n         const filtering = zip.filter(({label}:any) => label === data);\r\n         if(filtering){\r\n"
+                },
+                {
+                    "date": 1643969967756,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -133,10 +133,12 @@\n         if(filtering){\r\n           setZipObj(filtering);\r\n           setSearchZip(data);\r\n           setZipBool(true);\r\n+          return;\r\n         }else{\r\n           setErrorZip(true);\r\n+          return;\r\n         }\r\n \r\n       \r\n   };\r\n@@ -345,9 +347,9 @@\n      return () => {\r\n        clearTimeout(timer);\r\n      }\r\n     }\r\n-  },[searchBool, zipBool, zip]);\r\n+  },[searchBool, zipBool, zipObj]);\r\n \r\n   return ( \r\n     <>\r\n       <div className=\"result-page\">\r\n"
+                },
+                {
+                    "date": 1643969978546,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -326,9 +326,9 @@\n       const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             ...location.state,\r\n-            location: zip\r\n+            location: zipObj\r\n           }\r\n         })\r\n       }, 700)\r\n      return () => {\r\n@@ -339,9 +339,9 @@\n       const timer = setTimeout(() => {\r\n         history.push({\r\n           state:{\r\n             name:searchMed,\r\n-            location: zip\r\n+            location: zipObj\r\n           }\r\n         })\r\n       }, 700)\r\n      return () => {\r\n"
+                },
+                {
+                    "date": 1643970207582,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -128,12 +128,14 @@\n   const SubmitActionZip = () => {\r\n \r\n         \r\n         const data = zip[0].label;\r\n+        if(data){\r\n+          setSearchZip(data);\r\n+        }\r\n         const filtering = zip.filter(({label}:any) => label === data);\r\n         if(filtering){\r\n           setZipObj(filtering);\r\n-          setSearchZip(data);\r\n           setZipBool(true);\r\n           return;\r\n         }else{\r\n           setErrorZip(true);\r\n"
+                },
+                {
+                    "date": 1643971603140,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,11 +127,11 @@\n \r\n   const SubmitActionZip = () => {\r\n \r\n         \r\n-        const data = zip[0].label;\r\n+        const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip));\r\n         if(data){\r\n-          setSearchZip(data);\r\n+          setSearchZip(data[0].label);\r\n         }\r\n         const filtering = zip.filter(({label}:any) => label === data);\r\n         if(filtering){\r\n           setZipObj(filtering);\r\n"
+                },
+                {
+                    "date": 1643971659186,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -130,18 +130,17 @@\n         \r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip));\r\n         if(data){\r\n           setSearchZip(data[0].label);\r\n-        }\r\n-        const filtering = zip.filter(({label}:any) => label === data);\r\n-        if(filtering){\r\n-          setZipObj(filtering);\r\n-          setZipBool(true);\r\n+          setZipObj(data[0]);\r\n+          // setZipBool(true)\r\n           return;\r\n         }else{\r\n           setErrorZip(true);\r\n+          setZipBool(false);\r\n           return;\r\n         }\r\n+ \r\n \r\n       \r\n   };\r\n   const sortedFunc: any = () => {\r\n"
+                },
+                {
+                    "date": 1643971973406,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -129,8 +129,9 @@\n \r\n         \r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip));\r\n         if(data){\r\n+          console.log(data)''\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n           // setZipBool(true)\r\n           return;\r\n"
+                },
+                {
+                    "date": 1643971976497,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -129,9 +129,9 @@\n \r\n         \r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip));\r\n         if(data){\r\n-          console.log(data)''\r\n+          console.log(data);\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n           // setZipBool(true)\r\n           return;\r\n"
+                },
+                {
+                    "date": 1643972001965,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -127,9 +127,9 @@\n \r\n   const SubmitActionZip = () => {\r\n \r\n         \r\n-        const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip));\r\n+        const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n"
+                },
+                {
+                    "date": 1643972640763,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,9 +126,9 @@\n }\r\n \r\n   const SubmitActionZip = () => {\r\n \r\n-        \r\n+        console.log(searchZip);\r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n"
+                },
+                {
+                    "date": 1643972999384,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -124,12 +124,12 @@\n     return;\r\n   }\r\n }\r\n \r\n-  const SubmitActionZip = () => {\r\n+  const SubmitActionZip = (str: string) => {\r\n \r\n-        console.log(searchZip);\r\n-        const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n+        \r\n+        const data = zip.filter(({label}:any) => label.toLowerCase().includes(str.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n@@ -300,9 +300,9 @@\n         if(searchMed.length){\r\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n-          SubmitActionZip();\r\n+          SubmitActionZip(searchZip);\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643973022668,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,9 +126,9 @@\n }\r\n \r\n   const SubmitActionZip = (str: string) => {\r\n \r\n-        \r\n+        console.log(str);\r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(str.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n"
+                },
+                {
+                    "date": 1643973082989,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -124,9 +124,9 @@\n     return;\r\n   }\r\n }\r\n \r\n-  const SubmitActionZip = (str: string) => {\r\n+  const SubmitActionZip = () => {\r\n \r\n         console.log(str);\r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(str.toLowerCase()));\r\n         if(data){\r\n@@ -300,9 +300,9 @@\n         if(searchMed.length){\r\n           SubmitActionValue();\r\n         }\r\n         if(searchZip.length && open === true){\r\n-          SubmitActionZip(searchZip);\r\n+          SubmitActionZip();\r\n         }\r\n       }\r\n     }\r\n     document.addEventListener('keydown', hanldeClick);\r\n"
+                },
+                {
+                    "date": 1643973093137,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -126,10 +126,10 @@\n }\r\n \r\n   const SubmitActionZip = () => {\r\n \r\n-        console.log(str);\r\n-        const data = zip.filter(({label}:any) => label.toLowerCase().includes(str.toLowerCase()));\r\n+        \r\n+        const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n"
+                },
+                {
+                    "date": 1643973102417,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -125,10 +125,8 @@\n   }\r\n }\r\n \r\n   const SubmitActionZip = () => {\r\n-\r\n-        \r\n         const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n@@ -138,12 +136,9 @@\n         }else{\r\n           setErrorZip(true);\r\n           setZipBool(false);\r\n           return;\r\n-        }\r\n- \r\n-\r\n-      \r\n+        } \r\n   };\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n"
+                },
+                {
+                    "date": 1643973154598,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -124,10 +124,25 @@\n     return;\r\n   }\r\n }\r\n \r\n-  const SubmitActionZip = () => {\r\n-        const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n+  // const SubmitActionZip = () => {\r\n+  //       const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n+  //       if(data){\r\n+  //         console.log(data);\r\n+  //         setSearchZip(data[0].label);\r\n+  //         setZipObj(data[0]);\r\n+  //         // setZipBool(true)\r\n+  //         return;\r\n+  //       }else{\r\n+  //         setErrorZip(true);\r\n+  //         setZipBool(false);\r\n+  //         return;\r\n+  //       } \r\n+  // };\r\n+\r\n+  const SubmitActionZip = useCallback(() => {\r\n+            const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n         if(data){\r\n           console.log(data);\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n@@ -137,9 +152,11 @@\n           setErrorZip(true);\r\n           setZipBool(false);\r\n           return;\r\n         } \r\n-  };\r\n+  },[searchMed]);\r\n+\r\n+\r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n       const {formulations, settings} = currentMedication;\r\n       const manufacturer = settings.manufacturer;\r\n"
+                },
+                {
+                    "date": 1643973203134,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -140,11 +140,11 @@\n   //       } \r\n   // };\r\n \r\n   const SubmitActionZip = useCallback(() => {\r\n+    console.log('sdsadasdasdad', searchZip);\r\n             const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n         if(data){\r\n-          console.log(data);\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n           // setZipBool(true)\r\n           return;\r\n@@ -152,9 +152,9 @@\n           setErrorZip(true);\r\n           setZipBool(false);\r\n           return;\r\n         } \r\n-  },[searchMed]);\r\n+  },[searchZip]);\r\n \r\n \r\n   const sortedFunc: any = () => {\r\n     if (currentMedication.name && chosen) {\r\n"
+                },
+                {
+                    "date": 1643973228664,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -142,8 +142,9 @@\n \r\n   const SubmitActionZip = useCallback(() => {\r\n     console.log('sdsadasdasdad', searchZip);\r\n             const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n+            console.log(data);\r\n         if(data){\r\n           setSearchZip(data[0].label);\r\n           setZipObj(data[0]);\r\n           // setZipBool(true)\r\n"
+                },
+                {
+                    "date": 1643973302912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -145,10 +145,10 @@\n             const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n             console.log(data);\r\n         if(data){\r\n           setSearchZip(data[0].label);\r\n-          setZipObj(data[0]);\r\n-          // setZipBool(true)\r\n+          setZipObj([data[0]]);\r\n+          setZipBool(true)\r\n           return;\r\n         }else{\r\n           setErrorZip(true);\r\n           setZipBool(false);\r\n"
+                },
+                {
+                    "date": 1643973445376,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -147,9 +147,9 @@\n         if(data){\r\n           setSearchZip(data[0].label);\r\n           setZipObj([data[0]]);\r\n           setZipBool(true)\r\n-          return;\r\n+          \r\n         }else{\r\n           setErrorZip(true);\r\n           setZipBool(false);\r\n           return;\r\n"
+                },
+                {
+                    "date": 1643973511735,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -140,21 +140,22 @@\n   //       } \r\n   // };\r\n \r\n   const SubmitActionZip = useCallback(() => {\r\n-    console.log('sdsadasdasdad', searchZip);\r\n+        try{\r\n             const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n             console.log(data);\r\n-        if(data){\r\n+      \r\n           setSearchZip(data[0].label);\r\n           setZipObj([data[0]]);\r\n           setZipBool(true)\r\n           \r\n-        }else{\r\n-          setErrorZip(true);\r\n+        \r\n+      }catch(e){\r\n+        setErrorZip(true);\r\n           setZipBool(false);\r\n           return;\r\n-        } \r\n+      }\r\n   },[searchZip]);\r\n \r\n \r\n   const sortedFunc: any = () => {\r\n"
+                },
+                {
+                    "date": 1643973591054,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -123,29 +123,12 @@\n     setSearchBool(true);\r\n     return;\r\n   }\r\n }\r\n-\r\n-  // const SubmitActionZip = () => {\r\n-  //       const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n-  //       if(data){\r\n-  //         console.log(data);\r\n-  //         setSearchZip(data[0].label);\r\n-  //         setZipObj(data[0]);\r\n-  //         // setZipBool(true)\r\n-  //         return;\r\n-  //       }else{\r\n-  //         setErrorZip(true);\r\n-  //         setZipBool(false);\r\n-  //         return;\r\n-  //       } \r\n-  // };\r\n-\r\n   const SubmitActionZip = useCallback(() => {\r\n         try{\r\n             const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n             console.log(data);\r\n-      \r\n           setSearchZip(data[0].label);\r\n           setZipObj([data[0]]);\r\n           setZipBool(true)\r\n           \r\n"
+                },
+                {
+                    "date": 1643975323899,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -301,11 +301,11 @@\n           SubmitActionZip();\r\n         }\r\n       }\r\n     }\r\n-    document.addEventListener('keydown', hanldeClick);\r\n+    document.addEventListener('keyup', hanldeClick);\r\n     return () => {\r\n-      document.removeEventListener('keydown', hanldeClick);\r\n+      document.removeEventListener('keyup', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n     if(searchBool && !zipBool){\r\n"
+                },
+                {
+                    "date": 1643975352172,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -123,8 +123,9 @@\n     setSearchBool(true);\r\n     return;\r\n   }\r\n }\r\n+\r\n   const SubmitActionZip = useCallback(() => {\r\n         try{\r\n             const data = zip.filter(({label}:any) => label.toLowerCase().includes(searchZip.toLowerCase()));\r\n             console.log(data);\r\n@@ -301,11 +302,11 @@\n           SubmitActionZip();\r\n         }\r\n       }\r\n     }\r\n-    document.addEventListener('keyup', hanldeClick);\r\n+    document.addEventListener('keydown', hanldeClick);\r\n     return () => {\r\n-      document.removeEventListener('keyup', hanldeClick);\r\n+      document.removeEventListener('keydown', hanldeClick);\r\n     }\r\n   },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n   useEffect(() => {\r\n     if(searchBool && !zipBool){\r\n"
+                }
+            ],
+            "date": 1643955364007,
+            "name": "Commit-0",
+            "content": "import React, {\r\n  FC,\r\n  useEffect,\r\n  useState,\r\n  useMemo,\r\n  Suspense,\r\n  useCallback,\r\n} from \"react\";\r\n\r\nimport { useLocation, useHistory } from \"react-router\";\r\nimport { Link } from \"react-router-dom\";\r\nimport { useDispatch, useSelector, useStore, shallowEqual } from \"react-redux\";\r\nimport { useCookies } from \"react-cookie\";\r\nimport { Loader, PlugSvg, RowItem, TileItem } from \"../../components\";\r\nimport {\r\n  HeaderLogoImage,\r\n  LocationIconSvg,\r\n  SearchIconSvg,\r\n} from \"../../assets/images\";\r\nimport { InputField, Dropdown, ItemsControl, Footer } from \"../../components\";\r\nimport InputAutoSuggest from '../../components/InputAutoSuggest';\r\nimport { ITEMS_CONTROL_MODE } from \"../../components/ItemsControl\";\r\nimport CurrentMed from \"../../store/currentMed/action\";\r\nimport TopMed from '../../store/topMed/action';\r\nimport SearchZip from '../../store/SearchZip/action';\r\nimport { ClearZip } from \"../../store/SearchZip/action\";\r\nimport getPrice from '../../store/Price/actions';\r\nimport { OptimeRootReducer } from \"core/store/rootReducer\";\r\nimport '../../assets/pages/result.scss';\r\n\r\nexport const ResultPage: FC<any> = () => {\r\n  const store = useStore();\r\n  const [prices, setPrices] = useState(store.getState());\r\n  const [error, setError] = useState(false);\r\n  const [errorZip, setErrorZip] = useState(false);\r\n  const [searchMed, setSearchMed] = useState(\"\");\r\n  const [searchZip, setSearchZip] = useState(\"\");\r\n  const [cookies, setCookies] = useCookies();\r\n  const currentMedication = useSelector((state:OptimeRootReducer) => state.currentReducer, shallowEqual);\r\n  const [description,setDescription] = useState(\"\");\r\n  const topMed = useSelector((state:any) => state.topMedReducer.top);\r\n  const zip = useSelector((state:any) => state.zipReducer.sort((a:any, b:any) => {return (a.label < b.label)? -1 :(a.label > b.label) ? 1 : 0 }));\r\n  const { priceReducer } = useSelector((state:OptimeRootReducer) => state);\r\n  const history = useHistory();\r\n  const location:any = useLocation();\r\n  const [open, setOpen] = useState(false);\r\n  const mockSorting = [\"LOWEST\", \"HIGHEST\"];\r\n  const [itemsMode, setItemsMode] = useState(ITEMS_CONTROL_MODE.TILES);\r\n  const [loading, setLoading] = useState(false);\r\n  const [chosen, setChosen]: any = useState({\r\n    Manufacturer: \"no items\",\r\n    Form: \"no items\",\r\n    Dosage: \"no items\",\r\n    Quantity: \"no items\",\r\n  });\r\n  const dispatch = useDispatch();\r\n  useEffect(() => {\r\n    if (!location.state) {  \r\n      return history.push(\"/search\");\r\n    }\r\n  }, [location]);\r\n  useEffect(() => {\r\n    if(searchZip){\r\n      dispatch(SearchZip(searchZip));\r\n    }\r\n    \r\n    return () => {dispatch(ClearZip())}\r\n  }, [searchZip]);\r\n  useEffect(() => {\r\n    dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));\r\n  }, [])\r\n  useEffect(() => {\r\n    if(location.state.name.length > 0){\r\n      dispatch(CurrentMed(location.state.name,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))\r\n    }\r\n  }, [location]);\r\n\r\n  useEffect(() => {\r\n      if(currentMedication.name){\r\n          const {name, defaultSettings, brandSettings, comparing} = currentMedication;\r\n          const defaults = brandSettings.name === location.state.name ? brandSettings : comparing[0];\r\n          if(defaults){\r\n                    setChosen({\r\n                      Manufacturer:`${defaults.name} (${defaults.drugType})`, \r\n                      Form: defaults.form, \r\n                      Dosage: defaults.dosage.display, \r\n                      Quantity: defaults.commonQuantities.find(({value}:any) => value === defaultSettings.quantity).display\r\n                    })       \r\n          }\r\n      }\r\n  }, [currentMedication]);\r\n  \r\n  const SubmitActionValue = () => {\r\n    const escapedRegexCharacters =(str:any) => {\r\n      return str.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\r\n    }\r\n    const escaped = escapedRegexCharacters(searchMed.trim());\r\n    const regex = new RegExp('^' + escaped, 'i');\r\n    if(searchMed.length > 0){\r\n    const searchSubmit = topMed.map(({label}:any) => {\r\n      return {\r\n        label: label.filter(({label}:any) => regex.test(label))\r\n      }\r\n    })\r\n    .filter(({label}:any) => label.length > 0)\r\n    if(searchSubmit.length === 0){\r\n      setError(true)\r\n      return;\r\n    }\r\n    const sorting = searchSubmit.map(({label}:any) => label).flat()\r\n    .sort((a:any,b:any) => {\r\n      return (a.label < b.label) ? -1 : (a.label > b.label) ? 1 : 0;\r\n    }).map((e:any) => {\r\n      return {\r\n        label:[{label: e.label, type: e.type}]\r\n      }\r\n    })[0].label[0].label; \r\n    setSearchMed(sorting);\r\n    return history.push({\r\n      state:{\r\n        ...location.state,\r\n        name: sorting\r\n      }\r\n    })\r\n  }\r\n}\r\n  const SubmitActionZip = () => {\r\n    if(searchZip.length > 0){\r\n      history.push({\r\n        state:{\r\n          ...location.state,\r\n          location:zip\r\n        }\r\n      })\r\n      setErrorZip(false);\r\n      return true;\r\n    }else{\r\n      searchZip ? setErrorZip(false) : setErrorZip(true);\r\n      return false;\r\n    }\r\n  }\r\n\r\n  const sortedFunc: any = () => {\r\n    if (currentMedication.name && chosen) {\r\n      const {formulations, settings} = currentMedication;\r\n      const manufacturer = settings.manufacturer;\r\n      const setting = formulations.reduce((acc:any, next:any, index:any) => {\r\n        if(chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \") === next.name){\r\n          acc.form.push(next.form);\r\n        }\r\n        if(chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \") === next.name && next.form === chosen.Form){\r\n          acc.dosage.push(next.dosage.display);\r\n          \r\n        }\r\n        if(next.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \") && chosen.Dosage === next.dosage.display && next.form === chosen.Form){\r\n          \r\n          acc.quantity.push(...next.commonQuantities);\r\n          acc.quantity = acc.quantity.map(({display}:any) => display);\r\n        }\r\n        acc.form = [...new Set(acc.form)];\r\n        return acc;\r\n      },{\r\n        manufacturer: manufacturer,\r\n        form:[],\r\n        dosage:[],\r\n        quantity:[]\r\n      })\r\n      return {\r\n        manufacturer: setting.manufacturer,\r\n        form: setting.form,\r\n        dosage: setting.dosage,\r\n        quantity: setting.quantity\r\n      };\r\n    }\r\n  };\r\n\r\n\r\n\r\n  const priceFunc = () => {\r\n    if (currentMedication.name) {\r\n      const {formulations} = currentMedication;\r\n      // const formulationsIds = formulations.reduce((arr:any, set:any) => {\r\n      //   if(set.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \") && set.form === chosen.Form && set.dosage.display === chosen.Dosage ){\r\n      //       arr.formulationId = set.ndc;\r\n      //       arr.quantity = set.commonQuantities.find(({display}:any) => display === chosen.Quantity).value;\r\n      //   }\r\n      //   return arr;\r\n      // },{});\r\n                  const formulationId = formulations\r\n        .filter((e: any) => {\r\n          return (\r\n            e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n          );\r\n        })\r\n        .filter((e: any) => {\r\n          return e.form === chosen.Form;\r\n        })\r\n        .filter((e: any) => {\r\n          return e.dosage.display === chosen.Dosage;\r\n        })\r\n        .map((e: any) => {\r\n          return e.commonQuantities;\r\n        })\r\n        .flat()\r\n        .filter((e: any) => {\r\n          return e.display === chosen.Quantity;\r\n        })\r\n        .map((e: any) => {\r\n          return e.ndc;\r\n        });\r\n      const value = formulations\r\n        .filter((e: any) => {\r\n          return (\r\n            e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n          );\r\n        })\r\n        .filter((e: any) => {\r\n          return e.form === chosen.Form;\r\n        })\r\n        .filter((e: any) => {\r\n          return e.dosage.display === chosen.Dosage;\r\n        })\r\n        .map((e: any) => {\r\n          return e.commonQuantities;\r\n        })\r\n        .flat()\r\n        .filter((e: any) => {\r\n          return e.display === chosen.Quantity;\r\n        })\r\n        .map((e: any) => {\r\n          return e.value;\r\n        });\r\n\r\n        const info = formulations\r\n        .filter((e: any) => {\r\n          return (\r\n            e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n          )\r\n        }).filter((e: any) => {\r\n          return e.form === chosen.Form;\r\n        })\r\n        .filter((e: any) => {\r\n          return e.dosage.display === chosen.Dosage;\r\n        })[0]\r\n\r\n      return {type:info, formulationId:formulationId,quantity:value};\r\n    }\r\n  };\r\n\r\n  const requestPrice:any = () => {\r\n    if(priceSettings){\r\n      dispatch( getPrice(\r\n        priceSettings.quantity, \r\n        priceSettings.formulationId, \r\n        priceSettings.type.drugType, \r\n        priceSettings.type.name, \r\n        priceSettings.type.gpi14, \r\n        false,\r\n        location.state.location[0].location,\r\n        location.state.location[0].zip,\r\n        ));\r\n      }\r\n  }\r\n\r\n  const sorted = useMemo(() => {\r\n    setLoading(true);\r\n    return sortedFunc();\r\n }, [\r\n   chosen.Manufacturer,\r\n   chosen.Form,\r\n   chosen.Dosage,\r\n   chosen.Quantity\r\n ]);\r\n  const priceSettings = useMemo(() => {\r\n    return priceFunc();\r\n  },[chosen.Manufacturer, chosen.Form, chosen.Dosage, sorted]);\r\n\r\n  useEffect(() => {\r\n    requestPrice();\r\n   \r\n  },[priceSettings, sorted]);\r\n  useEffect(() => {\r\n    if(searchMed.length > 0){\r\n      setError(false);\r\n    }\r\n  },[searchMed]);\r\n  useEffect(() => {\r\n    const hanldeClick = (event:any) => {\r\n      const { key } = event;\r\n      if(key === 'Enter' ){\r\n        if(searchMed.length){\r\n        SubmitActionValue();\r\n        }\r\n        if(searchZip.length && open){\r\n          SubmitActionZip();\r\n        }\r\n      }\r\n    }\r\n    document.addEventListener('keydown', hanldeClick);\r\n    return () => {\r\n      document.removeEventListener('keydown', hanldeClick);\r\n    }\r\n  },[searchMed, SubmitActionValue, SubmitActionZip, searchZip, open]);\r\n\r\n  return (\r\n    <>\r\n      <div className=\"result-page\">\r\n        <div className=\"result-page__header\">\r\n          <div className=\"result-page__row\">\r\n            <Link to=\"/\">\r\n              <img src={HeaderLogoImage} alt=\"\" />\r\n            </Link>\r\n            <div className=\"input_search_error\">\r\n              <InputAutoSuggest \r\n                  value={searchMed}\r\n                  setValue={setSearchMed}\r\n                  autocomplete={topMed}\r\n                  iconUrl={SearchIconSvg}\r\n                  placeholder=\"Type your drug name\"\r\n                  haveSubmit\r\n                  buttonText=\"Search\"\r\n                  onSubmit={SubmitActionValue}\r\n                  error={error}\r\n              />\r\n              {error ? (\r\n                <div className=\"error_message\">\r\n                  Please choose correct medication\r\n                </div>\r\n              ) : (\r\n                <div className=\"null\"></div>\r\n              )}\r\n            </div>\r\n          </div>\r\n          <div className=\"result-page__row\">\r\n            {open && (\r\n              <div className=\"input_search_error fild_animation\">\r\n                <InputField\r\n                  value={searchZip}\r\n                  iconUrl={LocationIconSvg}\r\n                  onChange={setSearchZip}\r\n                  placeholder=\"ZIP (enter at least 3 characters)\"\r\n                  classes=\"result-page__header-input\"\r\n                  autocompleteClasses=\"result-page__autocomplete\"\r\n                  onSubmit={SubmitActionZip}\r\n                  autocomplete={zip}\r\n                  haveSubmit\r\n                  buttonText=\"Search\"\r\n                  errorHandle={errorZip}\r\n                  error=\"Incorrect ZIP code\"\r\n                />\r\n                {errorZip ? (\r\n                  <div className=\"error_message\">\r\n                    Please choose correct Zip code\r\n                  </div>\r\n                ) : (\r\n                  <div className=\"null\"></div>\r\n                )}\r\n              </div>\r\n            )}\r\n            <PlugSvg\r\n              url={LocationIconSvg}\r\n              classes=\"result-page__location-icon\"\r\n              title=\"location\"\r\n            />\r\n\r\n            {location.state && (<p\r\n              className=\"result-page__location-text\"\r\n              onClick={() => setOpen(!open)}\r\n            >\r\n              {location.state.location[0].label}\r\n            </p>)}\r\n          </div>\r\n        </div>\r\n\r\n        <div className=\"result-page__content\">\r\n          <div className='result-page__description-title'>\r\n            {location.state && (<h1 className=\"title\">{location.state.name}</h1>)}\r\n            {description && (<p className=\"description\">{description}</p>)}\r\n          </div>\r\n          <div className=\"result-page__separator--green\" />\r\n            \r\n          \r\n\r\n          {sorted && chosen && (\r\n            <div className=\"result-page__dropdowns\">\r\n              <Dropdown\r\n                label=\"Manufacturer\"\r\n                items={sorted.manufacturer}\r\n                chosen={chosen.Manufacturer}\r\n                setChosen={(e: any) =>\r\n                  setChosen({\r\n                    ...chosen,\r\n                    Manufacturer: e,\r\n                  })\r\n                }\r\n              />\r\n              <Dropdown\r\n                label=\"Form\"\r\n                items={sorted.form}\r\n                chosen={chosen.Form}\r\n                setChosen={(e: any) =>\r\n                  setChosen({\r\n                    ...chosen,\r\n                    Form: e,\r\n                  })\r\n                }\r\n              />\r\n              <Dropdown\r\n                label=\"Dosage\"\r\n                items={sorted.dosage}\r\n                chosen={chosen.Dosage}\r\n                setChosen={(e: any) => setChosen({ ...chosen, Dosage: e })}\r\n              />\r\n              <Dropdown\r\n                label=\"Quantity\"\r\n                items={sorted.quantity}\r\n                chosen={chosen.Quantity}\r\n                setChosen={(e: any) => setChosen({ ...chosen, Quantity: e })}\r\n              />\r\n            </div>\r\n          )}\r\n          <div className=\"result-page__items-control\">\r\n            <ItemsControl\r\n              sortingItems={mockSorting}\r\n              mode={itemsMode}\r\n              action={setItemsMode}\r\n            />\r\n          </div>\r\n          <div className=\"result-page__separator--grey\" />\r\n          {itemsMode === ITEMS_CONTROL_MODE.TILES && (\r\n          <div className=\"result-page__tiles-area\">\r\n            <div className=\"result-page__tiles-wrapper\">\r\n                \r\n             \r\n             {priceReducer.data && priceReducer.load === 'idle'  ? priceReducer.data.map((item:any, index:any) => (\r\n                <TileItem\r\n                partnerId={null}\r\n                isOtcDrug={false}\r\n                highPriceAmount={null}\r\n                priceCurrency={\"USD\"}\r\n                retailerName={item.retailer.name}\r\n                retailerId={item.retailer.id}\r\n                retailerLogo={item.retailer.logo}\r\n                drugName={chosen.Manufacturer.split(\" \")[0]}\r\n                dosageDisplay={chosen.Dosage}\r\n                pbmId={item.pbmId}\r\n                formulationId={priceSettings?.formulationId}\r\n                ndc={priceSettings?.formulationId}\r\n                key={item.retailer.name}\r\n                locationId={item.retailer.location.id}\r\n                locationPhoneNumber={item.retailer.location.phoneNumber}\r\n                lowPriceAmount={item.price.amount}\r\n                quantityDisplay={chosen.Quantity}\r\n                drugUrlSlug={chosen.Manufacturer.split(\r\n                  \" \"\r\n                )[0].toLowerCase()}\r\n                drugId={currentMedication.id}\r\n                name={item.retailer.name}\r\n                price={item.price.display}\r\n                label=\" Optum Perks\"\r\n                index={index}\r\n                onClick={() => {}}\r\n                distance={`${item.distance}`}\r\n              />\r\n             )) : (<Loader />)}\r\n                \r\n            </div>\r\n          </div>\r\n          )}\r\n\r\n          {itemsMode === ITEMS_CONTROL_MODE.ROWS && (\r\n            <div className=\"result-page__rows-wrapper\">\r\n                { priceReducer.data && priceReducer.load === 'idle' ? priceReducer.data.map((item:any, index:any) => {\r\n                  return ( \r\n                          <RowItem\r\n                          partnerId={null}\r\n                          isOtcDrug={false}\r\n                          highPriceAmount={null}\r\n                          priceCurrency={\"USD\"}\r\n                          retailerName={item.retailer.name}\r\n                          retailerId={item.retailer.id}\r\n                          retailerLogo={item.retailer.logo}\r\n                          drugName={chosen.Manufacturer.split(\" \")[0]}\r\n                          dosageDisplay={chosen.Dosage}\r\n                          pbmId={item.pbmId}\r\n                          formulationId={priceSettings?.formulationId}\r\n                          ndc={priceSettings?.formulationId}\r\n                          key={item.retailer.name}\r\n                          locationId={item.retailer.location.id}\r\n                          locationPhoneNumber={item.retailer.location.phoneNumber}\r\n                          lowPriceAmount={item.price.amount}\r\n                          quantityDisplay={chosen.Quantity}\r\n                          drugUrlSlug={chosen.Manufacturer.split(\r\n                            \" \"\r\n                          )[0].toLowerCase()}\r\n                          drugId={currentMedication.id}\r\n                          name={item.retailer.name}\r\n                          price={item.price.display}\r\n                          label=\" Optum Perks\"\r\n                          index={index}\r\n                          onClick={() => {}}\r\n                          distance={`${item.distance}`}\r\n                        />\r\n              )})  \r\n             \r\n                : (<Loader />)\r\n              }\r\n\r\n            </div>\r\n          )}\r\n        </div>\r\n\r\n        <div className=\"result-page__space-fill\"> </div>\r\n        <Footer />\r\n      </div>  \r\n    \r\n    </>\r\n  );\r\n};\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n/*\r\n\r\n  // const manufacturer: any = currentMedication.variants.map((e: any) => {\r\n      //   return `${e.name} (${e.drugType})`;\r\n      // });\r\n\r\n      // const form: any = currentMedication.formulations\r\n      //   .filter((e: any) => {\r\n      //     return (\r\n      //       e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n      //     );\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.form;\r\n      //   })\r\n      //   .filter(function (value: any, index: any, self: any) {\r\n      //     return self.indexOf(value.trim()) === index;\r\n      //   });\r\n      // const dosage = currentMedication.formulations\r\n      //   .filter((e: any) => {\r\n      //     return (\r\n      //       e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n      //     );\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.form === chosen.Form;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.dosage;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.display;\r\n      //   });\r\n      // const quantity = currentMedication.formulations\r\n      //   .filter((e: any) => {\r\n      //     return (\r\n      //       e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n      //     );\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.form === chosen.Form;\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.dosage.display === chosen.Dosage;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.commonQuantities;\r\n      //   })\r\n      //   .flat()\r\n      //   .map((e: any) => {\r\n      //     return e.display;\r\n      //   });\r\n\r\n*/\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n        /* \r\n        // const formId = currentMedication[0].defaultSettings.formulationId;\r\n        // const defaultMedQuantity = currentMedication[0].defaultSettings.quantity;\r\n        // const currentName = currentMedication[0].formulations.filter((item:any) => item.name=== location.state.name)[0];\r\n        // const formulations = currentMedication[0].formulations;\r\n        // const defaultArr = formulations.filter((item:any) => item.id === formId)[0];\r\n\r\n        // const defaultForm = defaultArr.form;\r\n        // const defaultDosage = defaultArr.dosage.display;\r\n        // const defaultQuantity = defaultArr.commonQuantities.find((item:any) => item.value === defaultMedQuantity).display;\r\n\r\n        // const formulationsName = formulations.filter((item:any) => item.name === currentName.name);\r\n\r\n        // const formulationsNameForm = formulationsName.find((item:any) => item.form === defaultForm);\r\n        // const formulationsNameDosage = formulationsName.find((item:any) => item.dosage.display === defaultDosage);\r\n        // const formulationsNameQuantity = formulationsName.map((e:any) => e.commonQuantities).flat().find((item:any) => item.display === defaultQuantity);\r\n\r\n        // const currentForm = formulationsNameForm !== undefined ? defaultForm : currentName.form;\r\n        // const currentDosage = formulationsNameDosage !== undefined ? defaultDosage : currentName.dosage.disaplay;\r\n\r\n        // if(formulationsNameQuantity === undefined){\r\n        //   setChosen({Manufacturer:`${currentName.name} (${currentName.drugType})`, Form:currentForm, Dosage:currentDosage});\r\n        // }else{\r\n        //   setChosen({Manufacturer:`${currentName.name} (${currentName.drugType})`, Form:currentForm, Dosage:currentDosage, Quantity: defaultQuantity});\r\n        // }\r\n          */\r\n\r\n\r\n              // const formulationId = formulations\r\n      //   .filter((e: any) => {\r\n      //     return (\r\n      //       e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n      //     );\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.form === chosen.Form;\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.dosage.display === chosen.Dosage;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.commonQuantities;\r\n      //   })\r\n      //   .flat()\r\n      //   .filter((e: any) => {\r\n      //     return e.display === chosen.Quantity;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.ndc;\r\n      //   });\r\n      // const value = formulations\r\n      //   .filter((e: any) => {\r\n      //     return (\r\n      //       e.name === chosen.Manufacturer.split(\" \").slice(0, -1).join(\" \")\r\n      //     );\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.form === chosen.Form;\r\n      //   })\r\n      //   .filter((e: any) => {\r\n      //     return e.dosage.display === chosen.Dosage;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.commonQuantities;\r\n      //   })\r\n      //   .flat()\r\n      //   .filter((e: any) => {\r\n      //     return e.display === chosen.Quantity;\r\n      //   })\r\n      //   .map((e: any) => {\r\n      //     return e.value;\r\n      //   });"
+        }
+    ]
+}

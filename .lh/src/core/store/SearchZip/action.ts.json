@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/core/store/SearchZip/action.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1643953318496,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1643953631190,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n         data:{\n           zip:code\n         }\n       });\n-      if(zip.length ===3){\n+      if(zip.length >= 3){\n       dispatch({type:ActionsType.ZIP, payload: codes.data})\n       }\n     }catch(err){\n       console.error(err);\n"
+                }
+            ],
+            "date": 1643953318496,
+            "name": "Commit-0",
+            "content": "import {ActionCreator, Dispatch} from 'redux';\nimport {ThunkAction} from 'redux-thunk';\nimport axios from 'axios';\nimport { ActionsType,SearchZipAction, ClearZipAction} from './zipTypes';\nimport { adress } from '../../../../types/env';\n\n\nconst SearchZip:ActionCreator<ThunkAction<Promise<any>, any, null, SearchZipAction>> = (zip:string) => {\n  return async (dispatch:Dispatch) => {\n    try{\n      const code = zip.split(\" \")[0];\n      const codes = await axios({\n        method:\"POST\",\n        url:`${adress}/api/zip/searchzip`,\n        data:{\n          zip:code\n        }\n      });\n      if(zip.length ===3){\n      dispatch({type:ActionsType.ZIP, payload: codes.data})\n      }\n    }catch(err){\n      console.error(err);\n    }\n  }\n}\n\nexport const ClearZip:ActionCreator<ThunkAction<Promise<any>, any, null, ClearZipAction>> = () => {\n  return async (dispatch:Dispatch) => {\n    try{\n      dispatch({type: ActionsType.CLEAR, payload: []});\n    }catch(err){\n      console.error(err);\n    }\n  }\n}\n\n\n\nexport default SearchZip;\n\n"
+        }
+    ]
+}
