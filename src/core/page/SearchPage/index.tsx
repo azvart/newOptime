@@ -34,6 +34,7 @@ export const SearchPage: React.FC = () => {
     dispatch(TopMed({authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}));
   }, []);
 
+
   useEffect(() => {
     if(codes.length){
       dispatch(SearchZip(codes));
@@ -95,32 +96,24 @@ export const SearchPage: React.FC = () => {
 }
 
 
-const submitActionZip = (value:string) => {
-  const data = zip.filter(({label}:any) => label.toLowerCase().includes(value.toLowerCase()));
-  console.log(data);
-  if(data.length){
-    setZipBool(true);
-    if(zip.length > 1){
-      setCodes(zip[0].label);
-    }
-  }else{
-    setZipBool(false)
-    setZipError(true);
-  }
-}
+
   useEffect(() => {
     if(search.length > 0){
       setError(false);
     }
   },[search])
+
+
   useEffect(() => {
     if(codes.length > 0 ){
       setZipError(false);
     }
   },[codes]);
-  useEffect(() => {
-    setCodes(codes);
-  },[codes]);
+
+
+ 
+
+
   useEffect(() => {
 
     if(zipBool && searchBool ){
@@ -133,9 +126,7 @@ const submitActionZip = (value:string) => {
     }
     
   },[zipBool,searchBool]);
-
   useEffect(() => {
-    
     const handleClick = (event:any) => {
      
       const {key} = event;
@@ -143,19 +134,17 @@ const submitActionZip = (value:string) => {
         if(search.length){
           submitAction();
         }
-        if(codes.length){
-          submitActionZip(codes);
-        }
       }
     }
 
     document.addEventListener('keydown', handleClick);
 
     return () => {
-      document.removeEventListener('keydown', handleClick);
+      document.removeEventListener('keydown',handleClick);
     }
-  },[submitAction, search, codes, submitActionZip, zip]);
+  },[submitAction, search]);
 
+ 
   return (
     <div className="search-page">
       <div>
@@ -192,10 +181,11 @@ const submitActionZip = (value:string) => {
               value={codes}
               placeholder="ZIP (enter at least 3 characters)"
               onChange={setCodes}
-              onSubmit={submitActionZip}
               buttonText="Find lowest prices"
               autocomplete={zip}
               errorHandle={zipError}
+              setError={setZipError}
+              setBool={setZipBool}
               haveSubmit
               // error="Please type correct ZIP code"
             />

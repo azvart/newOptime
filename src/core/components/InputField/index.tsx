@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState, useCallback, useRef } from "react";
 import AutocompleteInput from "../AutocompleteInput";
 
 import "../../assets/components/inputField.scss";
@@ -12,7 +12,6 @@ type Props = {
   onChange: (value: string) => void;
   haveSubmit?: boolean;
   buttonText?: string;
-  onSubmit?: any;
   // autocomplete?: Array<{
   //   label: string;
   // }>;
@@ -22,7 +21,11 @@ type Props = {
   selected?: boolean;
   grouping?:boolean;
   filtered?:any;
-  setFiltered?:any
+  setFiltered?:any,
+  ref?:any
+  setError?:any,
+  setBool?:any,
+
 };
 
 const InputField: FC<Props> = ({
@@ -34,7 +37,6 @@ const InputField: FC<Props> = ({
   onChange,
   haveSubmit = false,
   buttonText,
-  onSubmit,
   autocomplete = [],
   errorHandle,
   error,
@@ -42,9 +44,38 @@ const InputField: FC<Props> = ({
   grouping,
   filtered,
   setFiltered,
+  setError,
+  setBool,
 }) => {
-
-
+  useEffect(() => {
+    onChange(value);
+  },[value]);
+  const onSubmit = () => {
+    try{
+    const data = autocomplete.filter(({label}:any) => label === value);
+    const firstElem = autocomplete[0].label;
+    if(data.length === 0){
+      onChange(firstElem);
+    }
+  }catch(e){
+    setError(true)
+    setBool(false);
+  }
+  }
+  useEffect(() => {
+    const handleClick = (event:any) => {
+      const { key } = event;
+      if(key === 'Enter'){
+        onSubmit();
+      }
+    }
+    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keyup', handleClick);
+    return () => {
+      document.removeEventListener('keydown', handleClick);
+      document.removeEventListener('keyup', handleClick);
+    }
+  },[value, autocomplete]);
   return (
     <div style={{ display: "flex", flexGrow: 1, alignItems: "flex-end" }}>
       <div
@@ -69,7 +100,6 @@ const InputField: FC<Props> = ({
               }
               value={value}
               setValue={onChange}
-              onSubmit={onSubmit}
               autocomplete={autocomplete}
               selected={selected}
             />
@@ -78,7 +108,7 @@ const InputField: FC<Props> = ({
         {haveSubmit && (
           <button
             className="input-field__submit-button"
-            onClick={() => onSubmit(value)}
+            onClick={() => onSubmit()}
           >
             {buttonText}
           </button>
