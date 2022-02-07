@@ -50,18 +50,21 @@ const InputField: FC<Props> = ({
   useEffect(() => {
     onChange(value);
   },[value]);
-  const onSubmit = () => {
+  const onSubmit = useCallback(() => {
     try{
     const data = autocomplete.filter(({label}:any) => label === value);
     const firstElem = autocomplete[0].label;
+    
     if(data.length === 0){
       onChange(firstElem);
     }
+    setBool(true);
+    return;
   }catch(e){
     setError(true)
     setBool(false);
   }
-  }
+  },[value, autocomplete])
   useEffect(() => {
     const handleClick = (event:any) => {
       const { key } = event;
@@ -70,10 +73,8 @@ const InputField: FC<Props> = ({
       }
     }
     document.addEventListener('keydown', handleClick);
-    document.addEventListener('keyup', handleClick);
     return () => {
       document.removeEventListener('keydown', handleClick);
-      document.removeEventListener('keyup', handleClick);
     }
   },[value, autocomplete]);
   return (
