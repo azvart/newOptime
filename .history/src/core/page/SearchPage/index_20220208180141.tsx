@@ -146,7 +146,7 @@ export const SearchPage: React.FC = () => {
     return () => {
     document.removeEventListener('keyup',handleClick);
     }
-  },[search, state]);
+  },[search, state, submitAction]);
 
   return (
     <div className="search-page">
@@ -190,7 +190,6 @@ export const SearchPage: React.FC = () => {
               errorHandle={zipError}
               setError={setZipError}
               setBool={setZipBool}
-              submitSearch={submitAction}
               haveSubmit
               // error="Please type correct ZIP code"
             />

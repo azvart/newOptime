@@ -118,7 +118,7 @@ const InputField: FC<Props> = ({
           <button
             className="input-field__submit-button"
             onMouseDown={() => onSubmit()}
-            onClick={() => submitSearch()}
+            onMouseUp={() => submitSearch()}
           >
             {buttonText}
           </button>

@@ -5,7 +5,7 @@ import '../../assets/components/autocomplete.scss';
 
 
 
-const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput}:any) => {
+const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput, setBool}:any) => {
   const [suggest, setSuggest] = useState([]);
   const node:any = useRef();
   const escapedRegexCharacters =(str:any) => {
@@ -55,7 +55,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
   }
   const renderSuggestion = (suggestion:any) => {
     return (
-      <span>{suggestion.label} ({suggestion.type})</span>
+      <span onClick={() => setBool(true)} >{suggestion.label} ({suggestion.type})</span>
     )
   }
   const renderSectionTitle = (section:any) => {

@@ -117,6 +117,14 @@ export const SearchPage: React.FC = () => {
   },[state,codes]);
 
 
+  useEffect(() => {
+    const data = state.map(({label}:any) => {
+      return {
+        label: label.filter(({label}:any) => label === search)
+      }
+    }).filter(({label}:any) => label.length > 0);
+    console.log(data);
+  },[search])
  
 
 
@@ -190,7 +198,6 @@ export const SearchPage: React.FC = () => {
               errorHandle={zipError}
               setError={setZipError}
               setBool={setZipBool}
-              submitSearch={submitAction}
               haveSubmit
               // error="Please type correct ZIP code"
             />

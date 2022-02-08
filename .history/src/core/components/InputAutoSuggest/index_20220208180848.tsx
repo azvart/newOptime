@@ -18,6 +18,9 @@ const InputAutoSuggest:FC<any> = ({
 
   useEffect(() => {
     setValue(value);
+    return () => {
+      onSubmit();
+    }
   },[value]);
 
   return (

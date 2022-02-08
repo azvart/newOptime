@@ -173,6 +173,7 @@ export const SearchPage: React.FC = () => {
               placeholder="Search Medications"
               error={error}
               setError={setError}
+              setBool={setSearchBool}
             />
             {error ? (
                  <p className="error_message">Please choose correct medication</p>
@@ -190,7 +191,6 @@ export const SearchPage: React.FC = () => {
               errorHandle={zipError}
               setError={setZipError}
               setBool={setZipBool}
-              submitSearch={submitAction}
               haveSubmit
               // error="Please type correct ZIP code"
             />

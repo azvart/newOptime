@@ -117,8 +117,10 @@ const InputField: FC<Props> = ({
         {haveSubmit && (
           <button
             className="input-field__submit-button"
-            onMouseDown={() => onSubmit()}
-            onClick={() => submitSearch()}
+            onClick={() => {
+              onSubmit()
+              submitSearch()
+            }}
           >
             {buttonText}
           </button>

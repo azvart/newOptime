@@ -85,6 +85,7 @@ const InputField: FC<Props> = ({
       document.removeEventListener('keydown', handleClick);
     }
   },[ onSubmit, autocomplete, value ]);
+  useEffect(() => {},[submitSearch]);
   return (
     <div style={{ display: "flex", flexGrow: 1, alignItems: "flex-end" }}>
       <div
@@ -117,8 +118,10 @@ const InputField: FC<Props> = ({
         {haveSubmit && (
           <button
             className="input-field__submit-button"
-            onMouseDown={() => onSubmit()}
-            onClick={() => submitSearch()}
+            onClick={() => {
+              onSubmit();
+              return submitSearch();
+            }}
           >
             {buttonText}
           </button>

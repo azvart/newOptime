@@ -13,13 +13,11 @@ const InputAutoSuggest:FC<any> = ({
   haveSubmit = false,
   setBool,
   onSubmit = () => {},
-  bool,
   buttonText}) => {
 
   useEffect(() => {
     setValue(value);
   },[value]);
-
   return (
     <div style={{display: "flex", flexGrow: 1, alignItems:"flex-end"}}>
       <div className={`input-field ${error === true ? 'error' : null} `}>
@@ -27,7 +25,7 @@ const InputAutoSuggest:FC<any> = ({
             <div className='input-field__icon-wrapper'>
                 <img src={iconUrl} alt="" className='input-field__icon' />
             </div>
-            <AutoSuggestInput  input={value} setInput={setValue} autocomplete={autocomplete} placeholder={placeholder}  />
+            <AutoSuggestInput  input={value} setInput={setValue} autocomplete={autocomplete} placeholder={placeholder} setBool={setBool}  />
         </div>
         {haveSubmit && (
           <button

@@ -65,6 +65,7 @@ const AutoSuggestInput = ({autocomplete = [], placeholder='', input='', setInput
     return ''
   }
   const getSectionSuggestions = (section:any) => {
+    setBool(true);
    return section.label
   }
   const onSuggestionsFetchRequested = ({value}:any) => {

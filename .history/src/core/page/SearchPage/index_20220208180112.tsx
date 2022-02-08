@@ -190,7 +190,6 @@ export const SearchPage: React.FC = () => {
               errorHandle={zipError}
               setError={setZipError}
               setBool={setZipBool}
-              submitSearch={submitAction}
               haveSubmit
               // error="Please type correct ZIP code"
             />

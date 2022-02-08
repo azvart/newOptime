@@ -172,6 +172,7 @@ export const SearchPage: React.FC = () => {
               iconUrl={SearchIconSvg}
               placeholder="Search Medications"
               error={error}
+              onSubmit={submitAction}
               setError={setError}
             />
             {error ? (
@@ -190,7 +191,6 @@ export const SearchPage: React.FC = () => {
               errorHandle={zipError}
               setError={setZipError}
               setBool={setZipBool}
-              submitSearch={submitAction}
               haveSubmit
               // error="Please type correct ZIP code"
             />

@@ -123,10 +123,12 @@ export const SearchPage: React.FC = () => {
   useEffect(() => {
 
     if(zipBool === true && searchBool === true){
-      
+      const timer = setTimeout(() => {
         dispatch(CurrentMed(search,{authorization: `Bearer ${cookies['token']}`, 'x-account-id':cookies['account']}))
-      
-    
+      }, 500)
+      return () => {
+        clearTimeout(timer);
+      }  
     }
     
   },[zipBool,searchBool, search]);
@@ -146,7 +148,7 @@ export const SearchPage: React.FC = () => {
     return () => {
     document.removeEventListener('keyup',handleClick);
     }
-  },[search, state]);
+  },[search, state, submitAction]);
 
   return (
     <div className="search-page">
@@ -173,6 +175,7 @@ export const SearchPage: React.FC = () => {
               placeholder="Search Medications"
               error={error}
               setError={setError}
+              setBool={setSearchBool}
             />
             {error ? (
                  <p className="error_message">Please choose correct medication</p>
@@ -190,7 +193,6 @@ export const SearchPage: React.FC = () => {
               errorHandle={zipError}
               setError={setZipError}
               setBool={setZipBool}
-              submitSearch={submitAction}
               haveSubmit
               // error="Please type correct ZIP code"
             />

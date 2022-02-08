@@ -19,7 +19,6 @@ const InputAutoSuggest:FC<any> = ({
   useEffect(() => {
     setValue(value);
   },[value]);
-
   return (
     <div style={{display: "flex", flexGrow: 1, alignItems:"flex-end"}}>
       <div className={`input-field ${error === true ? 'error' : null} `}>
