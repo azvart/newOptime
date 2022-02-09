@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/server/app/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1644392647508,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644395672199,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,11 +35,11 @@\n     // this.app.use(helmet());\n     this.app.use(express.static(__dirname));\n     this.app.use(logger);\n     this.app.use(correlator());\n-    this.app.use('/search',\n-    getToken, getCorrelationId, getAccountId\n-    );\n+    // this.app.use('/search',\n+    // getToken, getCorrelationId, getAccountId\n+    // );\n   }\n     private main() {\n       this.app.get(\"*\", async (req:Request,res:Response) => {\n         const content = renderApp(store,{},req.url);\n"
+                },
+                {
+                    "date": 1644414354960,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,11 +35,11 @@\n     // this.app.use(helmet());\n     this.app.use(express.static(__dirname));\n     this.app.use(logger);\n     this.app.use(correlator());\n-    // this.app.use('/search',\n-    // getToken, getCorrelationId, getAccountId\n-    // );\n+    this.app.use('/search',\n+    getToken, getCorrelationId, getAccountId\n+    );\n   }\n     private main() {\n       this.app.get(\"*\", async (req:Request,res:Response) => {\n         const content = renderApp(store,{},req.url);\n"
+                }
+            ],
+            "date": 1644392647508,
+            "name": "Commit-0",
+            "content": "import express, {Request, Response, NextFunction} from 'express';\nimport compression from 'compression';\nimport cors from 'cors';\nimport mongoose from 'mongoose';\nimport helmet from 'helmet';\nimport path from 'path';\nimport cookieParser from 'cookie-parser';\nimport correlator from 'express-correlation-id';\nimport {logger} from '../middleware/logger';\nimport {Controller} from '../../../types/controller.types';\nimport {getToken} from '../middleware/getToken';\nimport {getCorrelationId} from '../middleware/getCorrelationId';\nimport {getAccountId} from '../middleware/getAccountId';\nimport {renderApp} from './renderApp';\nimport {renderHtml} from './renderHtml';\nimport store from '../../core/store/store';\nimport fs from 'fs';\nimport {mongoLocal} from '../../../types/env';\nclass App{\n  private app:express.Application;\n  constructor(controllers:Controller[]){\n    this.app = express();\n    this.DB();\n    this.middleware();\n    this.controller(controllers);\n    this.main();\n  }\n\n  private middleware(){\n    this.app.use(express.json());\n    this.app.use(express.urlencoded({extended:true}));\n    this.app.use(compression());\n    this.app.use(cors());\n    this.app.use(cookieParser());\n    // this.app.use(helmet());\n    this.app.use(express.static(__dirname));\n    this.app.use(logger);\n    this.app.use(correlator());\n    this.app.use('/search',\n    getToken, getCorrelationId, getAccountId\n    );\n  }\n    private main() {\n      this.app.get(\"*\", async (req:Request,res:Response) => {\n        const content = renderApp(store,{},req.url);\n        const manifest = fs.readFileSync(\n          path.join(__dirname, \"asset-manifest.json\"),\n          \"utf-8\"\n        );\n        const assets = JSON.parse(manifest); \n        \n          return res.send(renderHtml({content, styles:[assets[\"main.css\"]],scripts:[\"static/client.js\"] }))\n      })\n    }\n  private controller(controllers:Controller[]){\n        controllers.forEach((controller) => {\n          this.app.use('/api', controller.router);\n        })\n  }\n  private DB(){\n    mongoose.connect(mongoLocal).then(() => {\n      console.log(`DB connected success ${mongoLocal}`)\n    })\n  }\n  public listen(){\n    this.app.listen(5000, () => {\n      console.log(`Server running on port: 5000`)\n    })\n  }\n}\n\nexport default App;"
+        }
+    ]
+}

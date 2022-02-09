@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/core/hooks/useSearch.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1644395441550,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644395454703,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,5 +16,9 @@\n \n \n function useProvideSearch(){\n   const [search, setSearch] = useState(null);\n+\n+  return {\n+    search\n+  }\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644395521894,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n \n \n export function ProvideSearch({ children }:any) {\n   const search = useProvideSearch();\n-  return <searchContext.Provider value={search}> {children} </searchContext.Provider>;\n+  return <searchContext.Provider value={search}>{children}</searchContext.Provider>;\n }\n \n \n export const useSearch = () => {\n"
+                }
+            ],
+            "date": 1644395441550,
+            "name": "Commit-0",
+            "content": "import React, { useState, useEffect, useContext, createContext } from 'react';\n\n\nconst searchContext:any = createContext(null);\n\n\nexport function ProvideSearch({ children }:any) {\n  const search = useProvideSearch();\n  return <searchContext.Provider value={search}> {children} </searchContext.Provider>;\n}\n\n\nexport const useSearch = () => {\n  return useContext(searchContext);\n}\n\n\nfunction useProvideSearch(){\n  const [search, setSearch] = useState(null);\n}"
+        }
+    ]
+}

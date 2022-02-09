@@ -1,0 +1,42 @@
+{
+    "sourceFile": "src/core/store/Price/actions.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1644390491446,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644390552897,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,8 @@\n           searchLocation: searchLocation,\n           searchLocationZipCode: searchLocationZipCode,\n       }\n     }).then(({data}) => {\n-      console.log(data);\n       dispatch({type:ActionsType.PRICE,payload:{\n         data:data,\n         load:'idle'\n       }});\n"
+                },
+                {
+                    "date": 1644390578322,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,11 +54,12 @@\n           ubi: ubi,\n           searchLocation: searchLocation,\n           searchLocationZipCode: searchLocationZipCode,\n       }\n-    }).then(({data}) => {\n+    }).then((response) => {\n+      console.log(response);\n       dispatch({type:ActionsType.PRICE,payload:{\n-        data:data,\n+        data:response.data,\n         load:'idle'\n       }});\n     })\n     .catch((e) => {\n"
+                },
+                {
+                    "date": 1644390979893,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,17 +54,16 @@\n           ubi: ubi,\n           searchLocation: searchLocation,\n           searchLocationZipCode: searchLocationZipCode,\n       }\n-    }).then((response) => {\n-      console.log(response);\n+    }).then(({data}) => {\n       dispatch({type:ActionsType.PRICE,payload:{\n-        data:response.data,\n+        data:data,\n         load:'idle'\n       }});\n     })\n     .catch((e) => {\n-      console.error(e.message);\n+      console.error(\"message after get pricing\",e.message);\n     })\n   }\n }\n \n"
+                },
+                {
+                    "date": 1644391887341,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,8 +62,13 @@\n       }});\n     })\n     .catch((e) => {\n       console.error(\"message after get pricing\",e.message);\n+      dispatch({type: ActionsType.PRICE, payload:{\n+        load: 'failure',\n+        message:e.message,\n+        userMessage:'Sorry price not found'\n+      }})\n     })\n   }\n }\n \n"
+                },
+                {
+                    "date": 1644413721190,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -61,13 +61,12 @@\n         load:'idle'\n       }});\n     })\n     .catch((e) => {\n-      console.error(\"message after get pricing\",e.message);\n       dispatch({type: ActionsType.PRICE, payload:{\n         load: 'failure',\n         message:e.message,\n-        userMessage:'Sorry price not found'\n+        userMessage:'Sorry, price is not found'\n       }})\n     })\n   }\n }\n"
+                },
+                {
+                    "date": 1644413822876,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,9 +64,9 @@\n     .catch((e) => {\n       dispatch({type: ActionsType.PRICE, payload:{\n         load: 'failure',\n         message:e.message,\n-        userMessage:'Sorry, price is not found'\n+        userMessage:'Sorry! No result found'\n       }})\n     })\n   }\n }\n"
+                }
+            ],
+            "date": 1644390491446,
+            "name": "Commit-0",
+            "content": "import {ActionCreator, Dispatch} from 'redux';\nimport {ThunkAction} from 'redux-thunk';\nimport axios from 'axios';\nimport {ActionsType, CurrentPrice} from './priceTypes';\nimport { adress } from '../../../../types/env';\n\n\nconst getPrice:ActionCreator<ThunkAction<Promise<any>,any, null,CurrentPrice>> = (\nquantity:string,\nformulationId:string,\ntype:string,\nname:string,\ngpi14:string,\nubi:boolean,\nsearchLocation:string,\nsearchLocationZipCode: string,\n) => {\n  return async (dispatch:Dispatch) => {\n    // try{\n    //   const price:any = await axios({\n    //     method:\"POST\",\n    //     url: `${adress}/api/price/getting`,\n    //     withCredentials:true,\n    //     data:{\n    //       quantity: quantity,\n    //       formulationId: formulationId,\n    //       type: type,\n    //       name: name,\n    //       gpi14: gpi14,\n    //       ubi: ubi,\n    //       searchLocation: searchLocation,\n    //       searchLocationZipCode: searchLocationZipCode,\n         \n    //     }\n    //   });\n\n    //   dispatch({type: ActionsType.PRICE, payload: price.data});\n    // }catch(err){\n    //   console.error(err);\n    // }\n    dispatch({type:ActionsType.PRICE,payload:{\n      load:'loading'\n    }});\n    return axios({\n      method:\"POST\",\n      url:`${adress}/api/price/getting`,\n      withCredentials:true,\n      data:{\n          quantity: quantity,\n          formulationId: formulationId,\n          type: type,\n          name: name,\n          gpi14: gpi14,\n          ubi: ubi,\n          searchLocation: searchLocation,\n          searchLocationZipCode: searchLocationZipCode,\n      }\n    }).then(({data}) => {\n      console.log(data);\n      dispatch({type:ActionsType.PRICE,payload:{\n        data:data,\n        load:'idle'\n      }});\n    })\n    .catch((e) => {\n      console.error(e.message);\n    })\n  }\n}\n\n\n\n\nexport default getPrice;"
+        }
+    ]
+}

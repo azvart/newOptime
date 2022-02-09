@@ -1,0 +1,38 @@
+{
+    "sourceFile": "src/core/hooks/useUpdateEffect.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1644399830482,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644399956905,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n import { DependencyList, EffectCallback, useEffect } from 'react';\n \n+import useIsFirstRender from './useIsFirstRender';\n \n \n \n function useUpdateEffect(effect:EffectCallback, deps?:DependencyList){\n"
+                },
+                {
+                    "date": 1644400052990,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,10 +4,14 @@\n \n \n \n function useUpdateEffect(effect:EffectCallback, deps?:DependencyList){\n-\n-  useEffect(() => {}, deps);\n+  const isFirst = useIsFirstRender();\n+  useEffect(() => {\n+    if(!isFirst){\n+      return effect()\n+    }\n+  }, deps);\n }\n \n \n \n"
+                },
+                {
+                    "date": 1644402175504,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import useIsFirstRender from './useIsFirstRender';\n \n \n \n-function useUpdateEffect(effect:EffectCallback, deps?:DependencyList){\n+function useUpdateEffect(effect: EffectCallback, deps?:DependencyList){\n   const isFirst = useIsFirstRender();\n   useEffect(() => {\n     if(!isFirst){\n       return effect()\n"
+                },
+                {
+                    "date": 1644402254989,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import useIsFirstRender from './useIsFirstRender';\n \n \n \n-function useUpdateEffect(effect: EffectCallback, deps?:DependencyList){\n+function useUpdateEffect(effect?: EffectCallback, deps?:DependencyList){\n   const isFirst = useIsFirstRender();\n   useEffect(() => {\n     if(!isFirst){\n       return effect()\n"
+                },
+                {
+                    "date": 1644402343342,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import useIsFirstRender from './useIsFirstRender';\n \n \n \n-function useUpdateEffect(effect?: EffectCallback, deps?:DependencyList){\n+function useUpdateEffect(effect: EffectCallback, deps?:DependencyList){\n   const isFirst = useIsFirstRender();\n   useEffect(() => {\n     if(!isFirst){\n       return effect()\n"
+                }
+            ],
+            "date": 1644399830482,
+            "name": "Commit-0",
+            "content": "import { DependencyList, EffectCallback, useEffect } from 'react';\n\n\n\n\nfunction useUpdateEffect(effect:EffectCallback, deps?:DependencyList){\n\n  useEffect(() => {}, deps);\n}\n\n\n\nexport default useUpdateEffect;"
+        }
+    ]
+}

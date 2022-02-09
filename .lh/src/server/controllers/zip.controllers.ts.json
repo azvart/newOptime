@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/server/controllers/zip.controllers.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1644384186508,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1644384186508,
+            "name": "Commit-0",
+            "content": "import { Controller } from \"../../../types/controller.types\";\nimport {Router, Request, Response} from 'express';\nimport ZipService from '../services/zip.service';\nclass Zip implements Controller{\n  public path = '/zip';\n  public router = Router();\n  public service = new ZipService();\n  constructor(){\n    this.initilizeRouter();\n  }\n\n  private initilizeRouter(){\n      this.router.post(`${this.path}/searchzip`, this.currentZip);\n  }\n\n\n  currentZip = async (req:Request, res:Response) => {\n    try{\n    const data = await this.service.getCurrentZip(req.body.zip);\n    return res.status(200).send(data);\n    }catch(e){\n      return res.status(400).json({message: e.message, status: false});\n    }\n  }\n}\n\n\nexport default Zip;"
+        }
+    ]
+}

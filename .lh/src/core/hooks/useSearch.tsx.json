@@ -1,0 +1,38 @@
+{
+    "sourceFile": "src/core/hooks/useSearch.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1644402586240,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644402709859,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,16 @@\n \n function useProvideSearch(){\n   const [search, setSearch] = useState({name:'', location:''});\n \n+  const setLocation = (value:any){\n+\n+    setSearch({...search, location:value})\n+  }\n+  const setName = (value:string){\n+    setSearch({...search, name: value});\n+  }\n+\n   return {\n     search\n   }\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644402724353,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,14 +17,14 @@\n \n function useProvideSearch(){\n   const [search, setSearch] = useState({name:'', location:''});\n \n-  const setLocation = (value:any){\n+  const setLocation = (value:any) => {\n \n     setSearch({...search, location:value})\n   }\n-  const setName = (value:string){\n-    setSearch({...search, name: value});\n+  const setName = (value:string) =>{\n+    setSearch({...search, name: value})\n   }\n \n   return {\n     search\n"
+                },
+                {
+                    "date": 1644402733776,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,7 +26,9 @@\n     setSearch({...search, name: value})\n   }\n \n   return {\n-    search\n+    search,\n+    setLocation,\n+    setName,\n   }\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644405344240,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,6 +29,7 @@\n   return {\n     search,\n     setLocation,\n     setName,\n+    setSearch,\n   }\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644405351838,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,19 +17,10 @@\n \n function useProvideSearch(){\n   const [search, setSearch] = useState({name:'', location:''});\n \n-  const setLocation = (value:any) => {\n \n-    setSearch({...search, location:value})\n-  }\n-  const setName = (value:string) =>{\n-    setSearch({...search, name: value})\n-  }\n-\n   return {\n     search,\n-    setLocation,\n-    setName,\n     setSearch,\n   }\n }\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1644402586240,
+            "name": "Commit-0",
+            "content": "import React, { useState, useEffect, useContext, createContext } from 'react';\n\n\nconst searchContext:any = createContext(null);\n\n\nexport function ProvideSearch({ children }:any) {\n  const search = useProvideSearch();\n  return <searchContext.Provider value={search}>{children}</searchContext.Provider>;\n}\n\n\nexport const useSearch = () => {\n  return useContext(searchContext);\n}\n\n\nfunction useProvideSearch(){\n  const [search, setSearch] = useState({name:'', location:''});\n\n  return {\n    search\n  }\n}"
+        }
+    ]
+}

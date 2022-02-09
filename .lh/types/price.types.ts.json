@@ -1,0 +1,34 @@
+{
+    "sourceFile": "types/price.types.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1644384863843,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644387097207,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -67,9 +67,9 @@\n export type IRequestPriceParamsService = {\n   quantity: string,\n   formulationId: string,\n   'b-g': string,\n-  db: string,\n+  dn: string,\n   gpi14: string,\n   ubi: string,\n   searchLocation: string,\n   searchLocationZipCode: string\n"
+                },
+                {
+                    "date": 1644387701582,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,13 +64,13 @@\n }\n \n \n export type IRequestPriceParamsService = {\n-  quantity: string,\n-  formulationId: string,\n+  quantity: [number],\n+  formulationId: [string],\n   'b-g': string,\n   dn: string,\n   gpi14: string,\n-  ubi: string,\n+  ubi: boolean,\n   searchLocation: string,\n   searchLocationZipCode: string\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644387818394,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -65,9 +65,9 @@\n \n \n export type IRequestPriceParamsService = {\n   quantity: [number],\n-  formulationId: [string],\n+  formulationId:any,\n   'b-g': string,\n   dn: string,\n   gpi14: string,\n   ubi: boolean,\n"
+                },
+                {
+                    "date": 1644387835375,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,9 +64,9 @@\n }\n \n \n export type IRequestPriceParamsService = {\n-  quantity: [number],\n+  quantity: any,\n   formulationId:any,\n   'b-g': string,\n   dn: string,\n   gpi14: string,\n"
+                }
+            ],
+            "date": 1644384863843,
+            "name": "Commit-0",
+            "content": "interface IPriceObj{\n  amount: string;\n  currency: string;\n  display: string;\n  quantity: number;\n}\n\ninterface IRetailer{\n  id: string;\n  isBigNameRetailer: boolean,\n  isFavorite: boolean;\n  isMembershipRequired: boolean;\n  location: ILocation;\n  logo: any;\n  membershipDetailsUrl: null | string;\n  name: string;\n}\n\ninterface ILocation{\n  adressLine1: null | string;\n  addressLIne2: null | string;\n  city: string;\n  coordinates: ICoordinates ;\n  hours: IHours[] ;\n  isFavorite: boolean;\n  phoneNumber: string;\n  state: string;\n  zipCode: string;\n\n}\n\n\ninterface ICoordinates {\n  latitude: number;\n  longitude: number;\n}\n\ninterface IHours {\n  close: IClose;\n  open: IOpen;\n}\ninterface IOpen {\n  day: string;\n  time: string;\n}\ninterface IClose {\n  day: string;\n  time: string;\n}\n\n\n\nexport interface IPrice {\n  couponId: null | string;\n  isLowestPrice: boolean;\n  pbmId: string;\n  price: IPriceObj;\n  priceLevel: string;\n  retailer: IRetailer;\n  formId: string;\n  location: string;\n  quantity: string;\n  data: any;\n}\n\n\nexport type IRequestPriceParamsService = {\n  quantity: string,\n  formulationId: string,\n  'b-g': string,\n  db: string,\n  gpi14: string,\n  ubi: string,\n  searchLocation: string,\n  searchLocationZipCode: string\n}"
+        }
+    ]
+}

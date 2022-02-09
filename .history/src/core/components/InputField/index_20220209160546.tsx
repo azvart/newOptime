@@ -1,0 +1,134 @@
+import React, { ChangeEvent, FC, useEffect, useState, useCallback, useRef } from "react";
+import AutocompleteInput from "../AutocompleteInput";
+import useEventListener from '../../hooks/useEventListener';
+import "../../assets/components/inputField.scss";
+
+type Props = {
+  classes?: string;
+  autocompleteClasses?: string;
+  placeholder?: string;
+  value: string;
+  iconUrl?: string;
+  onChange: (value: string) => void;
+  haveSubmit?: boolean;
+  buttonText?: string;
+  // autocomplete?: Array<{
+  //   label: string;
+  // }>;
+  autocomplete: any;
+  errorHandle?: boolean;
+  error?: string;
+  selected?: boolean;
+  grouping?:boolean;
+  filtered?:any;
+  setFiltered?:any,
+  ref?:any
+  setError?:any,
+  setBool?:any,
+  open?:boolean
+  submitSearch?:any
+};
+
+const InputField: FC<Props> = ({
+  classes,
+  autocompleteClasses,
+  placeholder = "",
+  value,
+  iconUrl,
+  onChange,
+  haveSubmit = false,
+  buttonText,
+  autocomplete = [],
+  errorHandle,
+  error,
+  selected,
+  grouping,
+  filtered,
+  setFiltered,
+  setError,
+  setBool,
+  submitSearch
+}) => {
+  useEffect(() => {
+    onChange(value);
+  },[value]);
+  const onSubmit = useCallback((event:any) => {
+    const { key } = event;
+    if(key === 'Enter'){
+    try{
+    console.log(value)
+    console.log(autocomplete);
+    const data = autocomplete.filter(({label}:any) => label === value);
+    const firstElem = autocomplete[0].label;
+    if(data.length === 0){
+      onChange(firstElem);
+    }
+    setBool(true);
+    return;
+  }catch(e){
+    setError(true)
+    setBool(false);
+    return;
+  }
+}
+  },[value, autocomplete]);
+  useEventListener('keydown', onSubmit);
+  // useEffect(() => {
+  //   const handleClick = (event:any) => {
+  //     const { key } = event;
+  //     if(key === 'Enter' && value.length > 0 && autocomplete.length > 0){
+        
+  //         onSubmit()
+        
+       
+  //     }
+  //   }
+  //     document.addEventListener('keydown', handleClick);
+  //   return () => {
+  //     document.removeEventListener('keydown', handleClick);
+  //   }
+  // },[ onSubmit, autocomplete, value ]);
+  return (
+    <div style={{ display: "flex", flexGrow: 1, alignItems: "flex-end" }}>
+      <div
+        className={`input-field ${classes} ${
+          errorHandle === true ? "error" : classes
+        }`}
+      >
+        <div className="input-field__row">
+          <div className="input-field__icon-wrapper">
+            <img src={iconUrl} className="input-field__icon" alt="" />
+          </div>
+
+            <AutocompleteInput
+              filtered={filtered}
+              setFiltered={setFiltered}
+              grouping={grouping}
+              placeholder={placeholder}
+              classes={
+                autocompleteClasses === undefined
+                  ? "input-field__input"
+                  : autocompleteClasses
+              }
+              value={value}
+              setValue={onChange}
+              autocomplete={autocomplete}
+              selected={selected}
+            />
+
+        </div>
+        {haveSubmit && (
+          <button
+            className="input-field__submit-button"
+            onMouseDown={(event) => onSubmit(event)}
+            onClick={() => submitSearch()}
+          >
+            {buttonText}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default InputField;

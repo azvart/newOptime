@@ -1,0 +1,74 @@
+{
+    "sourceFile": "src/server/services/price.service.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 14,
+            "patches": [
+                {
+                    "date": 1644384338408,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644384376506,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,10 +3,12 @@\n import { Settings } from '../utils/priceSettings';\n \n class PriceService{\n \n+    public price = Price;\n+\n     getPrice = async () => {\n-\n+        \n     }\n \n }\n \n"
+                },
+                {
+                    "date": 1644384764435,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,12 +5,16 @@\n class PriceService{\n \n     public price = Price;\n \n-    getPrice = async () => {\n+    getPrice = async (params) => {\n         \n     }\n \n+    getRequestPrice = async () => {\n+\n+    }\n+\n }\n \n \n export default PriceService;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644384892043,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import axios, {AxiosResponse} from 'axios';\n import Price from '../models/price.model';\n import { Settings } from '../utils/priceSettings';\n-\n+import type {IRequestPriceParamsService} from '../../../types/price.types';\n class PriceService{\n \n     public price = Price;\n \n"
+                },
+                {
+                    "date": 1644384904209,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,13 @@\n import axios, {AxiosResponse} from 'axios';\n import Price from '../models/price.model';\n import { Settings } from '../utils/priceSettings';\n-import type {IRequestPriceParamsService} from '../../../types/price.types';\n+import type { IRequestPriceParamsService } from '../../../types/price.types';\n class PriceService{\n \n     public price = Price;\n \n-    getPrice = async (params) => {\n+    getPrice = async (params:IRequestPriceParamsService) => {\n         \n     }\n \n     getRequestPrice = async () => {\n"
+                },
+                {
+                    "date": 1644385090935,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,14 +5,27 @@\n class PriceService{\n \n     public price = Price;\n \n-    getPrice = async (params:IRequestPriceParamsService) => {\n+    getPrice = async () => {\n         \n-    }\n \n-    getRequestPrice = async () => {\n+    }   \n \n+    getRequestPrice = async (params:IRequestPriceParamsService, token: string, accountId:string, correlationId: string) => {\n+\n+        const { data }:AxiosResponse = await axios({\n+            method:\"GET\",\n+            url:`https://api.perks.optum.com/api/optumperks/v1/prices`,\n+            headers:{\n+                \"Content-Type\":\"application/json\",\n+                \"Accept\":\"application/json\",\n+                authorization: token,\n+                'x-account-id': accountId,\n+                'x-app-id':\"Optum Perks\"\n+            }\n+        })\n+\n     }\n \n }\n \n"
+                },
+                {
+                    "date": 1644385102419,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,10 @@\n                 \"Accept\":\"application/json\",\n                 authorization: token,\n                 'x-account-id': accountId,\n                 'x-app-id':\"Optum Perks\"\n-            }\n+            },\n+            params: params\n         })\n \n     }\n \n"
+                },
+                {
+                    "date": 1644385138892,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n \n     }   \n \n     getRequestPrice = async (params:IRequestPriceParamsService, token: string, accountId:string, correlationId: string) => {\n-\n+        try{\n         const { data }:AxiosResponse = await axios({\n             method:\"GET\",\n             url:`https://api.perks.optum.com/api/optumperks/v1/prices`,\n             headers:{\n@@ -23,9 +23,12 @@\n                 'x-account-id': accountId,\n                 'x-app-id':\"Optum Perks\"\n             },\n             params: params\n-        })\n+        });\n+        }catch(e){\n+            return `Something wrong: ${e.message}`\n+        }\n \n     }\n \n }\n"
+                },
+                {
+                    "date": 1644385296443,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,14 +24,20 @@\n                 'x-app-id':\"Optum Perks\"\n             },\n             params: params\n         });\n+\n         }catch(e){\n             return `Something wrong: ${e.message}`\n         }\n \n     }\n \n+    settingsPrice = async (data:any, locations: string) => {\n+        return await Settings(data, locations);\n+\n+    }\n+\n }\n \n \n export default PriceService;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644385306303,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,10 +32,11 @@\n \n     }\n \n     settingsPrice = async (data:any, locations: string) => {\n+\n         return await Settings(data, locations);\n-\n+        \n     }\n \n }\n \n"
+                },
+                {
+                    "date": 1644386541067,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n     }   \n \n     getRequestPrice = async (params:IRequestPriceParamsService, token: string, accountId:string, correlationId: string) => {\n         try{\n-        const { data }:AxiosResponse = await axios({\n+        const { data }:AxiosResponse<any> = await axios({\n             method:\"GET\",\n             url:`https://api.perks.optum.com/api/optumperks/v1/prices`,\n             headers:{\n                 \"Content-Type\":\"application/json\",\n@@ -24,9 +24,15 @@\n                 'x-app-id':\"Optum Perks\"\n             },\n             params: params\n         });\n-\n+        await new this.price({\n+            formId: params.formulationId,\n+            quantity: params.quantity,\n+            location: params.searchLocation,\n+            data: data.data\n+        }).save();\n+        \n         }catch(e){\n             return `Something wrong: ${e.message}`\n         }\n \n@@ -34,9 +40,9 @@\n \n     settingsPrice = async (data:any, locations: string) => {\n \n         return await Settings(data, locations);\n-        \n+\n     }\n \n }\n \n"
+                },
+                {
+                    "date": 1644386674110,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,11 +5,18 @@\n class PriceService{\n \n     public price = Price;\n \n-    getPrice = async () => {\n-        \n-\n+    getPrice = async (params:IRequestPriceParamsService) => {\n+        try{\n+        return await this.price.findPrice(\n+            params.formulationId,\n+            params.quantity, \n+            params.searchLocation\n+        );\n+        }catch(e){\n+            return `Price not found: ${e.message}`;\n+        }\n     }   \n \n     getRequestPrice = async (params:IRequestPriceParamsService, token: string, accountId:string, correlationId: string) => {\n         try{\n@@ -30,9 +37,9 @@\n             quantity: params.quantity,\n             location: params.searchLocation,\n             data: data.data\n         }).save();\n-        \n+\n         }catch(e){\n             return `Something wrong: ${e.message}`\n         }\n \n"
+                },
+                {
+                    "date": 1644386715217,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,8 +27,9 @@\n                 \"Content-Type\":\"application/json\",\n                 \"Accept\":\"application/json\",\n                 authorization: token,\n                 'x-account-id': accountId,\n+                'x-correlation-id': correlationId,\n                 'x-app-id':\"Optum Perks\"\n             },\n             params: params\n         });\n"
+                },
+                {
+                    "date": 1644388063313,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,9 +17,9 @@\n             return `Price not found: ${e.message}`;\n         }\n     }   \n \n-    getRequestPrice = async (params:IRequestPriceParamsService, token: string, accountId:string, correlationId: string) => {\n+    getRequestPrice = async (params:IRequestPriceParamsService, token: string, accountId:string, correlationId: any) => {\n         try{\n         const { data }:AxiosResponse<any> = await axios({\n             method:\"GET\",\n             url:`https://api.perks.optum.com/api/optumperks/v1/prices`,\n"
+                },
+                {
+                    "date": 1644412947192,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -46,9 +46,9 @@\n \n     }\n \n     settingsPrice = async (data:any, locations: string) => {\n-\n+        \n         return await Settings(data, locations);\n \n     }\n \n"
+                }
+            ],
+            "date": 1644384338408,
+            "name": "Commit-0",
+            "content": "import axios, {AxiosResponse} from 'axios';\nimport Price from '../models/price.model';\nimport { Settings } from '../utils/priceSettings';\n\nclass PriceService{\n\n    getPrice = async () => {\n\n    }\n\n}\n\n\nexport default PriceService;"
+        }
+    ]
+}

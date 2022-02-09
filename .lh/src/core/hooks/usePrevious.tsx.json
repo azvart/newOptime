@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/core/hooks/usePrevious.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1644398906875,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1644398941620,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,5 +9,7 @@\n     ref.current = value;\n   },[value]);\n \n   return ref.current;\n-}\n\\ No newline at end of file\n+}\n+\n+export default usePrevios();\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644398950406,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,5 +11,5 @@\n \n   return ref.current;\n }\n \n-export default usePrevios();\n\\ No newline at end of file\n+export default usePrevios;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1644399008062,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,10 @@\n import { useEffect, useRef } from 'react';\n \n \n \n-function usePrevios(value:any){\n-  const ref = useRef();\n+function usePrevios<T>(value:T):T{\n+  const ref:any = useRef<T>();\n \n   useEffect(() => {\n     ref.current = value;\n   },[value]);\n"
+                }
+            ],
+            "date": 1644398906875,
+            "name": "Commit-0",
+            "content": "import { useEffect, useRef } from 'react';\n\n\n\nfunction usePrevios(value:any){\n  const ref = useRef();\n\n  useEffect(() => {\n    ref.current = value;\n  },[value]);\n\n  return ref.current;\n}"
+        }
+    ]
+}
